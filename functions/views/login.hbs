@@ -1,0 +1,173 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+  <!--<head>-->
+    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+    <!--&lt;!&ndash; Meta, title, CSS, favicons, etc. &ndash;&gt;-->
+    <!--<meta charset="utf-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+
+    <!--<title>Gentelella Alela! | </title>-->
+
+    <!--&lt;!&ndash; Bootstrap &ndash;&gt;-->
+    <!--<link href="bootstrap.min.css" rel="stylesheet">-->
+    <!--&lt;!&ndash; Font Awesome &ndash;&gt;-->
+    <!--<link href="font-awesome.min.css" rel="stylesheet">-->
+    <!--&lt;!&ndash; NProgress &ndash;&gt;-->
+    <!--<link href="nprogress.css" rel="stylesheet">-->
+    <!--&lt;!&ndash; Animate.css &ndash;&gt;-->
+    <!--<link href="animate.min.css" rel="stylesheet">-->
+
+    <!--&lt;!&ndash; Custom Theme Style &ndash;&gt;-->
+    <!--<link href="custom.css" rel="stylesheet">-->
+  <!--</head>-->
+
+  <body class="login">
+    <div>
+      <!--<a class="hiddenanchor" id="signup"></a>-->
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <div class="form">
+              <h1>Iniciar Sesión</h1>
+                <div id="message" class="alert alert-danger hide" role="alert">
+                </div>
+              <div>
+                <input id="txtEmail" type="email" class="form-control" placeholder="Correo Electrónico" required />
+              </div>
+              <div>
+                <input id="txtPassword" type="password" class="form-control" placeholder="Contraseña" required />
+              </div>
+              <div>
+                <button id="btnLogin" class="btn btn-default p-0">Iniciar Sesión</button>
+                <!--<a class="btn btn-default submit" href="dashboard">Log In</a>-->
+                <!--<a class="reset_pass" href="#">Lost your password?</a>-->
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <!--<p class="change_link">New to site?-->
+                  <!--<a href="signup" class="to_register"> Create Account </a>-->
+                <!--</p>-->
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-paw"></i> SIECE</h1>
+                  <p>© 2018 SIECE</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!--<div id="register" class="animate form registration_form">-->
+          <!--<section class="login_content">-->
+            <!--<form>-->
+              <!--<h1>Create Account</h1>-->
+              <!--<div>-->
+                <!--<input type="text" class="form-control" placeholder="Username" required="" />-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<input type="email" class="form-control" placeholder="Email" required="" />-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<input type="password" class="form-control" placeholder="Password" required="" />-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<a class="btn btn-default submit" href="index.hbs">Submit</a>-->
+              <!--</div>-->
+
+              <!--<div class="clearfix"></div>-->
+
+              <!--<div class="separator">-->
+                <!--<p class="change_link">Already a member ?-->
+                  <!--<a href="#signin" class="to_register"> Log in </a>-->
+                <!--</p>-->
+
+                <!--<div class="clearfix"></div>-->
+                <!--<br />-->
+
+                <!--<div>-->
+                  <!--<h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>-->
+                  <!--<p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</form>-->
+          <!--</section>-->
+        <!--</div>-->
+      </div>
+    </div>
+    <!--<script src="cookie.js"></script>-->
+    <script type="text/javascript">
+      (function() {
+        const messageContainer = document.getElementById('message');
+        const btnLogin = document.getElementById('btnLogin');
+        const txtEmail = document.getElementById('txtEmail');
+        const txtPassword = document.getElementById('txtPassword');
+
+        btnLogin.addEventListener('click', e => {
+          const email = txtEmail.value;
+          const pass = txtPassword.value;
+          const auth = firebase.auth();
+          auth.signInWithEmailAndPassword(email, pass)
+              .then(() => {
+                console.log('logged in');
+                // sendToken().then(() => { console.log('success') }).catch((e => console.log(e)))
+              })
+              .catch(e => {
+                // console.log(e);
+                handleAuthError(e.code);
+              });
+        });
+
+        // function sendToken() {
+        //   return firebase.auth().currentUser.getIdToken().then(idToken => {
+        //     return axios({
+        //       method: 'POST',
+        //       url: 'http:/localhost:5000/login',
+        //       headers: {
+        //         Authorization: idToken
+        //       }
+        //     })
+        //   })
+        // }
+
+        function handleAuthError(code) {
+          let message;
+          switch (code) {
+            case 'auth/user-not-found':
+              message = 'Usuario o contraseña incorrectos';
+              break;
+            case 'auth/invalid-email':
+              message = 'Usuario o contraseña incorrectos';
+              break;
+            case 'auth/wrong-password':
+              message = 'Usuario o contraseña incorrectos';
+              break;
+            default:
+              console.log('unrecognized/unimplemented error code');
+              break;
+          }
+          if (message) {
+            messageContainer.innerText = message;
+            messageContainer.classList.remove('hide');
+          }
+        }
+
+        // firebase.auth().onAuthStateChanged(firebaseUser => {
+        //   if (firebaseUser) {
+        //     console.log(firebaseUser);
+        //   } else {
+        //     console.log('not logged in');
+        //   }
+        // })
+
+      }());
+    </script>
+  </body>
+<!--</html>-->

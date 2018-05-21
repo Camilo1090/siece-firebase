@@ -796,6 +796,22 @@
                           </div>
                         </div>
                       </div>
+                      <!-- pregunta 25A -->
+                      <div class="form-group">
+                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
+                          15A. Monto de la cartera vigente por género (USD)
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 pt">
+                          <div>
+                            <label for="current_portfolio_male">Masculino: </label>
+                            <input type="number" id="current_portfolio_male" name="current_portfolio_male" min="0">
+                          </div>
+                          <div>
+                            <label for="current_portfolio_female">Femenino: </label>
+                            <input type="number" id="current_portfolio_female" name="current_portfolio_female" min="0">
+                          </div>
+                        </div>
+                      </div>
                       <!-- pregunta 26 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
@@ -824,6 +840,22 @@
                           </div>
                         </div>
                       </div>
+                      <!-- pregunta 26A -->
+                      <div class="form-group">
+                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
+                          16A. Monto de la cartera vencida por género (USD)
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 pt">
+                          <div>
+                            <label for="pastdue_portfolio_male">Masculino: </label>
+                            <input type="number" id="pastdue_portfolio_male" name="pastdue_portfolio_male" min="0">
+                          </div>
+                          <div>
+                            <label for="pastdue_portfolio_female">Femenino: </label>
+                            <input type="number" id="pastdue_portfolio_female" name="pastdue_portfolio_female" min="0">
+                          </div>
+                        </div>
+                      </div>
                       <!--<div class="form-group">-->
                         <!--<label class="col-md-3 col-sm-3 col-xs-12 control-label">-->
                           <!--16. Distribución del monto de la cartera vigente (USD al cierre del año fiscal)-->
@@ -842,7 +874,7 @@
                       <!-- pregunta 27 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          17. Monto de la cartera ejecución
+                          17. Monto de la cartera en ejecución
                           <span id="tooltip" class="tool" data-tip="Monto total de créditos por los cuales la IPSCE ha iniciado acciones judiciales para el cobro. (USD al cierre del año fiscal)"
                                 tabindex="1">
                             <i class="fa fa-question-circle"></i>
@@ -864,6 +896,22 @@
                             </label>
                             <label for="execution_portfolio_exterior_amount">USD</label>
                             <input type="number" disabled id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- pregunta 27A -->
+                      <div class="form-group">
+                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
+                          17A. Monto de la cartera en ejecución por género (USD)
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 pt">
+                          <div>
+                            <label for="execution_portfolio_male">Masculino: </label>
+                            <input type="number" id="execution_portfolio_male" name="execution_portfolio_male" min="0">
+                          </div>
+                          <div>
+                            <label for="execution_portfolio_female">Femenino: </label>
+                            <input type="number" id="execution_portfolio_female" name="execution_portfolio_female" min="0">
                           </div>
                         </div>
                       </div>
@@ -1347,6 +1395,14 @@
         $("#current_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
+      {{#if data.current_portfolio_male}}
+        $("#current_portfolio_male").val("{{data.current_portfolio_male}}");
+      {{/if}}
+
+      {{#if data.current_portfolio_female}}
+        $("#current_portfolio_female").val("{{data.current_portfolio_female}}");
+      {{/if}}
+
       <!--{{#if data.studying_beneficiaries_amount}}-->
         <!--$("#studying_beneficiaries_amount").val("{{data.studying_beneficiaries_amount}}");-->
       <!--{{/if}}-->
@@ -1360,10 +1416,26 @@
         $("#pastdue_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
+      {{#if data.pastdue_portfolio_male}}
+        $("#pastdue_portfolio_male").val("{{data.pastdue_portfolio_male}}");
+      {{/if}}
+
+      {{#if data.pastdue_portfolio_female}}
+        $("#pastdue_portfolio_female").val("{{data.pastdue_portfolio_female}}");
+      {{/if}}
+
       {{#each data.execution_portfolio as |obj|}}
         $("#execution_portfolio_{{obj.name}}").attr("checked", true);
         $("#execution_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
+
+      {{#if data.execution_portfolio_male}}
+        $("#execution_portfolio_male").val("{{data.execution_portfolio_male}}");
+      {{/if}}
+
+      {{#if data.execution_portfolio_female}}
+        $("#execution_portfolio_female").val("{{data.execution_portfolio_female}}");
+      {{/if}}
 
       {{#each data.risks as |risk|}}
         $("#risks_{{risk}}").attr("checked", true);
@@ -1425,6 +1497,9 @@
       {{#if data.programs}}
         $("#program_quantity").val("{{data.programs.length}}").trigger("change");
         {{#each data.programs as |obj index|}}
+          {{#if obj.level}}
+            $("#program"+({{index}}+1)+"_level_{{obj.level}}").attr("checked", true);
+          {{/if}}
           {{#if obj.name}}
             $("#program"+({{index}}+1)+"_name").val("{{obj.name}}");
           {{/if}}
@@ -1498,6 +1573,25 @@
                 <div class="clearfix"></div>
               </div>
               <div class="x_content">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                    Nivel
+                  </label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <div class="radio">
+                      <label>
+                        <input class="level" type="radio" value="pregrado" id="${'program'+i+'_level_pregrado'}" name="${'program'+i+'_level'}" checked required>
+                        Pregrado
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input class="level" type="radio" value="posgrado" id="${'program'+i+'_level_posgrado'}" name="${'program'+i+'_level'}">
+                        Posgrado
+                      </label>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12" for="${'program'+i+'_name'}">
                     1. Nombre del Programa o Línea de C.E.

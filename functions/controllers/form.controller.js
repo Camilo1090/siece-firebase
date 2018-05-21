@@ -220,7 +220,7 @@ exports.processForm = (req, res) => {
       let current_portfolio = [];
       if (params.current_portfolio && params.current_portfolio_amounts) {
         if (typeof params.current_portfolio === typeof []) {
-          for (i = 0; i < params.current_portfolio.length; i++) {
+          for (let i = 0; i < params.current_portfolio.length; i++) {
             obj = {};
             obj.name = params.current_portfolio[i];
             obj.amount = params.current_portfolio_amounts[i];
@@ -235,6 +235,14 @@ exports.processForm = (req, res) => {
       }
       institution.current_portfolio = current_portfolio;
 
+      if (params.current_portfolio_male) {
+        institution.current_portfolio_male = params.current_portfolio_male;
+      }
+
+      if (params.current_portfolio_female) {
+        institution.current_portfolio_female = params.current_portfolio_female;
+      }
+
       // if (params.studying_beneficiaries_amount) {
       //   institution.studying_beneficiaries_amount = params.studying_beneficiaries_amount;
       // }
@@ -246,7 +254,7 @@ exports.processForm = (req, res) => {
       let pastdue_portfolio = [];
       if (params.pastdue_portfolio && params.pastdue_portfolio_amounts) {
         if (typeof params.pastdue_portfolio === typeof []) {
-          for (i = 0; i < params.pastdue_portfolio.length; i++) {
+          for (let i = 0; i < params.pastdue_portfolio.length; i++) {
             obj = {};
             obj.name = params.pastdue_portfolio[i];
             obj.amount = params.pastdue_portfolio_amounts[i];
@@ -261,10 +269,18 @@ exports.processForm = (req, res) => {
       }
       institution.pastdue_portfolio = pastdue_portfolio;
 
+      if (params.pastdue_portfolio_male) {
+        institution.pastdue_portfolio_male = params.pastdue_portfolio_male;
+      }
+
+      if (params.pastdue_portfolio_female) {
+        institution.pastdue_portfolio_female = params.pastdue_portfolio_female;
+      }
+
       let execution_portfolio = [];
       if (params.execution_portfolio && params.execution_portfolio_amounts) {
         if (typeof params.execution_portfolio === typeof []) {
-          for (i = 0; i < params.execution_portfolio.length; i++) {
+          for (let i = 0; i < params.execution_portfolio.length; i++) {
             obj = {};
             obj.name = params.execution_portfolio[i];
             obj.amount = params.execution_portfolio_amounts[i];
@@ -278,6 +294,14 @@ exports.processForm = (req, res) => {
         }
       }
       institution.execution_portfolio = execution_portfolio;
+
+      if (params.execution_portfolio_male) {
+        institution.execution_portfolio_male = params.execution_portfolio_male;
+      }
+
+      if (params.execution_portfolio_female) {
+        institution.execution_portfolio_female = params.execution_portfolio_female;
+      }
 
       let risks = [];
       if (params.risks) {
@@ -342,8 +366,10 @@ exports.processForm = (req, res) => {
 
       // programs
       let programs = [];
-      for (i = 1; i <= params.program_quantity; i++) {
+      for (let i = 1; i <= params.program_quantity; i++) {
         obj = {};
+        if (params['program' + i + '_level'])
+          obj.level = params['program' + i + '_level'];
         if (params['program' + i + '_name'])
           obj.name = params['program' + i + '_name'];
         if (params['program' + i + '_beneficiaries'])

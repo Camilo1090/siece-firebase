@@ -7,7 +7,7 @@
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
     <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
 
-    <!--<title>Gentelella Alela! | </title>-->
+    <!--<title>DataTables | Gentelella</title>-->
 
     <!--&lt;!&ndash; Bootstrap &ndash;&gt;-->
     <!--<link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">-->
@@ -15,9 +15,15 @@
     <!--<link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->
     <!--&lt;!&ndash; NProgress &ndash;&gt;-->
     <!--<link href="../vendors/nprogress/nprogress.css" rel="stylesheet">-->
-    <!--&lt;!&ndash; bootstrap-daterangepicker &ndash;&gt;-->
-    <!--<link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">-->
-    <!---->
+    <!--&lt;!&ndash; iCheck &ndash;&gt;-->
+    <!--<link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">-->
+    <!--&lt;!&ndash; Datatables &ndash;&gt;-->
+    <!--<link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">-->
+
     <!--&lt;!&ndash; Custom Theme Style &ndash;&gt;-->
     <!--<link href="../build/css/custom.min.css" rel="stylesheet">-->
   <!--</head>-->
@@ -34,6 +40,7 @@
             <div class="clearfix"></div>
 
             <!-- menu profile quick info -->
+            {{#if user}}
             <div class="profile clearfix">
               <div class="profile_pic">
                 <img src="img.jpg" alt="..." class="img-circle profile_img">
@@ -43,10 +50,9 @@
                 <h2>{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}</h2>
               </div>
             </div>
+            {{/if}}
             <!-- /menu profile quick info -->
-
             <br />
-
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <div class="menu_section">
@@ -80,14 +86,18 @@
               </div>
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
-                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="img.jpg" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
-                    <span class=" fa fa-angle-down"></span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="perfil"> Perfil</a></li>
-                    <li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
-                  </ul>
+                  {{#if user}}
+                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <img src="img.jpg" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
+                      <span class=" fa fa-angle-down"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                      <li><a href="perfil"> Perfil</a></li>
+                      <li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
+                    </ul>
+                  {{else}}
+                    <a href="login"><i class="fa fa-sign-in pull-right mt-1"></i> Iniciar Sesión</a>
+                  {{/if}}
                 </li>
               </ul>
             </nav>
@@ -112,29 +122,49 @@
                 {{/if}}
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Perfil de Usuario</h2>
+                    <h2>Seleccionar un Indicador para visualizar</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <div class="col-xs-12">
-                      <form id="demo-form2" class=" form-label-left" method="post">
-                        <div class="form-group">
-                          <label class="col-xs-12" for="user_email">Correo Electrónico</label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="user_email" class="form-control" type="text" value="{{user.email}}" readonly>
-                          </div>
+                    <form id="demo-form2" class="form-label-left" data-parsley-validate method="post">
+                      <div class="form-group">
+                        <label class="col-xs-12" for="report">
+                          Indicador
+                        </label>
+                        <div class="col-xs-6">
+                          <select class="select2_single form-control" id="report" tabindex="-1" name="report" required>
+                            <option></option>
+                            <option value="financiamiento_anual">Financiamiento de CE anual</option>
+                          </select>
                         </div>
-                        <div class="form-group">
-                          <label class="col-xs-12 pt" for="user_name">Nombre de la Institución</label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="user_name" class="form-control" type="text" value="{{user.displayName}}" name="institution_name">
-                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-xs-12 pt">
+                          Periodo
+                        </label>
+                        <div class="col-xs-6">
+                          <label for="from_year">Desde: </label>
+                          <input type="number" id="from_year" maxlength="4" minlength="4" min="1950" max="2018" name="from_year" required>
+                          <label for="to_year">Hasta: </label>
+                          <input type="number" id="to_year" maxlength="4" minlength="4" min="1950" max="2018" name="to_year" required>
                         </div>
+                      </div>
+                      <div class="form-group">
                         <div class="col-xs-12 pt">
-                          <button class="btn btn-success" type="submit"><i class="fa fa-edit m-right-xs"></i>Guardar Cambios</button>
+                          <button type="submit" class="btn btn-success">Ver Indicador</button>
                         </div>
-                      </form>
-                    </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Indicador</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
                   </div>
                 </div>
               </div>
@@ -160,9 +190,47 @@
     <script src="bootstrap.min.js"></script>
     <!-- FastClick -->
     <script src="fastclick.js"></script>
-    
+    <!-- NProgress -->
+    <script src="nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="icheck.min.js"></script>
+    <!-- Parsley -->
+    <script src="parsley.min.js"></script>
+    <!-- i18n/es.js-->
+    <script src="es.js"></script>
+    <!-- Datatables -->
+    <script src="jquery.dataTables.min.js"></script>
+    <script src="dataTables.bootstrap.min.js"></script>
+    <script src="dataTables.responsive.min.js"></script>
+    <script src="responsive.bootstrap.js"></script>
+    <script src="jszip.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="custom.min.js"></script>
 
+    <script type="text/javascript">
+      $(document).ready(() => {
+        {{#if selected_report}}
+          $("#report option[value={{selected_report}}]").attr("selected", true);
+        {{/if}}
+
+        {{#if from_year}}
+          $("#from_year").val("{{from_year}}");
+        {{/if}}
+
+        {{#if to_year}}
+          $("#to_year").val("{{to_year}}");
+        {{/if}}
+
+        <!--{{#if results}}-->
+          <!--console.log({{{results}}});-->
+        <!--{{/if}}-->
+      })
+    </script>
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", () => {
+
+      });
+    </script>
   </body>
 <!--</html>-->

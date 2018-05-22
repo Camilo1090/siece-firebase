@@ -3,6 +3,7 @@ const router = express.Router();
 
 const formController = require('./controllers/form.controller');
 const profileController = require('./controllers/profile.controller');
+const reportsController = require('./controllers/reports.controller');
 
 module.exports = (app, authentication) => {
   router.use(authentication);
@@ -52,7 +53,7 @@ module.exports = (app, authentication) => {
       return res.redirect('/login');
   });
 
-  router.get('/formulario', (req, res) => {
+  router.get('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return formController.getForms(req, res);
@@ -60,7 +61,7 @@ module.exports = (app, authentication) => {
       return res.redirect('/login');
   });
 
-  router.post('/formulario', (req, res) => {
+  router.post('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return formController.createForm(req, res);
@@ -68,7 +69,7 @@ module.exports = (app, authentication) => {
       return res.redirect('/login');
   });
 
-  router.get('/formulario/:reported_year', (req, res) => {
+  router.get('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return formController.getForm(req, res);
@@ -76,12 +77,22 @@ module.exports = (app, authentication) => {
       return res.redirect('/login');
   });
 
-  router.post('/formulario/:reported_year', (req, res) => {
+  router.post('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return formController.processForm(req, res);
     else
       return res.redirect('/login');
+  });
+
+  router.get('/indicadores', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    return reportsController.listReports(req, res);
+  });
+
+  router.post('/indicadores', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    return reportsController.getReport(req, res);
   });
 
   app.use('/', router);

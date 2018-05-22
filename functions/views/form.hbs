@@ -68,7 +68,10 @@
                       <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
                     </li>
                     <li>
-                      <a href="formulario"><i class="fa fa-edit"></i> Formulario</a>
+                      <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
+                    </li>
+                    <li>
+                      <a href="indicadores"><i class="fa fa-bar-chart"></i> Indicadores</a>
                     </li>
                   </ul>
               </div>
@@ -1254,13 +1257,13 @@
         }
       });
 
-      $("body").on("change", ".credit", function() {
-        console.log($(this).attr("name"));
-        if ($("#"+$(this).attr("name")+"_pais").is(":checked") || $("#"+$(this).attr("name")+"_exterior").is(":checked")) {
-          $("#" + $(this).attr("name") + "_new").attr("required", true).removeAttr("disabled");
-          $("#" + $(this).attr("name") + "_old").attr("required", true).removeAttr("disabled");
-        }
-      });
+      // $("body").on("change", ".credit", function() {
+      //   console.log($(this).attr("name"));
+      //   if ($("#"+$(this).attr("name")+"_pais").is(":checked") || $("#"+$(this).attr("name")+"_exterior").is(":checked")) {
+      //     $("#" + $(this).attr("name") + "_new").attr("required", true).removeAttr("disabled");
+      //     $("#" + $(this).attr("name") + "_old").attr("required", true).removeAttr("disabled");
+      //   }
+      // });
 
       $("input:checkbox[name=current_portfolio]").change(function() {
         // console.log($(this).attr("id"));
@@ -1538,16 +1541,19 @@
             if ($("#program"+({{index}}+1)+"_guarantors_otra").is(":checked"))
               $("#program"+({{index}}+1)+"_guarantors_other").val("{{obj.guarantors_other}}").attr("required", true).removeAttr("disabled");
           {{/if}}
-          {{#if obj.credit}}
-            $("#program"+({{index}}+1)+"_credit_{{obj.credit.type}}").attr("checked", true);
-            $("#program"+({{index}}+1)+"_credit_new").val("{{obj.credit.new}}").attr("required", true).removeAttr("disabled");
-            $("#program"+({{index}}+1)+"_credit_old").val("{{obj.credit.old}}").attr("required", true).removeAttr("disabled");
+          {{#if obj.credit_pais}}
+            $("#program"+({{index}}+1)+"_credit_pais_new").val("{{obj.credit_pais.new}}");
+            $("#program"+({{index}}+1)+"_credit_pais_old").val("{{obj.credit_pais.old}}");
+          {{/if}}
+          {{#if obj.credit_exterior}}
+            $("#program"+({{index}}+1)+"_credit_exterior_new").val("{{obj.credit_exterior.new}}");
+            $("#program"+({{index}}+1)+"_credit_exterior_old").val("{{obj.credit_exterior.old}}");
           {{/if}}
         {{/each}}
       {{/if}}
 
-      $("#tooltip").attr('data-tip', );
-      console.log($("#tooltip").attr('data-tip'));
+      // $("#tooltip").attr('data-tip', );
+      // console.log($("#tooltip").attr('data-tip'));
     });
   </script>
 	<script type="text/javascript">
@@ -1771,25 +1777,32 @@
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                    10. Número de créditos otorgados por año
+                    10. Número de créditos otorgados por año en el País
                   </label>
-                  <div class="col-md-9 col-sm-9 col-xs-12">
-                    <div class="radio">
-                      <label>
-                        <input class="credit" type="radio" value="pais" id="${'program'+i+'_credit_pais'}" name="${'program'+i+'_credit'}">
-                        Estudios en el país
-                      </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 pt">
+                    <div>
+                      <label for="${'program'+i+'_credit_pais_new'}">Créditos nuevos: </label>
+                      <input type="number" id="${'program'+i+'_credit_pais_new'}" name="${'program'+i+'_credit_pais_new'}" min="0">
                     </div>
-                    <div class="radio">
-                      <label>
-                        <input class="credit" type="radio" value="exterior" id="${'program'+i+'_credit_exterior'}" name="${'program'+i+'_credit'}">
-                        Estudios en el exterior
-                      </label>
+                    <div>
+                      <label for="${'program'+i+'_credit_pais_old'}">Créditos antiguos: </label>
+                      <input type="number" id="${'program'+i+'_credit_pais_old'}" name="${'program'+i+'_credit_pais_old'}" min="0">
                     </div>
-                    <label for="${'program'+i+'_credit_new'}">Créditos nuevos: </label>
-                    <input type="number" id="${'program'+i+'_credit_new'}" name="${'program'+i+'_credit_new'}" min="0" disabled>
-                    <label for="${'program'+i+'_credit_old'}">Créditos antiguos: </label>
-                    <input type="number" id="${'program'+i+'_credit_old'}" name="${'program'+i+'_credit_old'}" min="0" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 col-sm-3 col-xs-12 control-label">
+                    10A. Número de créditos otorgados por año en el Exterior
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 pt">
+                    <div>
+                      <label for="${'program'+i+'_credit_exterior_new'}">Créditos nuevos: </label>
+                      <input type="number" id="${'program'+i+'_credit_exterior_new'}" name="${'program'+i+'_credit_exterior_new'}" min="0">
+                    </div>
+                    <div>
+                      <label for="${'program'+i+'_credit_exterior_old'}">Créditos antiguos: </label>
+                      <input type="number" id="${'program'+i+'_credit_exterior_old'}" name="${'program'+i+'_credit_exterior_old'}" min="0">
+                    </div>
                   </div>
                 </div>
               </div>

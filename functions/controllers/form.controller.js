@@ -93,7 +93,7 @@ exports.createForm = (req, res) => {
 };
 
 exports.getForm = (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
   let institutionQuery = db.collection('institutions').where('user_id', '==', req.user.uid).where('reported_year', '==', req.params.reported_year);
   institutionQuery.get().then(querySnapshot => {
     if (querySnapshot.empty || querySnapshot.size > 1) {
@@ -191,7 +191,7 @@ exports.processForm = (req, res) => {
         } else {
           obj = {};
           obj.source = params.sources;
-          obj.amount = params.source_amounts;
+          obj.amount = Number(params.source_amounts);
           if (obj.source === 'otra')
             obj.name = params.source_otra_name;
           sources.push(obj);
@@ -210,11 +210,11 @@ exports.processForm = (req, res) => {
       }
 
       if (params.total_investment) {
-        institution.total_investment = params.total_investment;
+        institution.total_investment = Number(params.total_investment);
       }
 
       if (params.total_students) {
-        institution.total_students = params.total_students;
+        institution.total_students = Number(params.total_students);
       }
 
       let current_portfolio = [];
@@ -223,24 +223,24 @@ exports.processForm = (req, res) => {
           for (let i = 0; i < params.current_portfolio.length; i++) {
             obj = {};
             obj.name = params.current_portfolio[i];
-            obj.amount = params.current_portfolio_amounts[i];
+            obj.amount = Number(params.current_portfolio_amounts[i]);
             current_portfolio.push(obj);
           }
         } else {
           obj = {};
           obj.name = params.current_portfolio;
-          obj.amount = params.current_portfolio_amounts;
+          obj.amount = Number(params.current_portfolio_amounts);
           current_portfolio.push(obj);
         }
       }
       institution.current_portfolio = current_portfolio;
 
       if (params.current_portfolio_male) {
-        institution.current_portfolio_male = params.current_portfolio_male;
+        institution.current_portfolio_male = Number(params.current_portfolio_male);
       }
 
       if (params.current_portfolio_female) {
-        institution.current_portfolio_female = params.current_portfolio_female;
+        institution.current_portfolio_female = Number(params.current_portfolio_female);
       }
 
       // if (params.studying_beneficiaries_amount) {
@@ -257,24 +257,24 @@ exports.processForm = (req, res) => {
           for (let i = 0; i < params.pastdue_portfolio.length; i++) {
             obj = {};
             obj.name = params.pastdue_portfolio[i];
-            obj.amount = params.pastdue_portfolio_amounts[i];
+            obj.amount = Number(params.pastdue_portfolio_amounts[i]);
             pastdue_portfolio.push(obj);
           }
         } else {
           obj = {};
           obj.name = params.pastdue_portfolio;
-          obj.amount = params.pastdue_portfolio_amounts;
+          obj.amount = Number(params.pastdue_portfolio_amounts);
           pastdue_portfolio.push(obj);
         }
       }
       institution.pastdue_portfolio = pastdue_portfolio;
 
       if (params.pastdue_portfolio_male) {
-        institution.pastdue_portfolio_male = params.pastdue_portfolio_male;
+        institution.pastdue_portfolio_male = Number(params.pastdue_portfolio_male);
       }
 
       if (params.pastdue_portfolio_female) {
-        institution.pastdue_portfolio_female = params.pastdue_portfolio_female;
+        institution.pastdue_portfolio_female = Number(params.pastdue_portfolio_female);
       }
 
       let execution_portfolio = [];
@@ -283,24 +283,24 @@ exports.processForm = (req, res) => {
           for (let i = 0; i < params.execution_portfolio.length; i++) {
             obj = {};
             obj.name = params.execution_portfolio[i];
-            obj.amount = params.execution_portfolio_amounts[i];
+            obj.amount = Number(params.execution_portfolio_amounts[i]);
             execution_portfolio.push(obj);
           }
         } else {
           obj = {};
           obj.name = params.execution_portfolio;
-          obj.amount = params.execution_portfolio_amounts;
+          obj.amount = Number(params.execution_portfolio_amounts);
           execution_portfolio.push(obj);
         }
       }
       institution.execution_portfolio = execution_portfolio;
 
       if (params.execution_portfolio_male) {
-        institution.execution_portfolio_male = params.execution_portfolio_male;
+        institution.execution_portfolio_male = Number(params.execution_portfolio_male);
       }
 
       if (params.execution_portfolio_female) {
-        institution.execution_portfolio_female = params.execution_portfolio_female;
+        institution.execution_portfolio_female = Number(params.execution_portfolio_female);
       }
 
       let risks = [];
@@ -333,27 +333,27 @@ exports.processForm = (req, res) => {
       }
 
       if (params.male_students) {
-        institution.male_students = params.male_students;
+        institution.male_students = Number(params.male_students);
       }
 
       if (params.female_students) {
-        institution.female_students = params.female_students;
+        institution.female_students = Number(params.female_students);
       }
 
       if (params.high_students) {
-        institution.high_students = params.high_students;
+        institution.high_students = Number(params.high_students);
       }
 
       if (params.medium_students) {
-        institution.medium_students = params.medium_students;
+        institution.medium_students = Number(params.medium_students);
       }
 
       if (params.low_students) {
-        institution.low_students = params.low_students;
+        institution.low_students = Number(params.low_students);
       }
 
       if (params.graduate_percentage) {
-        institution.graduate_percentage = params.graduate_percentage;
+        institution.graduate_percentage = Number(params.graduate_percentage);
       }
 
       if (params.benefits) {
@@ -370,20 +370,26 @@ exports.processForm = (req, res) => {
         obj = {};
         if (params['program' + i + '_level'])
           obj.level = params['program' + i + '_level'];
+
         if (params['program' + i + '_name'])
           obj.name = params['program' + i + '_name'];
+
         if (params['program' + i + '_beneficiaries'])
-          obj.beneficiaries = params['program' + i + '_beneficiaries'];
+          obj.beneficiaries = Number(params['program' + i + '_beneficiaries']);
+
         if (params['program' + i + '_term'])
           obj.term = params['program' + i + '_term'];
+
         if (params['program' + i + '_investment'])
-          obj.investment = params['program' + i + '_investment'];
+          obj.investment = Number(params['program' + i + '_investment']);
+
         if (params['program' + i + '_rate']) {
           let rate = {};
           rate.type = params['program' + i + '_rate'];
-          rate.percentage = params['program' + i + '_rate_percentage'];
+          rate.percentage = Number(params['program' + i + '_rate_percentage']);
           obj.rate = rate;
         }
+
         if (params['program' + i + '_repayment']) {
           let repayment = {};
           repayment.type = params['program' + i + '_repayment'];
@@ -391,33 +397,43 @@ exports.processForm = (req, res) => {
             repayment.other = params['program' + i + '_repayment_other'];
           obj.repayment = repayment;
         }
+
         if (params['program' + i + '_grace'])
           obj.grace = params['program' + i + '_grace'];
+
         if (params['program' + i + '_warranties']) {
           if (typeof params['program' + i + '_warranties'] === typeof [])
             obj.warranties = params['program' + i + '_warranties'];
           else
             obj.warranties = [params['program' + i + '_warranties']];
         }
+
         if (params['program' + i + '_warranties_other'])
           obj.warranties_other = params['program' + i + '_warranties_other'];
+
         if (params['program' + i + '_guarantors']) {
           if (typeof params['program' + i + '_guarantors'] === typeof [])
             obj.guarantors = params['program' + i + '_guarantors'];
           else
             obj.guarantors = [params['program' + i + '_guarantors']];
         }
+
         if (params['program' + i + '_guarantors_other'])
           obj.guarantors_other = params['program' + i + '_guarantors_other'];
-        if (params['program' + i + '_credit']) {
-          let credit = {};
-          credit.type = params['program' + i + '_credit'];
-          if (params['program' + i + '_credit_new'])
-            credit.new = params['program' + i + '_credit_new'];
-          if (params['program' + i + '_credit_old'])
-            credit.old = params['program' + i + '_credit_old'];
-          obj.credit = credit;
-        }
+
+        let credit_pais = {};
+        if (params['program' + i + '_credit_pais_new'])
+          credit_pais.new = Number(params['program' + i + '_credit_pais_new']);
+        if (params['program' + i + '_credit_pais_old'])
+          credit_pais.old = Number(params['program' + i + '_credit_pais_old']);
+        obj.credit_pais = credit_pais;
+
+        let credit_exterior = {};
+        if (params['program' + i + '_credit_exterior_new'])
+          credit_exterior.new = Number(params['program' + i + '_credit_exterior_new']);
+        if (params['program' + i + '_credit_exterior_old'])
+          credit_exterior.old = Number(params['program' + i + '_credit_exterior_old']);
+        obj.credit_exterior = credit_exterior;
 
         programs.push(obj);
       }

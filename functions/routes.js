@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const indexController = require('./controllers/index.controller');
 const formController = require('./controllers/form.controller');
 const profileController = require('./controllers/profile.controller');
 const reportsController = require('./controllers/reports.controller');
@@ -10,7 +11,7 @@ module.exports = (app, authentication) => {
 
   router.get('/', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
-    return res.redirect('/index');
+    return res.render('landing');
   });
 
   router.get('/login', (req, res) => {
@@ -34,7 +35,7 @@ module.exports = (app, authentication) => {
     let data = {};
     if (req.user)
       data.user = req.user;
-    return res.render('index', data);
+    return indexController.getIndex(req, res);
   });
 
   router.get('/perfil', (req, res) => {

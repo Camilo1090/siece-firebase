@@ -8,11 +8,7 @@ exports.getForms = (req, res) => {
     if (querySnapshot.empty) {
       console.log('No documents found.');
     }
-    let formDocs = querySnapshot.docs;
-    let forms = formDocs.map(doc => {
-      doc = doc.data();
-      return doc;
-    });
+    let forms = querySnapshot.docs.map(doc => doc.data());
     return res.render('select-form', {
       user: req.user,
       forms: forms

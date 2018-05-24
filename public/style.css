@@ -19,8 +19,21 @@
     margin-top: 15px;
 }
 
+.mt-3 {
+    margin-top: 40px;
+}
+
 .ml-2 {
     margin-left: 15px;
+}
+
+.banner {
+    min-width: 200px;
+}
+
+.custom-count {
+    font-size: 24px;
+    font-weight: 600;
 }
 
 .pointer {

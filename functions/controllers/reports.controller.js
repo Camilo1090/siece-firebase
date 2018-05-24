@@ -43,13 +43,15 @@ function financiamientoAnual(req, res, data) {
         return res.render('select-report', data);
       } else {
         let institutions = querySnapshot.docs.map(doc => doc.data());
-        institutions.sort();
+        // institutions.sort();
         // console.log(institutions);
         let userCache = {};
         let results = [];
         let promiseChain = Promise.resolve();
-        let lastUserId = '';
-        let lastIndex = -1;
+        for (let i = params.from_year; i <= params.to_year; i++) {
+          let result = { reported_year: Number(i) };
+          results.push(result);
+        }
         for (let i = 0; i < institutions.length; i++) {
           if (institutions[i].programs && institutions[i].programs.length > 0) {
             let total_investment = 0;
@@ -65,41 +67,19 @@ function financiamientoAnual(req, res, data) {
               }
             }
 
-            const indicator = total_investment / total_credits;
-            if (indicator) {
-              let result = {};
-              result.reported_year = Number(institutions[i].reported_year);
-              result.indicator = indicator;
+            const indicatorValue = total_investment / total_credits;
+            if (indicatorValue) {
               // console.log(indicator);
-              const makeNextPromise = (institution, result) => () => {
-                if (institution.user_id !== lastUserId) {
-                  lastUserId = institution.user_id;
-                  let indicators = [];
-                  for (let j = params.from_year; j <= params.to_year; j++) {
-                    indicators.push({ reported_year: Number(j) });
-                  }
-                  results.push({indicators: indicators});
-                  console.log(indicators);
-                  lastIndex = results.length - 1;
-                }
+              const makeNextPromise = (institution, indicatorValue) => () => {
                 if (userCache[institution.user_id]) {
                   return Promise.resolve().then(() => {
-                    results[lastIndex].institution_name = userCache[institution.user_id];
-                    const index = results[lastIndex].indicators.findIndex((item) => {
-                      return item.reported_year === result.reported_year;
-                    });
-                    return results[lastIndex].indicators[index].indicator = result.indicator;
+                    return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
                   });
                 } else {
                   return admin.auth().getUser(institution.user_id)
                     .then(userRecord => {
-                      results[lastIndex].institution_name = userRecord.displayName;
-                      userCache[userRecord.uid] = userRecord.displayName;
-                      // console.log('tiki');
-                      const index = results[lastIndex].indicators.findIndex((item) => {
-                        return item.reported_year === result.reported_year;
-                      });
-                      return results[lastIndex].indicators[index].indicator = result.indicator;
+                      userCache[institution.user_id] = userRecord.displayName;
+                      return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
                     })
                     .catch(error => {
                       console.log('Error getting user', error);
@@ -109,14 +89,20 @@ function financiamientoAnual(req, res, data) {
                 }
               };
 
-              promiseChain = promiseChain.then(makeNextPromise(institutions[i], result));
+              promiseChain = promiseChain.then(makeNextPromise(institutions[i], indicatorValue));
             }
           }
         }
 
         promiseChain.then(() => {
-          data.results = results;
-          console.log(results[0]);
+          data.chart_results = results;
+          data.table_results = tableResults(results, userCache);
+          data.institution_names = Object.values(userCache);
+          console.log(data.chart_results, data.table_results[0]);
+          return res.render('select-report', data);
+        }).catch(err => {
+          console.log('Error getting document', err);
+          data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
           return res.render('select-report', data);
         });
       }
@@ -129,4 +115,23 @@ function financiamientoAnual(req, res, data) {
     data.error = 'Rango de años invalido. (0 <= rango <= 10)';
     return res.render('select-report', data);
   }
+}
+
+function tableResults(chartResults, userCache) {
+  let tableResults = [];
+  const institutionNames = Object.values(userCache);
+  for (let i = 0; i < institutionNames.length; i++) {
+    let result = { institution_name: institutionNames[i], indicators: [] };
+    for (let j = 0; j < chartResults.length; j++) {
+      let indicator = { reported_year: chartResults[j].reported_year };
+      const indicatorValue = chartResults[j][result.institution_name];
+      if (indicatorValue)
+        indicator.value = indicatorValue;
+      // console.log(indicator);
+      result.indicators.push(indicator);
+    }
+    tableResults.push(result);
+  }
+
+  return tableResults;
 }

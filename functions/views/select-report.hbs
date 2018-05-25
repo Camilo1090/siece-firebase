@@ -284,29 +284,31 @@
 
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", () => {
-        let chart = new Morris.Line({
-          element: 'chart',
-          data: [
-            {{#each chart_results}}
-              {
-                {{#each this}}
-                  '{{@key}}': '{{this}}',
-                {{/each}}
-              },
-            {{/each}}
-          ],
-          xkey: 'reported_year',
-          ykeys: [
-            {{#each institution_names}}
-              '{{this}}',
-            {{/each}}
-          ],
-          labels: [
-            {{#each institution_names}}
-              '{{this}}',
-            {{/each}}
-          ]
-        });
+        {{#if chart_results.[0].institution_name}}
+          let chart = new Morris.Line({
+            element: 'chart',
+            data: [
+              {{#each chart_results}}
+                {
+                  {{#each this}}
+                    '{{@key}}': '{{this}}',
+                  {{/each}}
+                },
+              {{/each}}
+            ],
+            xkey: 'reported_year',
+            ykeys: [
+              {{#each institution_names}}
+                '{{this}}',
+              {{/each}}
+            ],
+            labels: [
+              {{#each institution_names}}
+                '{{this}}',
+              {{/each}}
+            ]
+          });
+        {{/if}}
       });
     </script>
   </body>

@@ -94,11 +94,11 @@ function financiamientoAnual(req, res, data) {
           }
         }
 
-        promiseChain.then(() => {
+        return promiseChain.then(() => {
           data.chart_results = results;
           data.table_results = tableResults(results, userCache);
           data.institution_names = Object.values(userCache);
-          console.log(data.chart_results, data.table_results[0]);
+          console.log(data.chart_results, data.table_results);
           return res.render('select-report', data);
         }).catch(err => {
           console.log('Error getting document', err);

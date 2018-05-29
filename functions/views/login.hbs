@@ -122,6 +122,7 @@
           const auth = firebase.auth();
           auth.signInWithEmailAndPassword(email, pass)
               .then(() => {
+                // checkCookie();
                 console.log('logged in');
                 // sendToken().then(() => { console.log('success') }).catch((e => console.log(e)))
               })
@@ -165,13 +166,13 @@
           }
         }
 
-        // firebase.auth().onAuthStateChanged(firebaseUser => {
-        //   if (firebaseUser) {
-        //     console.log(firebaseUser);
-        //   } else {
-        //     console.log('not logged in');
-        //   }
-        // })
+        firebase.auth().onAuthStateChanged(firebaseUser => {
+          if (firebaseUser) {
+            console.log(firebaseUser);
+          } else {
+            console.log('not logged in');
+          }
+        })
 
       }());
     </script>

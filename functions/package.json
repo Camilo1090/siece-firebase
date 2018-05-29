@@ -7,10 +7,12 @@
     "shell": "firebase experimental:functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "prepare": "babel ./controllers/es7 --retain-lines -d ./controllers/es5"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-runtime": "^6.26.0",
     "consolidate": "^0.15.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
@@ -22,6 +24,11 @@
     "i18n-iso-countries": "^3.6.3"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^4.12.0",
     "eslint-plugin-promise": "^3.6.0"
   },

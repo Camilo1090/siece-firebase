@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-const indexController = require('./controllers/index.controller');
-const formController = require('./controllers/form.controller');
-const profileController = require('./controllers/profile.controller');
-const reportsController = require('./controllers/reports.controller');
+let dir = 'es7';
+if (process.env['NODE_ENV'] === 'production')
+  dir = 'es5';
+
+const indexController = require('./controllers/'+dir+'/index.controller');
+const formController = require('./controllers/'+dir+'/form.controller');
+const profileController = require('./controllers/'+dir+'/profile.controller');
+const reportsController = require('./controllers/'+dir+'/reports.controller');
+
 
 module.exports = (app, authentication) => {
   router.use(authentication);
@@ -57,7 +62,7 @@ module.exports = (app, authentication) => {
   router.get('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.getForms(req, res);
+      return formController.getReports(req, res);
     else
       return res.redirect('/login');
   });
@@ -65,7 +70,7 @@ module.exports = (app, authentication) => {
   router.post('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.createForm(req, res);
+      return formController.createReport(req, res);
     else
       return res.redirect('/login');
   });
@@ -73,7 +78,7 @@ module.exports = (app, authentication) => {
   router.get('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.getForm(req, res);
+      return formController.getReport(req, res);
     else
       return res.redirect('/login');
   });
@@ -81,7 +86,7 @@ module.exports = (app, authentication) => {
   router.post('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.processForm(req, res);
+      return formController.processReport(req, res);
     else
       return res.redirect('/login');
   });

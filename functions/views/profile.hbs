@@ -56,14 +56,16 @@
                     <a href="index"><i class="fa fa-home"></i> Dashboard</a>
                   </li>
                   <li>
-                    <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
-                  </li>
-                  <li>
-                    <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
-                  </li>
-                  <li>
                     <a href="indicadores"><i class="fa fa-bar-chart"></i> Indicadores</a>
                   </li>
+                  {{#if user}}
+                    <li>
+                      <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
+                    </li>
+                    <li>
+                      <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
+                    </li>
+                  {{/if}}
                 </ul>
               </div>
             </div>
@@ -105,6 +107,11 @@
                     {{success}}
                   </div>
                 {{/if}}
+                {{#if warning}}
+                  <div id="message" class="alert alert-warning" role="alert">
+                    {{warning}}
+                  </div>
+                {{/if}}
                 {{#if error}}
                   <div id="message" class="alert alert-danger" role="alert">
                     {{error}}
@@ -117,7 +124,7 @@
                   </div>
                   <div class="x_content">
                     <div class="col-xs-12">
-                      <form id="demo-form2" class=" form-label-left" method="post">
+                      <form id="demo-form2" data-parsley-validate class=" form-label-left" method="post">
                         <div class="form-group">
                           <label class="col-xs-12" for="user_email">Correo Electrónico</label>
                           <div class="col-md-6 col-sm-6 col-xs-12">
@@ -127,7 +134,419 @@
                         <div class="form-group">
                           <label class="col-xs-12 pt" for="user_name">Nombre de la Institución</label>
                           <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="user_name" class="form-control" type="text" value="{{user.displayName}}" name="institution_name">
+                            <input id="user_name" class="form-control" type="text" value="{{institution.name}}" name="institution_name" required>
+                          </div>
+                        </div>
+                        <!-- pregunta 2 -->
+                        <div class="form-group">
+                          <label class="col-xs-12 control-label pt">
+                            Tipo de organización de Credito Educativo (C.E.)
+                            <span id="tooltip" class="tool" data-tip="1. Entidad pública o privada que ofrece solo crédito educativo y/o becas.&#013;
+                                2. Puede ser ofrecido por una organización distinta a una institución de crédito educativo.&#013;
+                                3. Es ofrecido por una organización que tiene varias líneas de crédito, y una de ellas es de crédito educativo."
+                                  tabindex="1">
+                            <i class="fa fa-question-circle"></i>
+                          </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="institucion" id="type_institucion" name="type" required>
+                                Institución de Crédito Educativo
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="programa" id="type_programa" name="type" required>
+                                Programa de Crédito Educativo
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="servicio" id="type_servicio" name="type" required>
+                                Servicio de Crédito Educativo
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="otra" id="type_otra" name="type" required>
+                                Otra
+                              </label>
+                              <label for="type_other"></label>
+                              <input type="text" disabled id="type_other" name="type_other">
+                            </div>
+                          </div>
+                        </div>
+                        <!-- pregunta 3 -->
+                        <div class="form-group">
+                          <label class="col-xs-12 control-label pt">
+                            Carácter de la Institución, Programa o Servicio de Crédito Educativo, IPSCE
+                            <span id="tooltip" class="tool" data-tip="Marcar la opción correspondiente, de acuerdo con el documento oficial de constitución de la organización."
+                                  tabindex="1">
+                            <i class="fa fa-question-circle"></i>
+                          </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="publica" id="character_publica" name="character" required>
+                                Pública
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="privada" id="character_privada" name="character" required>
+                                Privada
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="privada_sin_lucro" id="character_privada_sin_lucro" name="character" required>
+                                Privada sin fines de lucro
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="mixta" id="character_mixta" name="character" required>
+                                Mixta (Privada, Pública)
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="cooperativa" id="character_cooperativa" name="character" required>
+                                Cooperativa
+                              </label>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="otra" id="character_otra" name="character" required>
+                                Otra
+                              </label>
+                              <label for="character_other"></label>
+                              <input type="text" disabled id="character_other" name="character_other">
+                            </div>
+                          </div>
+                        </div>
+                        <!-- pregunta 4 -->
+                        <div class="form-group">
+                          <label class="control-label col-xs-12 pt" for="country">
+                            País de origen de la IPSCE
+                            <span id="tooltip" class="tool" data-tip="Nombre del país donde aparece registrada original y legalmente la organización."
+                                  tabindex="1">
+                            <i class="fa fa-question-circle"></i>
+                          </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select class="select2_single form-control" id="country" tabindex="-1" name="country" required>
+                              <option></option>
+                              <option value="AF">Afganistán</option>
+                              <option value="AL">Albania</option>
+                              <option value="DE">Alemania</option>
+                              <option value="AD">Andorra</option>
+                              <option value="AO">Angola</option>
+                              <option value="AI">Anguilla</option>
+                              <option value="AQ">Antártida</option>
+                              <option value="AG">Antigua y Barbuda</option>
+                              <option value="AN">Antillas Holandesas</option>
+                              <option value="SA">Arabia Saudí</option>
+                              <option value="DZ">Argelia</option>
+                              <option value="AR">Argentina</option>
+                              <option value="AM">Armenia</option>
+                              <option value="AW">Aruba</option>
+                              <option value="AU">Australia</option>
+                              <option value="AT">Austria</option>
+                              <option value="AZ">Azerbaiyán</option>
+                              <option value="BS">Bahamas</option>
+                              <option value="BH">Bahrein</option>
+                              <option value="BD">Bangladesh</option>
+                              <option value="BB">Barbados</option>
+                              <option value="BE">Bélgica</option>
+                              <option value="BZ">Belice</option>
+                              <option value="BJ">Benin</option>
+                              <option value="BM">Bermudas</option>
+                              <option value="BY">Bielorrusia</option>
+                              <option value="MM">Birmania</option>
+                              <option value="BO">Bolivia</option>
+                              <option value="BA">Bosnia y Herzegovina</option>
+                              <option value="BW">Botswana</option>
+                              <option value="BR">Brasil</option>
+                              <option value="BN">Brunei</option>
+                              <option value="BG">Bulgaria</option>
+                              <option value="BF">Burkina Faso</option>
+                              <option value="BI">Burundi</option>
+                              <option value="BT">Bután</option>
+                              <option value="CV">Cabo Verde</option>
+                              <option value="KH">Camboya</option>
+                              <option value="CM">Camerún</option>
+                              <option value="CA">Canadá</option>
+                              <option value="TD">Chad</option>
+                              <option value="CL">Chile</option>
+                              <option value="CN">China</option>
+                              <option value="CY">Chipre</option>
+                              <option value="VA">Ciudad del Vaticano (Santa Sede)</option>
+                              <option value="CO">Colombia</option>
+                              <option value="KM">Comores</option>
+                              <option value="CG">Congo</option>
+                              <option value="CD">Congo, República Democrática del</option>
+                              <option value="KR">Corea</option>
+                              <option value="KP">Corea del Norte</option>
+                              <option value="CI">Costa de Marfíl</option>
+                              <option value="CR">Costa Rica</option>
+                              <option value="HR">Croacia (Hrvatska)</option>
+                              <option value="CU">Cuba</option>
+                              <option value="DK">Dinamarca</option>
+                              <option value="DJ">Djibouti</option>
+                              <option value="DM">Dominica</option>
+                              <option value="EC">Ecuador</option>
+                              <option value="EG">Egipto</option>
+                              <option value="SV">El Salvador</option>
+                              <option value="AE">Emiratos Árabes Unidos</option>
+                              <option value="ER">Eritrea</option>
+                              <option value="SI">Eslovenia</option>
+                              <option value="ES">España</option>
+                              <option value="US">Estados Unidos</option>
+                              <option value="EE">Estonia</option>
+                              <option value="ET">Etiopía</option>
+                              <option value="FJ">Fiji</option>
+                              <option value="PH">Filipinas</option>
+                              <option value="FI">Finlandia</option>
+                              <option value="FR">Francia</option>
+                              <option value="GA">Gabón</option>
+                              <option value="GM">Gambia</option>
+                              <option value="GE">Georgia</option>
+                              <option value="GH">Ghana</option>
+                              <option value="GI">Gibraltar</option>
+                              <option value="GD">Granada</option>
+                              <option value="GR">Grecia</option>
+                              <option value="GL">Groenlandia</option>
+                              <option value="GP">Guadalupe</option>
+                              <option value="GU">Guam</option>
+                              <option value="GT">Guatemala</option>
+                              <option value="GY">Guayana</option>
+                              <option value="GF">Guayana Francesa</option>
+                              <option value="GN">Guinea</option>
+                              <option value="GQ">Guinea Ecuatorial</option>
+                              <option value="GW">Guinea-Bissau</option>
+                              <option value="HT">Haití</option>
+                              <option value="HN">Honduras</option>
+                              <option value="HU">Hungría</option>
+                              <option value="IN">India</option>
+                              <option value="ID">Indonesia</option>
+                              <option value="IQ">Irak</option>
+                              <option value="IR">Irán</option>
+                              <option value="IE">Irlanda</option>
+                              <option value="BV">Isla Bouvet</option>
+                              <option value="CX">Isla de Christmas</option>
+                              <option value="IS">Islandia</option>
+                              <option value="KY">Islas Caimán</option>
+                              <option value="CK">Islas Cook</option>
+                              <option value="CC">Islas de Cocos o Keeling</option>
+                              <option value="FO">Islas Faroe</option>
+                              <option value="HM">Islas Heard y McDonald</option>
+                              <option value="FK">Islas Malvinas</option>
+                              <option value="MP">Islas Marianas del Norte</option>
+                              <option value="MH">Islas Marshall</option>
+                              <option value="UM">Islas menores de Estados Unidos</option>
+                              <option value="PW">Islas Palau</option>
+                              <option value="SB">Islas Salomón</option>
+                              <option value="SJ">Islas Svalbard y Jan Mayen</option>
+                              <option value="TK">Islas Tokelau</option>
+                              <option value="TC">Islas Turks y Caicos</option>
+                              <option value="VI">Islas Vírgenes (EEUU)</option>
+                              <option value="VG">Islas Vírgenes (Reino Unido)</option>
+                              <option value="WF">Islas Wallis y Futuna</option>
+                              <option value="IL">Israel</option>
+                              <option value="IT">Italia</option>
+                              <option value="JM">Jamaica</option>
+                              <option value="JP">Japón</option>
+                              <option value="JO">Jordania</option>
+                              <option value="KZ">Kazajistán</option>
+                              <option value="KE">Kenia</option>
+                              <option value="KG">Kirguizistán</option>
+                              <option value="KI">Kiribati</option>
+                              <option value="KW">Kuwait</option>
+                              <option value="LA">Laos</option>
+                              <option value="LS">Lesotho</option>
+                              <option value="LV">Letonia</option>
+                              <option value="LB">Líbano</option>
+                              <option value="LR">Liberia</option>
+                              <option value="LY">Libia</option>
+                              <option value="LI">Liechtenstein</option>
+                              <option value="LT">Lituania</option>
+                              <option value="LU">Luxemburgo</option>
+                              <option value="MK">Macedonia, Ex-República Yugoslava de</option>
+                              <option value="MG">Madagascar</option>
+                              <option value="MY">Malasia</option>
+                              <option value="MW">Malawi</option>
+                              <option value="MV">Maldivas</option>
+                              <option value="ML">Malí</option>
+                              <option value="MT">Malta</option>
+                              <option value="MA">Marruecos</option>
+                              <option value="MQ">Martinica</option>
+                              <option value="MU">Mauricio</option>
+                              <option value="MR">Mauritania</option>
+                              <option value="YT">Mayotte</option>
+                              <option value="MX">México</option>
+                              <option value="FM">Micronesia</option>
+                              <option value="MD">Moldavia</option>
+                              <option value="MC">Mónaco</option>
+                              <option value="MN">Mongolia</option>
+                              <option value="MS">Montserrat</option>
+                              <option value="MZ">Mozambique</option>
+                              <option value="NA">Namibia</option>
+                              <option value="NR">Nauru</option>
+                              <option value="NP">Nepal</option>
+                              <option value="NI">Nicaragua</option>
+                              <option value="NE">Níger</option>
+                              <option value="NG">Nigeria</option>
+                              <option value="NU">Niue</option>
+                              <option value="NF">Norfolk</option>
+                              <option value="NO">Noruega</option>
+                              <option value="NC">Nueva Caledonia</option>
+                              <option value="NZ">Nueva Zelanda</option>
+                              <option value="OM">Omán</option>
+                              <option value="NL">Países Bajos</option>
+                              <option value="PA">Panamá</option>
+                              <option value="PG">Papúa Nueva Guinea</option>
+                              <option value="PK">Paquistán</option>
+                              <option value="PY">Paraguay</option>
+                              <option value="PE">Perú</option>
+                              <option value="PN">Pitcairn</option>
+                              <option value="PF">Polinesia Francesa</option>
+                              <option value="PL">Polonia</option>
+                              <option value="PT">Portugal</option>
+                              <option value="PR">Puerto Rico</option>
+                              <option value="QA">Qatar</option>
+                              <option value="UK">Reino Unido</option>
+                              <option value="CF">República Centroafricana</option>
+                              <option value="CZ">República Checa</option>
+                              <option value="ZA">República de Sudáfrica</option>
+                              <option value="DO">República Dominicana</option>
+                              <option value="SK">República Eslovaca</option>
+                              <option value="RE">Reunión</option>
+                              <option value="RW">Ruanda</option>
+                              <option value="RO">Rumania</option>
+                              <option value="RU">Rusia</option>
+                              <option value="EH">Sahara Occidental</option>
+                              <option value="KN">Saint Kitts y Nevis</option>
+                              <option value="WS">Samoa</option>
+                              <option value="AS">Samoa Americana</option>
+                              <option value="SM">San Marino</option>
+                              <option value="VC">San Vicente y Granadinas</option>
+                              <option value="SH">Santa Helena</option>
+                              <option value="LC">Santa Lucía</option>
+                              <option value="ST">Santo Tomé y Príncipe</option>
+                              <option value="SN">Senegal</option>
+                              <option value="SC">Seychelles</option>
+                              <option value="SL">Sierra Leona</option>
+                              <option value="SG">Singapur</option>
+                              <option value="SY">Siria</option>
+                              <option value="SO">Somalia</option>
+                              <option value="LK">Sri Lanka</option>
+                              <option value="PM">St Pierre y Miquelon</option>
+                              <option value="SZ">Suazilandia</option>
+                              <option value="SD">Sudán</option>
+                              <option value="SE">Suecia</option>
+                              <option value="CH">Suiza</option>
+                              <option value="SR">Surinam</option>
+                              <option value="TH">Tailandia</option>
+                              <option value="TW">Taiwán</option>
+                              <option value="TZ">Tanzania</option>
+                              <option value="TJ">Tayikistán</option>
+                              <option value="TF">Territorios franceses del Sur</option>
+                              <option value="TP">Timor Oriental</option>
+                              <option value="TG">Togo</option>
+                              <option value="TO">Tonga</option>
+                              <option value="TT">Trinidad y Tobago</option>
+                              <option value="TN">Túnez</option>
+                              <option value="TM">Turkmenistán</option>
+                              <option value="TR">Turquía</option>
+                              <option value="TV">Tuvalu</option>
+                              <option value="UA">Ucrania</option>
+                              <option value="UG">Uganda</option>
+                              <option value="UY">Uruguay</option>
+                              <option value="UZ">Uzbekistán</option>
+                              <option value="VU">Vanuatu</option>
+                              <option value="VE">Venezuela</option>
+                              <option value="VN">Vietnam</option>
+                              <option value="YE">Yemen</option>
+                              <option value="YU">Yugoslavia</option>
+                              <option value="ZM">Zambia</option>
+                              <option value="ZW">Zimbabue</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- pregunta 5 -->
+                        <div class="form-group">
+                          <label class="control-label col-xs-12 pt" for="foundation_year">
+                            Año de origen de la IPSCE
+                            <span id="tooltip" class="tool" data-tip="Se debe indicar el año de inicio de la Institución, Programa o Servicio de crédito educativo."
+                                  tabindex="1">
+                            <i class="fa fa-question-circle"></i>
+                          </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="foundation_year" name="foundation_year" class="form-control"
+                                   min="1800" max="2018" step="1" required>
+                          </div>
+                        </div>
+                        <!-- pregunta 6 -->
+                        <div class="form-group">
+                          <label class="control-label col-xs-12 pt">
+                            Nombre y cargo del representante de la IPSCE
+                            <span id="tooltip" class="tool" data-tip="Persona que dirige oficialmente la institución, programa o servicio de crédito educativo."
+                                  tabindex="1">
+                            <i class="fa fa-question-circle"></i>
+                          </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-xs-6">
+                              <label class="control-label" for="representative_name">Nombre: </label>
+                              <input type="text" id="representative_name" class="form-control" name="representative_name" required>
+                            </div>
+                            <div class="col-xs-6">
+                              <label class="control-label" for="representative_position">Cargo: </label>
+                              <input type="text" id="representative_position" class="form-control" name="representative_position" required>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- pregunta 7 -->
+                        <div class="form-group">
+                          <label class="control-label col-xs-12 pt" for="employees">
+                            Número de empleados actuales, dedicados a atender el Crédito Educativo
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="employees" name="employees" class="form-control" min="0" step="1" required>
+                          </div>
+                        </div>
+                        <!-- pregunta 8 -->
+                        <div class="form-group">
+                          <label class="col-xs-12 control-label pt">
+                            ¿Cuenta la IPSCE con plataforma tecnológica para administrar el Crédito Educativo?
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="si" id="has_platform_si" name="has_platform" required>
+                                Sí
+                              </label>
+                              <div class="ml-2">
+                                <label>
+                                  <input type="radio" value="propia" id="platform_ownership_propia" name="platform_ownership" disabled>
+                                  Es propia
+                                </label>
+                                <label>
+                                  <input type="radio" value="terceros" id="platform_ownership_terceros" name="platform_ownership" disabled>
+                                  De terceros
+                                </label>
+                              </div>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="no" id="has_platform_no" name="has_platform" required>
+                                No
+                              </label>
+                            </div>
                           </div>
                         </div>
                         <div class="col-xs-12 pt">
@@ -163,6 +582,75 @@
     
     <!-- Custom Theme Scripts -->
     <script src="custom.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("input:radio[name=type]").change(function () {
+        let textField = $("#type_other");
+        textField.val("").attr("disabled", true).removeAttr("required");
+        if ($("#type_otra").is(":checked")) {
+          textField.removeAttr("disabled").attr("required", true).focus();
+        }
+      });
+
+      $("input:radio[name=character]").change(function () {
+        let textField = $("#character_other");
+        textField.val("").attr("disabled", true).removeAttr("required");
+        if ($("#character_otra").is(":checked")) {
+          textField.removeAttr("disabled").attr("required", true).focus();
+        }
+      });
+
+      $("input:radio[name=has_platform]").change(function () {
+        $("#platform_ownership_propia, #platform_ownership_terceros").attr("disabled", true).removeAttr("required").removeAttr("checked");
+        if ($("#has_platform_si").is(":checked")) {
+          $("#platform_ownership_propia, #platform_ownership_terceros").attr("required", true).removeAttr("disabled");
+        }
+      });
+
+      {{#if institution.type}}
+        $("#type_{{institution.type.name}}").attr("checked", true);
+        if ($("#type_otra").is(":checked"))
+          $("#type_other").val("{{institution.type.other}}").removeAttr("disabled").attr("required", true);
+      {{/if}}
+
+      {{#if institution.character}}
+        $("#character_{{institution.character.name}}").attr("checked", true);
+        if ($("#character_otra").is(":checked"))
+          $("#character_other").val("{{institution.character.other}}").removeAttr("disabled").attr("required", true);
+      {{/if}}
+
+      {{#if institution.country}}
+        $("#country option[value={{institution.country}}]").attr("selected", true);
+      {{/if}}
+
+      {{#if institution.foundation_year}}
+        $("#foundation_year").val("{{institution.foundation_year}}");
+      {{/if}}
+
+      {{#if institution.representative_name}}
+        $("#representative_name").val("{{institution.representative_name}}");
+      {{/if}}
+
+      {{#if institution.representative_position}}
+        $("#representative_position").val("{{institution.representative_position}}");
+      {{/if}}
+
+      {{#if institution.employees}}
+        $("#employees").val("{{institution.employees}}");
+      {{/if}}
+
+      {{#if institution.has_platform}}
+        $("#has_platform_{{institution.has_platform}}").attr("checked", true);
+        if ($("#has_platform_si").is(":checked")) {
+          $("#platform_ownership_propia, #platform_ownership_terceros").attr("required", true).removeAttr("disabled");
+          if ("{{institution.platform_ownership}}".length > 0) {
+            $("#platform_ownership_{{institution.platform_ownership}}").attr("checked", true);
+          }
+        }
+      {{/if}}
+    });
+  </script>
 
   </body>
 <!--</html>-->

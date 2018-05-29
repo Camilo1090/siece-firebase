@@ -65,14 +65,16 @@
                       <a href="index"><i class="fa fa-home"></i> Dashboard</a>
                     </li>
                     <li>
-                      <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
-                    </li>
-                    <li>
-                      <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
-                    </li>
-                    <li>
                       <a href="indicadores"><i class="fa fa-bar-chart"></i> Indicadores</a>
                     </li>
+                    {{#if user}}
+                      <li>
+                        <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
+                      </li>
+                      <li>
+                        <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
+                      </li>
+                    {{/if}}
                   </ul>
               </div>
             </div>
@@ -145,431 +147,16 @@
                     <br />
                       <!-- MAIN FORM -->
                     <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="post">
-                      <!-- pregunta 1 -->
                       <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-                          1. Nombre completo de la Institución
-                        </label>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">Nombre de la Institución</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="text" id="name" class="form-control" readonly="readonly" value="{{ user.displayName }}">
-                        </div>
-                      </div>
-                      <!-- pregunta 2 -->
-                      <div class="form-group">
-                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          2. Tipo de organización de Credito Educativo (C.E.)
-                          <span id="tooltip" class="tool" data-tip="1. Entidad pública o privada que ofrece solo crédito educativo y/o becas.&#013;
-                                2. Puede ser ofrecido por una organización distinta a una institución de crédito educativo.&#013;
-                                3. Es ofrecido por una organización que tiene varias líneas de crédito, y una de ellas es de crédito educativo."
-                                tabindex="1">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
-                        </label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="institucion" id="type_institucion" name="type">
-                              Institución de Crédito Educativo
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="programa" id="type_programa" name="type">
-                              Programa de Crédito Educativo
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="servicio" id="type_servicio" name="type">
-                              Servicio de Crédito Educativo
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="otra" id="type_otra" name="type">
-                              Otra
-                            </label>
-                            <label for="type_other"></label>
-                            <input type="text" disabled id="type_other" name="type_other">
-                          </div>
-                        </div>
-                      </div>
-                      <!-- pregunta 3 -->
-                      <div class="form-group">
-                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          3. Carácter de la Institución, Programa o Servicio de Crédito Educativo, IPSCE
-                          <span id="tooltip" class="tool" data-tip="Marcar la opción correspondiente, de acuerdo con el documento oficial de constitución de la organización."
-                                tabindex="1">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
-                        </label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="publica" id="character_publica" name="character">
-                              Pública
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="privada" id="character_privada" name="character">
-                              Privada
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="privada_sin_lucro" id="character_privada_sin_lucro" name="character">
-                              Privada sin fines de lucro
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="mixta" id="character_mixta" name="character">
-                              Mixta (Privada, Pública)
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="cooperativa" id="character_cooperativa" name="character">
-                              Cooperativa
-                            </label>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="otra" id="character_otra" name="character">
-                              Otra
-                            </label>
-                            <label for="character_other"></label>
-                            <input type="text" disabled id="character_other" name="character_other">
-                          </div>
-                        </div>
-                      </div>
-                      <!-- pregunta 4 -->
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="country">
-                          4. País de origen de la IPSCE
-                          <span id="tooltip" class="tool" data-tip="Nombre del país donde aparece registrada original y legalmente la organización."
-                                tabindex="1">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="select2_single form-control" id="country" tabindex="-1" name="country">
-                            <option></option>
-                            <option value="AF">Afganistán</option>
-                            <option value="AL">Albania</option>
-                            <option value="DE">Alemania</option>
-                            <option value="AD">Andorra</option>
-                            <option value="AO">Angola</option>
-                            <option value="AI">Anguilla</option>
-                            <option value="AQ">Antártida</option>
-                            <option value="AG">Antigua y Barbuda</option>
-                            <option value="AN">Antillas Holandesas</option>
-                            <option value="SA">Arabia Saudí</option>
-                            <option value="DZ">Argelia</option>
-                            <option value="AR">Argentina</option>
-                            <option value="AM">Armenia</option>
-                            <option value="AW">Aruba</option>
-                            <option value="AU">Australia</option>
-                            <option value="AT">Austria</option>
-                            <option value="AZ">Azerbaiyán</option>
-                            <option value="BS">Bahamas</option>
-                            <option value="BH">Bahrein</option>
-                            <option value="BD">Bangladesh</option>
-                            <option value="BB">Barbados</option>
-                            <option value="BE">Bélgica</option>
-                            <option value="BZ">Belice</option>
-                            <option value="BJ">Benin</option>
-                            <option value="BM">Bermudas</option>
-                            <option value="BY">Bielorrusia</option>
-                            <option value="MM">Birmania</option>
-                            <option value="BO">Bolivia</option>
-                            <option value="BA">Bosnia y Herzegovina</option>
-                            <option value="BW">Botswana</option>
-                            <option value="BR">Brasil</option>
-                            <option value="BN">Brunei</option>
-                            <option value="BG">Bulgaria</option>
-                            <option value="BF">Burkina Faso</option>
-                            <option value="BI">Burundi</option>
-                            <option value="BT">Bután</option>
-                            <option value="CV">Cabo Verde</option>
-                            <option value="KH">Camboya</option>
-                            <option value="CM">Camerún</option>
-                            <option value="CA">Canadá</option>
-                            <option value="TD">Chad</option>
-                            <option value="CL">Chile</option>
-                            <option value="CN">China</option>
-                            <option value="CY">Chipre</option>
-                            <option value="VA">Ciudad del Vaticano (Santa Sede)</option>
-                            <option value="CO">Colombia</option>
-                            <option value="KM">Comores</option>
-                            <option value="CG">Congo</option>
-                            <option value="CD">Congo, República Democrática del</option>
-                            <option value="KR">Corea</option>
-                            <option value="KP">Corea del Norte</option>
-                            <option value="CI">Costa de Marfíl</option>
-                            <option value="CR">Costa Rica</option>
-                            <option value="HR">Croacia (Hrvatska)</option>
-                            <option value="CU">Cuba</option>
-                            <option value="DK">Dinamarca</option>
-                            <option value="DJ">Djibouti</option>
-                            <option value="DM">Dominica</option>
-                            <option value="EC">Ecuador</option>
-                            <option value="EG">Egipto</option>
-                            <option value="SV">El Salvador</option>
-                            <option value="AE">Emiratos Árabes Unidos</option>
-                            <option value="ER">Eritrea</option>
-                            <option value="SI">Eslovenia</option>
-                            <option value="ES">España</option>
-                            <option value="US">Estados Unidos</option>
-                            <option value="EE">Estonia</option>
-                            <option value="ET">Etiopía</option>
-                            <option value="FJ">Fiji</option>
-                            <option value="PH">Filipinas</option>
-                            <option value="FI">Finlandia</option>
-                            <option value="FR">Francia</option>
-                            <option value="GA">Gabón</option>
-                            <option value="GM">Gambia</option>
-                            <option value="GE">Georgia</option>
-                            <option value="GH">Ghana</option>
-                            <option value="GI">Gibraltar</option>
-                            <option value="GD">Granada</option>
-                            <option value="GR">Grecia</option>
-                            <option value="GL">Groenlandia</option>
-                            <option value="GP">Guadalupe</option>
-                            <option value="GU">Guam</option>
-                            <option value="GT">Guatemala</option>
-                            <option value="GY">Guayana</option>
-                            <option value="GF">Guayana Francesa</option>
-                            <option value="GN">Guinea</option>
-                            <option value="GQ">Guinea Ecuatorial</option>
-                            <option value="GW">Guinea-Bissau</option>
-                            <option value="HT">Haití</option>
-                            <option value="HN">Honduras</option>
-                            <option value="HU">Hungría</option>
-                            <option value="IN">India</option>
-                            <option value="ID">Indonesia</option>
-                            <option value="IQ">Irak</option>
-                            <option value="IR">Irán</option>
-                            <option value="IE">Irlanda</option>
-                            <option value="BV">Isla Bouvet</option>
-                            <option value="CX">Isla de Christmas</option>
-                            <option value="IS">Islandia</option>
-                            <option value="KY">Islas Caimán</option>
-                            <option value="CK">Islas Cook</option>
-                            <option value="CC">Islas de Cocos o Keeling</option>
-                            <option value="FO">Islas Faroe</option>
-                            <option value="HM">Islas Heard y McDonald</option>
-                            <option value="FK">Islas Malvinas</option>
-                            <option value="MP">Islas Marianas del Norte</option>
-                            <option value="MH">Islas Marshall</option>
-                            <option value="UM">Islas menores de Estados Unidos</option>
-                            <option value="PW">Islas Palau</option>
-                            <option value="SB">Islas Salomón</option>
-                            <option value="SJ">Islas Svalbard y Jan Mayen</option>
-                            <option value="TK">Islas Tokelau</option>
-                            <option value="TC">Islas Turks y Caicos</option>
-                            <option value="VI">Islas Vírgenes (EEUU)</option>
-                            <option value="VG">Islas Vírgenes (Reino Unido)</option>
-                            <option value="WF">Islas Wallis y Futuna</option>
-                            <option value="IL">Israel</option>
-                            <option value="IT">Italia</option>
-                            <option value="JM">Jamaica</option>
-                            <option value="JP">Japón</option>
-                            <option value="JO">Jordania</option>
-                            <option value="KZ">Kazajistán</option>
-                            <option value="KE">Kenia</option>
-                            <option value="KG">Kirguizistán</option>
-                            <option value="KI">Kiribati</option>
-                            <option value="KW">Kuwait</option>
-                            <option value="LA">Laos</option>
-                            <option value="LS">Lesotho</option>
-                            <option value="LV">Letonia</option>
-                            <option value="LB">Líbano</option>
-                            <option value="LR">Liberia</option>
-                            <option value="LY">Libia</option>
-                            <option value="LI">Liechtenstein</option>
-                            <option value="LT">Lituania</option>
-                            <option value="LU">Luxemburgo</option>
-                            <option value="MK">Macedonia, Ex-República Yugoslava de</option>
-                            <option value="MG">Madagascar</option>
-                            <option value="MY">Malasia</option>
-                            <option value="MW">Malawi</option>
-                            <option value="MV">Maldivas</option>
-                            <option value="ML">Malí</option>
-                            <option value="MT">Malta</option>
-                            <option value="MA">Marruecos</option>
-                            <option value="MQ">Martinica</option>
-                            <option value="MU">Mauricio</option>
-                            <option value="MR">Mauritania</option>
-                            <option value="YT">Mayotte</option>
-                            <option value="MX">México</option>
-                            <option value="FM">Micronesia</option>
-                            <option value="MD">Moldavia</option>
-                            <option value="MC">Mónaco</option>
-                            <option value="MN">Mongolia</option>
-                            <option value="MS">Montserrat</option>
-                            <option value="MZ">Mozambique</option>
-                            <option value="NA">Namibia</option>
-                            <option value="NR">Nauru</option>
-                            <option value="NP">Nepal</option>
-                            <option value="NI">Nicaragua</option>
-                            <option value="NE">Níger</option>
-                            <option value="NG">Nigeria</option>
-                            <option value="NU">Niue</option>
-                            <option value="NF">Norfolk</option>
-                            <option value="NO">Noruega</option>
-                            <option value="NC">Nueva Caledonia</option>
-                            <option value="NZ">Nueva Zelanda</option>
-                            <option value="OM">Omán</option>
-                            <option value="NL">Países Bajos</option>
-                            <option value="PA">Panamá</option>
-                            <option value="PG">Papúa Nueva Guinea</option>
-                            <option value="PK">Paquistán</option>
-                            <option value="PY">Paraguay</option>
-                            <option value="PE">Perú</option>
-                            <option value="PN">Pitcairn</option>
-                            <option value="PF">Polinesia Francesa</option>
-                            <option value="PL">Polonia</option>
-                            <option value="PT">Portugal</option>
-                            <option value="PR">Puerto Rico</option>
-                            <option value="QA">Qatar</option>
-                            <option value="UK">Reino Unido</option>
-                            <option value="CF">República Centroafricana</option>
-                            <option value="CZ">República Checa</option>
-                            <option value="ZA">República de Sudáfrica</option>
-                            <option value="DO">República Dominicana</option>
-                            <option value="SK">República Eslovaca</option>
-                            <option value="RE">Reunión</option>
-                            <option value="RW">Ruanda</option>
-                            <option value="RO">Rumania</option>
-                            <option value="RU">Rusia</option>
-                            <option value="EH">Sahara Occidental</option>
-                            <option value="KN">Saint Kitts y Nevis</option>
-                            <option value="WS">Samoa</option>
-                            <option value="AS">Samoa Americana</option>
-                            <option value="SM">San Marino</option>
-                            <option value="VC">San Vicente y Granadinas</option>
-                            <option value="SH">Santa Helena</option>
-                            <option value="LC">Santa Lucía</option>
-                            <option value="ST">Santo Tomé y Príncipe</option>
-                            <option value="SN">Senegal</option>
-                            <option value="SC">Seychelles</option>
-                            <option value="SL">Sierra Leona</option>
-                            <option value="SG">Singapur</option>
-                            <option value="SY">Siria</option>
-                            <option value="SO">Somalia</option>
-                            <option value="LK">Sri Lanka</option>
-                            <option value="PM">St Pierre y Miquelon</option>
-                            <option value="SZ">Suazilandia</option>
-                            <option value="SD">Sudán</option>
-                            <option value="SE">Suecia</option>
-                            <option value="CH">Suiza</option>
-                            <option value="SR">Surinam</option>
-                            <option value="TH">Tailandia</option>
-                            <option value="TW">Taiwán</option>
-                            <option value="TZ">Tanzania</option>
-                            <option value="TJ">Tayikistán</option>
-                            <option value="TF">Territorios franceses del Sur</option>
-                            <option value="TP">Timor Oriental</option>
-                            <option value="TG">Togo</option>
-                            <option value="TO">Tonga</option>
-                            <option value="TT">Trinidad y Tobago</option>
-                            <option value="TN">Túnez</option>
-                            <option value="TM">Turkmenistán</option>
-                            <option value="TR">Turquía</option>
-                            <option value="TV">Tuvalu</option>
-                            <option value="UA">Ucrania</option>
-                            <option value="UG">Uganda</option>
-                            <option value="UY">Uruguay</option>
-                            <option value="UZ">Uzbekistán</option>
-                            <option value="VU">Vanuatu</option>
-                            <option value="VE">Venezuela</option>
-                            <option value="VN">Vietnam</option>
-                            <option value="YE">Yemen</option>
-                            <option value="YU">Yugoslavia</option>
-                            <option value="ZM">Zambia</option>
-                            <option value="ZW">Zimbabue</option>
-                          </select>
-                        </div>
-                      </div>
-                      <!-- pregunta 5 -->
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="foundation_year">
-                          5. Año de origen de la IPSCE
-                          <span id="tooltip" class="tool" data-tip="Se debe indicar el año de inicio de la Institución, Programa o Servicio de crédito educativo."
-                                tabindex="1">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="foundation_year" name="foundation_year" class="mt-1"
-                                 min="1800" max="2018" step="1">
-                        </div>
-                      </div>
-                      <!-- pregunta 6 -->
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">
-                          6. Nombre y cargo del representante de la IPSCE
-                          <span id="tooltip" class="tool" data-tip="Persona que dirige oficialmente la institución, programa o servicio de crédito educativo."
-                                tabindex="1">
-                            <i class="fa fa-question-circle"></i>
-                          </span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="col-md-6">
-                            <label class="control-label" for="representative_name">Nombre: </label>
-                            <input type="text" id="representative_name" class="form-control" name="representative_name">
-                          </div>
-                          <div class="col-md-6">
-                            <label class="control-label" for="representative_position">Cargo: </label>
-                            <input type="text" id="representative_position" class="form-control" name="representative_position">
-                          </div>
-                        </div>
-                      </div>
-                      <!-- pregunta 7 -->
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="employees">
-                          7. Número de empleados actuales, dedicados a atender el Crédito Educativo
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="employees" name="employees" class="mt-2" min="0" step="1">
-                        </div>
-                      </div>
-                      <!-- pregunta 8 -->
-                      <div class="form-group">
-                        <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          8. ¿Cuenta la IPSCE con plataforma tecnológica para administrar el Crédito Educativo?
-                        </label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="si" id="has_platform_si" name="has_platform">
-                              Sí
-                            </label>
-                            <div class="ml-2">
-                              <label>
-                                <input type="radio" value="propia" id="platform_ownership_propia" name="platform_ownership" disabled>
-                                Es propia
-                              </label>
-                              <label>
-                                <input type="radio" value="terceros" id="platform_ownership_terceros" name="platform_ownership" disabled>
-                                De terceros
-                              </label>
-                            </div>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="no" id="has_platform_no" name="has_platform">
-                              No
-                            </label>
-                          </div>
+                          <input id="institution_name" class="form-control" type="text" value="{{user.displayName}}" readonly>
                         </div>
                       </div>
                       <!-- pregunta 9 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          9. Fuentes y montos actuales de financiamiento del Crédito Educativo en su institución
+                          1. Fuentes y montos actuales de financiamiento del Crédito Educativo en su institución
                           (USD al cierre del año fiscal). (Se pueden marcar varias opciones)
                           <span id="tooltip" class="tool" data-tip="El Monto es en Dolares Americanos a la fecha de corte (cierre del año fiscal correspondiente)."
                                 tabindex="1">
@@ -577,110 +164,136 @@
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="gubernamental" id="source_gubernamental" name="sources">
                               Recursos gubernamentales:
                             </label>
-                            <label for="source_gubernamental_amount">USD</label>
-                            <input type="number" disabled id="source_gubernamental_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_gubernamental_amount">USD</label>
+                              <input type="number" disabled id="source_gubernamental_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="privado" id="source_privado" name="sources">
                               Recursos privados:
                             </label>
-                            <label for="source_privado_amount">USD</label>
-                            <input type="number" disabled id="source_privado_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_privado_amount">USD</label>
+                              <input type="number" disabled id="source_privado_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="nacional" id="source_nacional" name="sources">
                               Créditos nacionales:
                             </label>
-                            <label for="source_nacional_amount">USD</label>
-                            <input type="number" disabled id="source_nacional_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_nacional_amount">USD</label>
+                              <input type="number" disabled id="source_nacional_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="donaciones" id="source_donaciones" name="sources">
                               Donaciones y filantropía:
                             </label>
-                            <label for="source_donaciones_amount">USD</label>
-                            <input type="number" disabled id="source_donaciones_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_donaciones_amount">USD</label>
+                              <input type="number" disabled id="source_donaciones_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="cartera" id="source_cartera" name="sources">
                               Recuperación de la cartera / cobranza:
                             </label>
-                            <label for="source_cartera_amount">USD</label>
-                            <input type="number" disabled id="source_cartera_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_cartera_amount">USD</label>
+                              <input type="number" disabled id="source_cartera_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="terceros" id="source_terceros" name="sources">
                               Adminitración de recursos de terceros:
                             </label>
-                            <label for="source_terceros_amount">USD</label>
-                            <input type="number" disabled id="source_terceros_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_terceros_amount">USD</label>
+                              <input type="number" disabled id="source_terceros_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="cooperacion" id="source_cooperacion" name="sources">
                               Fondos de cooperación (nacionales o internacionales):
                             </label>
-                            <label for="source_cooperacion_amount">USD</label>
-                            <input type="number" disabled id="source_cooperacion_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_cooperacion_amount">USD</label>
+                              <input type="number" disabled id="source_cooperacion_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="impuestos" id="source_impuestos" name="sources">
                               Impuestos, tasas y contribuciones:
                             </label>
-                            <label for="source_impuestos_amount">USD</label>
-                            <input type="number" disabled id="source_impuestos_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_impuestos_amount">USD</label>
+                              <input type="number" disabled id="source_impuestos_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="titularizacion" id="source_titularizacion" name="sources">
                               Titularización:
                             </label>
-                            <label for="source_titularizacion_amount">USD</label>
-                            <input type="number" disabled id="source_titularizacion_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_titularizacion_amount">USD</label>
+                              <input type="number" disabled id="source_titularizacion_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="propios" id="source_propios" name="sources">
                               Recursos propios:
                             </label>
-                            <label for="source_propios_amount">USD</label>
-                            <input type="number" disabled id="source_propios_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_propios_amount">USD</label>
+                              <input type="number" disabled id="source_propios_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-md-5">
                               <input type="checkbox" value="inversiones" id="source_inversiones" name="sources">
                               Recursos propios:
                             </label>
-                            <label for="source_inversiones_amount">USD</label>
-                            <input type="number" disabled id="source_inversiones_amount" name="source_amounts" min="0">
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_inversiones_amount">USD</label>
+                              <input type="number" disabled id="source_inversiones_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
-                              <input type="checkbox" value="otra" id="source_otra" name="sources">
-                              Otra
-                            </label>
-                            <label for="source_otra_name"></label>
-                            <input type="text" disabled id="source_otra_name" name="source_otra_name">
-                            <label for="source_otra_amount">USD</label>
-                            <input type="number" disabled id="source_otra_amount" name="source_amounts" min="0">
+                          <div class="checkbox col-xs-12">
+                            <div class="col-xs-12 col-md-5">
+                              <label>
+                                <input type="checkbox" value="otra" id="source_otra" name="sources">
+                                Otra
+                              </label>
+                              <label for="source_otra_name"></label>
+                              <input type="text" disabled id="source_otra_name" name="source_otra_name">
+                            </div>
+                            <div class="col-xs-12 col-md-7">
+                              <label for="source_otra_amount">USD</label>
+                              <input type="number" disabled id="source_otra_amount" name="source_amounts" min="0">
+                            </div>
                           </div>
                         </div>
                       </div>
                       <!-- pregunta 10 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          10. ¿La Organización está regulada por la Comisión Bancaria o Superintendencia financiera,
+                          2. ¿La Organización está regulada por la Comisión Bancaria o Superintendencia financiera,
                           u otra autoridad financiera?.
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -703,7 +316,7 @@
                       <!-- pregunta 11 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          11. ¿La Organización cuenta con una calificación crediticia?.
+                          3. ¿La Organización cuenta con una calificación crediticia?.
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
@@ -725,7 +338,7 @@
                       <!-- pregunta 12 -->
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="program_quantity">
-                          12. Número de Programas o Líneas de C.E. que ofrece la institución
+                          4. Número de Programas o Líneas de C.E. que ofrece la institución
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 mt-1">
                           <select class="select2_single form-control" id="program_quantity" name="program_quantity"
@@ -750,7 +363,7 @@
                       <!-- pregunta 23 -->
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="total_investment">
-                          13. Monto de los recursos invertidos en Crédito Educativo por la Institución, desde
+                          5. Monto de los recursos invertidos en Crédito Educativo por la Institución, desde
                           la fundación hasta el año que se reporta
                           <span id="tooltip" class="tool" data-tip="Se reporta el valor acumulado invertido en Crédito Educativo, desde que inició operaciones hasta el año que se informa. (USD al cierre del año fiscal)"
                                 tabindex="1">
@@ -758,51 +371,55 @@
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="total_investment" name="total_investment" class="mt-2" min="0">
+                          <input type="number" id="total_investment" name="total_investment" class="form-control mt-2" min="0">
                         </div>
                       </div>
                       <!-- pregunta 24 -->
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="total_students">
-                          14. Número total de estudiantes, con Crédito Educativo, atendidos por la institución
+                          6. Número total de estudiantes, con Crédito Educativo, atendidos por la institución
                           desde su fundación
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="total_students" name="total_students" class="mt-2" min="0" step="1">
+                          <input type="number" id="total_students" name="total_students" class="form-control mt-1" min="0" step="1">
                         </div>
                       </div>
                       <!-- pregunta 25 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          15. Monto de la cartera vigente
+                          7. Monto de la cartera vigente
                           <span id="tooltip" class="tool" data-tip="Monto total de créditos que tienen sus amortizaciones de capital y pago de intereses al día, conforme al plan de pagos establecido en los contratos de crédito. (USD al cierre del año fiscal)"
                                 tabindex="1">
                             <i class="fa fa-question-circle"></i>
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="pais" id="current_portfolio_pais" name="current_portfolio">
                               Crédito país:
                             </label>
-                            <label for="current_portfolio_pais_amount">USD</label>
-                            <input type="number" disabled id="current_portfolio_pais_amount" name="current_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="current_portfolio_pais_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_pais_amount" name="current_portfolio_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="exterior" id="current_portfolio_exterior" name="current_portfolio">
                               Crédito exterior:
                             </label>
-                            <label for="current_portfolio_exterior_amount">USD</label>
-                            <input type="number" disabled id="current_portfolio_exterior_amount" name="current_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="current_portfolio_exterior_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_exterior_amount" name="current_portfolio_amounts" min="0">
+                            </div>
                           </div>
                         </div>
                       </div>
                       <!-- pregunta 25A -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          15A. Monto de la cartera vigente por género (USD)
+                          7A. Monto de la cartera vigente por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
@@ -818,35 +435,39 @@
                       <!-- pregunta 26 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          16. Monto de la cartera vencida
+                          8. Monto de la cartera vencida
                           <span id="tooltip" class="tool" data-tip="Monto total de créditos que tienen sus amortizaciones de capital y pago de intereses con una atraso mayor a 90 dias. (USD al cierre del año fiscal)"
                                 tabindex="1">
                             <i class="fa fa-question-circle"></i>
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="pais" id="pastdue_portfolio_pais" name="pastdue_portfolio">
                               Estudios en el país:
                             </label>
-                            <label for="pastdue_portfolio_pais_amount">USD</label>
-                            <input type="number" disabled id="pastdue_portfolio_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="pastdue_portfolio_pais_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="exterior" id="pastdue_portfolio_exterior" name="pastdue_portfolio">
                               Estudios en el exterior:
                             </label>
-                            <label for="pastdue_portfolio_exterior_amount">USD</label>
-                            <input type="number" disabled id="pastdue_portfolio_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="pastdue_portfolio_exterior_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                            </div>
                           </div>
                         </div>
                       </div>
                       <!-- pregunta 26A -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          16A. Monto de la cartera vencida por género (USD)
+                          8A. Monto de la cartera vencida por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
@@ -877,35 +498,39 @@
                       <!-- pregunta 27 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          17. Monto de la cartera en ejecución
+                          9. Monto de la cartera en ejecución
                           <span id="tooltip" class="tool" data-tip="Monto total de créditos por los cuales la IPSCE ha iniciado acciones judiciales para el cobro. (USD al cierre del año fiscal)"
                                 tabindex="1">
                             <i class="fa fa-question-circle"></i>
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="pais" id="execution_portfolio_pais" name="execution_portfolio">
                               Estudios en el país:
                             </label>
-                            <label for="execution_portfolio_pais_amount">USD</label>
-                            <input type="number" disabled id="execution_portfolio_pais_amount" name="execution_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="execution_portfolio_pais_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_pais_amount" name="execution_portfolio_amounts" min="0">
+                            </div>
                           </div>
-                          <div class="checkbox">
-                            <label>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-3">
                               <input type="checkbox" value="exterior" id="execution_portfolio_exterior" name="execution_portfolio">
                               Estudios en el exterior:
                             </label>
-                            <label for="execution_portfolio_exterior_amount">USD</label>
-                            <input type="number" disabled id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-9">
+                              <label for="execution_portfolio_exterior_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0">
+                            </div>
                           </div>
                         </div>
                       </div>
                       <!-- pregunta 27A -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          17A. Monto de la cartera en ejecución por género (USD)
+                          9A. Monto de la cartera en ejecución por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
@@ -921,7 +546,7 @@
                       <!-- pregunta 28 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          18. Tipos de riesgos que se administran en su institución
+                          10. Tipos de riesgos que se administran en su institución
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox">
@@ -967,7 +592,7 @@
                       <!-- pregunta 29 -->
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="risk_increasing_actions">
-                          19. Acciones u omisiones de la institución que podrían incrementar el riesgo de
+                          11. Acciones u omisiones de la institución que podrían incrementar el riesgo de
                           incumplimiento de pagos por parte de los deudores.
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -977,7 +602,7 @@
                       <!-- pregunta 30 -->
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="risk_mitigating_actions">
-                          20. Acciones que lleva a cabo su institución para mitigar los riesgos de no pago.
+                          12. Acciones que lleva a cabo su institución para mitigar los riesgos de no pago.
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <textarea class="form-control mt-1" rows="3" id="risk_mitigating_actions" name="risk_mitigating_actions"></textarea>
@@ -986,7 +611,7 @@
                       <!-- pregunta 31 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          21. Comparte el riesgo de NO pago del C.E.
+                          13. Comparte el riesgo de NO pago del C.E.
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
@@ -1024,7 +649,7 @@
                       <!-- pregunta 32 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          22. Número de estudiantes atendidos con Crédito Educativo, por sexo
+                          14. Número de estudiantes atendidos con Crédito Educativo, por sexo
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div>
@@ -1040,7 +665,7 @@
                       <!-- pregunta 33 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          23. Número de estudiantes atendidos con Crédito Educativo, de acuerdo con su nivel
+                          15. Número de estudiantes atendidos con Crédito Educativo, de acuerdo con su nivel
                           socioeconómico
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -1061,7 +686,7 @@
                       <!-- pregunta 34 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          24. Porcentaje de graduación de beneficiarios de C.E. de pregrado, de la(s) cohorte(s)
+                          16. Porcentaje de graduación de beneficiarios de C.E. de pregrado, de la(s) cohorte(s)
                           que debería(n) graduarse en el año que se está reportando
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -1074,7 +699,7 @@
                       <!-- pregunta 35 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
-                          25. La institución ofrece beneficios o estímulos para favorecer
+                          17. La institución ofrece beneficios o estímulos para favorecer
                           la graduación de los beneficiarios
                         </label>
                         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -1321,49 +946,7 @@
         }
       });
 
-      {{#if data.type}}
-        $("#type_{{data.type.name}}").attr("checked", true);
-        if ($("#type_otra").is(":checked"))
-          $("#type_other").val("{{data.type.other}}").removeAttr("disabled").attr("required", true);
-      {{/if}}
-
-      {{#if data.character}}
-        $("#character_{{data.character.name}}").attr("checked", true);
-        if ($("#character_otra").is(":checked"))
-          $("#character_other").val("{{data.character.other}}").removeAttr("disabled").attr("required", true);
-      {{/if}}
-
-      {{#if data.country}}
-        $("#country option[value={{data.country}}]").attr("selected", true);
-      {{/if}}
-
-      {{#if data.foundation_year}}
-        $("#foundation_year").val("{{data.foundation_year}}");
-      {{/if}}
-
-      {{#if data.representative_name}}
-        $("#representative_name").val("{{data.representative_name}}");
-      {{/if}}
-
-      {{#if data.representative_position}}
-        $("#representative_position").val("{{data.representative_position}}");
-      {{/if}}
-
-      {{#if data.employees}}
-        $("#employees").val("{{data.employees}}");
-      {{/if}}
-
-      {{#if data.has_platform}}
-        $("#has_platform_{{data.has_platform}}").attr("checked", true);
-        if ($("#has_platform_si").is(":checked")) {
-          $("#platform_ownership_propia, #platform_ownership_terceros").attr("required", true).removeAttr("disabled");
-          if ("{{data.platform_ownership}}".length > 0) {
-            $("#platform_ownership_{{data.platform_ownership}}").attr("checked", true);
-          }
-        }
-      {{/if}}
-
-      {{#each data.funding_sources as |obj|}}
+      {{#each report.funding_sources as |obj|}}
         $("#source_{{obj.source}}").attr("checked", true);
         $("#source_{{obj.source}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
         {{#if obj.name}}
@@ -1371,135 +954,135 @@
         {{/if}}
       {{/each}}
 
-      {{#if data.regulated}}
-        $("#regulated_{{data.regulated}}").attr("checked", true);
+      {{#if report.regulated}}
+        $("#regulated_{{report.regulated}}").attr("checked", true);
         if ($("#regulated_si").is(":checked")) {
-          $("#regulating_entity").val("{{data.regulating_entity}}").attr("required", true).removeAttr("disabled");
+          $("#regulating_entity").val("{{report.regulating_entity}}").attr("required", true).removeAttr("disabled");
         }
       {{/if}}
 
-      {{#if data.credit_rating}}
-        $("#credit_rating_{{data.credit_rating}}").attr("checked", true);
+      {{#if report.credit_rating}}
+        $("#credit_rating_{{report.credit_rating}}").attr("checked", true);
         if ($("#credit_rating_si").is(":checked")) {
-          $("#rating_agency").val("{{data.rating_agency}}").attr("required", true).removeAttr("disabled");
+          $("#rating_agency").val("{{report.rating_agency}}").attr("required", true).removeAttr("disabled");
         }
       {{/if}}      
 
-      {{#if data.total_investment}}
-        $("#total_investment").val("{{data.total_investment}}");
+      {{#if report.total_investment}}
+        $("#total_investment").val("{{report.total_investment}}");
       {{/if}}
 
-      {{#if data.total_students}}
-        $("#total_students").val("{{data.total_students}}");
+      {{#if report.total_students}}
+        $("#total_students").val("{{report.total_students}}");
       {{/if}}
 
-      {{#each data.current_portfolio as |obj|}}
+      {{#each report.current_portfolio as |obj|}}
         $("#current_portfolio_{{obj.name}}").attr("checked", true);
         $("#current_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if data.current_portfolio_male}}
-        $("#current_portfolio_male").val("{{data.current_portfolio_male}}");
+      {{#if report.current_portfolio_male}}
+        $("#current_portfolio_male").val("{{report.current_portfolio_male}}");
       {{/if}}
 
-      {{#if data.current_portfolio_female}}
-        $("#current_portfolio_female").val("{{data.current_portfolio_female}}");
+      {{#if report.current_portfolio_female}}
+        $("#current_portfolio_female").val("{{report.current_portfolio_female}}");
       {{/if}}
 
-      <!--{{#if data.studying_beneficiaries_amount}}-->
-        <!--$("#studying_beneficiaries_amount").val("{{data.studying_beneficiaries_amount}}");-->
+      <!--{{#if report.studying_beneficiaries_amount}}-->
+        <!--$("#studying_beneficiaries_amount").val("{{report.studying_beneficiaries_amount}}");-->
       <!--{{/if}}-->
 
-      <!--{{#if data.graduated_beneficiaries_amount}}-->
-        <!--$("#graduated_beneficiaries_amount").val("{{data.graduated_beneficiaries_amount}}");-->
+      <!--{{#if report.graduated_beneficiaries_amount}}-->
+        <!--$("#graduated_beneficiaries_amount").val("{{report.graduated_beneficiaries_amount}}");-->
       <!--{{/if}}-->
 
-      {{#each data.pastdue_portfolio as |obj|}}
+      {{#each report.pastdue_portfolio as |obj|}}
         $("#pastdue_portfolio_{{obj.name}}").attr("checked", true);
         $("#pastdue_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if data.pastdue_portfolio_male}}
-        $("#pastdue_portfolio_male").val("{{data.pastdue_portfolio_male}}");
+      {{#if report.pastdue_portfolio_male}}
+        $("#pastdue_portfolio_male").val("{{report.pastdue_portfolio_male}}");
       {{/if}}
 
-      {{#if data.pastdue_portfolio_female}}
-        $("#pastdue_portfolio_female").val("{{data.pastdue_portfolio_female}}");
+      {{#if report.pastdue_portfolio_female}}
+        $("#pastdue_portfolio_female").val("{{report.pastdue_portfolio_female}}");
       {{/if}}
 
-      {{#each data.execution_portfolio as |obj|}}
+      {{#each report.execution_portfolio as |obj|}}
         $("#execution_portfolio_{{obj.name}}").attr("checked", true);
         $("#execution_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if data.execution_portfolio_male}}
-        $("#execution_portfolio_male").val("{{data.execution_portfolio_male}}");
+      {{#if report.execution_portfolio_male}}
+        $("#execution_portfolio_male").val("{{report.execution_portfolio_male}}");
       {{/if}}
 
-      {{#if data.execution_portfolio_female}}
-        $("#execution_portfolio_female").val("{{data.execution_portfolio_female}}");
+      {{#if report.execution_portfolio_female}}
+        $("#execution_portfolio_female").val("{{report.execution_portfolio_female}}");
       {{/if}}
 
-      {{#each data.risks as |risk|}}
+      {{#each report.risks as |risk|}}
         $("#risks_{{risk}}").attr("checked", true);
       {{/each}}
       if ($("#risks_otra").is(":checked")) {
-        $("#risks_other").val("{{data.risks_other}}").attr("required", true).removeAttr("disabled");
+        $("#risks_other").val("{{report.risks_other}}").attr("required", true).removeAttr("disabled");
       }
 
-      {{#if data.risk_increasing_actions}}
-        $("#risk_increasing_actions").val(`{{data.risk_increasing_actions}}`);
+      {{#if report.risk_increasing_actions}}
+        $("#risk_increasing_actions").val(`{{report.risk_increasing_actions}}`);
       {{/if}}
 
-      {{#if data.risk_mitigating_actions}}
-        $("#risk_mitigating_actions").val(`{{data.risk_mitigating_actions}}`);
+      {{#if report.risk_mitigating_actions}}
+        $("#risk_mitigating_actions").val(`{{report.risk_mitigating_actions}}`);
       {{/if}}
 
-      {{#if data.non_payment_risk}}
-        $("#non_payment_risk_{{data.non_payment_risk.risk}}").attr("checked", true);
+      {{#if report.non_payment_risk}}
+        $("#non_payment_risk_{{report.non_payment_risk.risk}}").attr("checked", true);
         if ($("#non_payment_risk_si").is(":checked"))
           $("#non_payment_risk_si_universidades, #non_payment_risk_si_publico, #non_payment_risk_si_otra").attr("required", true).removeAttr("disabled");
-        {{#if data.non_payment_risk.name}}
-          $("#non_payment_risk_si_{{data.non_payment_risk.name}}").attr("checked", true);
-          {{#if data.non_payment_risk.other}}
-            $("#non_payment_risk_si_other").val("{{data.non_payment_risk.other}}").attr("required", true).removeAttr("disabled");
+        {{#if report.non_payment_risk.name}}
+          $("#non_payment_risk_si_{{report.non_payment_risk.name}}").attr("checked", true);
+          {{#if report.non_payment_risk.other}}
+            $("#non_payment_risk_si_other").val("{{report.non_payment_risk.other}}").attr("required", true).removeAttr("disabled");
           {{/if}}
         {{/if}}
       {{/if}}
 
-      {{#if data.male_students}}
-        $("#male_students").val("{{data.male_students}}");
+      {{#if report.male_students}}
+        $("#male_students").val("{{report.male_students}}");
       {{/if}}
 
-      {{#if data.female_students}}
-        $("#female_students").val("{{data.female_students}}");
+      {{#if report.female_students}}
+        $("#female_students").val("{{report.female_students}}");
       {{/if}}
 
-      {{#if data.high_students}}
-        $("#high_students").val("{{data.high_students}}");
+      {{#if report.high_students}}
+        $("#high_students").val("{{report.high_students}}");
       {{/if}}
 
-      {{#if data.medium_students}}
-        $("#medium_students").val("{{data.medium_students}}");
+      {{#if report.medium_students}}
+        $("#medium_students").val("{{report.medium_students}}");
       {{/if}}
 
-      {{#if data.low_students}}
-        $("#low_students").val("{{data.low_students}}");
+      {{#if report.low_students}}
+        $("#low_students").val("{{report.low_students}}");
       {{/if}}
 
-      {{#if data.graduate_percentage}}
-        $("#graduate_percentage").val("{{data.graduate_percentage}}");
+      {{#if report.graduate_percentage}}
+        $("#graduate_percentage").val("{{report.graduate_percentage}}");
       {{/if}}
 
-      {{#if data.benefits}}
-        $("#benefits_{{data.benefits.option}}").attr("checked", true);
+      {{#if report.benefits}}
+        $("#benefits_{{report.benefits.option}}").attr("checked", true);
         if ($("#benefits_si").is(":checked"))
-          $("#benefits_cuales").val("{{data.benefits.names}}").attr("required", true).removeAttr("disabled");
+          $("#benefits_cuales").val("{{report.benefits.names}}").attr("required", true).removeAttr("disabled");
       {{/if}}
 
-      {{#if data.programs}}
-        $("#program_quantity").val("{{data.programs.length}}").trigger("change");
-        {{#each data.programs as |obj index|}}
+      {{#if report.programs}}
+        $("#program_quantity").val("{{report.programs.length}}").trigger("change");
+        {{#each report.programs as |obj index|}}
           {{#if obj.level}}
             $("#program"+({{index}}+1)+"_level_{{obj.level}}").attr("checked", true);
           {{/if}}
@@ -1559,14 +1142,13 @@
 	<script type="text/javascript">
     function changePanelsQuantity(value) {
       // console.log(value);
-      var container = $("#programs_container");
+      let container = $("#programs_container");
 
-      var current_quantity = container.children().length;
+      let current_quantity = container.children().length;
       // console.log(current_quantity);
-      var target_quantity = value - current_quantity;
-      var i;
+      let target_quantity = value - current_quantity;
       if (target_quantity > 0) {
-        for (i = current_quantity + 1; i <= value; i++) {
+        for (let i = current_quantity + 1; i <= value; i++) {
           var html = `
             <div class="x_panel">
               <div class="x_title">

@@ -1,11 +1,11 @@
-const admin = require('firebase-admin');
+'use strict';const admin = require('firebase-admin');
 let db = admin.firestore();
 
 
 exports.listReports = (req, res) => {
   let data = {};
   if (req.user)
-    data.user = req.user;
+  data.user = req.user;
 
   return res.render('select-report', data);
 };
@@ -13,29 +13,29 @@ exports.listReports = (req, res) => {
 exports.getReport = (req, res) => {
   let data = {};
   if (req.user)
-    data.user = req.user;
+  data.user = req.user;
   data.selected_report = req.body.report;
   data.from_year = req.body.from_year;
   data.to_year = req.body.to_year;
 
   switch (req.body.report) {
-    case 'financiamiento_anual': {
-      return financiamientoAnual(req, res, data);
-    }
-    default: {
-      data.error = "No ha seleccionado un indicador válido";
-      return res.render('select-report', data);
-    }
-  }
+    case 'financiamiento_anual':{
+        return financiamientoAnual(req, res, data);
+      }
+    default:{
+        data.error = "No ha seleccionado un indicador válido";
+        return res.render('select-report', data);
+      }}
+
 };
 
 function financiamientoAnual(req, res, data) {
   let params = req.body;
   const years = params.to_year - params.from_year + 1;
   if (years >= 0 && years <= 10) {
-    let institutionQuery = db.collection('institutions')
-      .where('reported_year', '>=', params.from_year)
-      .where('reported_year', '<=', params.to_year);
+    let institutionQuery = db.collection('reports').
+    where('reported_year', '>=', params.from_year).
+    where('reported_year', '<=', params.to_year);
     institutionQuery.get().then(querySnapshot => {
       if (querySnapshot.empty) {
         console.log('No documents found.');
@@ -59,8 +59,8 @@ function financiamientoAnual(req, res, data) {
             for (let j = 0; j < institutions[i].programs.length; j++) {
               const program = institutions[i].programs[j];
               // console.log(program);
-              if (program.investment && program.credit_pais && program.credit_pais.new && program.credit_pais.old
-                && program.credit_exterior && program.credit_exterior.new && program.credit_exterior.old) {
+              if (program.investment && program.credit_pais && program.credit_pais.new && program.credit_pais.old &&
+              program.credit_exterior && program.credit_exterior.new && program.credit_exterior.old) {
                 // console.log(program.investment);
                 total_investment += program.investment;
                 total_credits += program.credit_pais.new + program.credit_pais.old + program.credit_exterior.new + program.credit_exterior.old;
@@ -76,16 +76,16 @@ function financiamientoAnual(req, res, data) {
                     return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
                   });
                 } else {
-                  return admin.auth().getUser(institution.user_id)
-                    .then(userRecord => {
-                      userCache[institution.user_id] = userRecord.displayName;
-                      return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
-                    })
-                    .catch(error => {
-                      console.log('Error getting user', error);
-                      data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
-                      return res.render('select-report', data);
-                    });
+                  return admin.auth().getUser(institution.user_id).
+                  then(userRecord => {
+                    userCache[institution.user_id] = userRecord.displayName;
+                    return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
+                  }).
+                  catch(error => {
+                    console.log('Error getting user', error);
+                    data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+                    return res.render('select-report', data);
+                  });
                 }
               };
 
@@ -126,7 +126,7 @@ function tableResults(chartResults, userCache) {
       let indicator = { reported_year: chartResults[j].reported_year };
       const indicatorValue = chartResults[j][result.institution_name];
       if (indicatorValue)
-        indicator.value = indicatorValue;
+      indicator.value = indicatorValue;
       // console.log(indicator);
       result.indicators.push(indicator);
     }

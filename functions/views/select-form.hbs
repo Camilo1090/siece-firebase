@@ -60,14 +60,16 @@
                     <a href="index"><i class="fa fa-home"></i> Dashboard</a>
                   </li>
                   <li>
-                    <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
-                  </li>
-                  <li>
-                    <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
-                  </li>
-                  <li>
                     <a href="indicadores"><i class="fa fa-bar-chart"></i> Indicadores</a>
                   </li>
+                  {{#if user}}
+                    <li>
+                      <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
+                    </li>
+                    <li>
+                      <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
+                    </li>
+                  {{/if}}
                 </ul>
               </div>
             </div>
@@ -107,6 +109,11 @@
                 {{#if success}}
                   <div id="message" class="alert alert-success" role="alert">
                     {{success}}
+                  </div>
+                {{/if}}
+                {{#if warning}}
+                  <div id="message" class="alert alert-warning" role="alert">
+                    {{warning}}
                   </div>
                 {{/if}}
                 {{#if error}}
@@ -157,7 +164,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {{#each forms}}
+                        {{#each reports}}
                           <tr>
                             <td>{{this.reported_year}}</td>
                             <td>{{this.status}}</td>
@@ -198,7 +205,7 @@
     <!-- iCheck -->
     <script src="icheck.min.js"></script>
     <!-- Parsley -->
-    <script src="parsley.min.js"></script>
+    <!--<script src="parsley.min.js"></script>-->
     <!-- i18n/es.js-->
     <script src="es.js"></script>
     <!-- Datatables -->

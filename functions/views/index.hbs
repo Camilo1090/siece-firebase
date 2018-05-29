@@ -65,14 +65,16 @@
                     <a href="index"><i class="fa fa-home"></i> Dashboard</a>
                   </li>
                   <li>
-                    <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
-                  </li>
-                  <li>
-                    <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
-                  </li>
-                  <li>
                     <a href="indicadores"><i class="fa fa-bar-chart"></i> Indicadores</a>
                   </li>
+                  {{#if user}}
+                    <li>
+                      <a href="perfil"><i class="fa fa-user"></i> Perfil</a>
+                    </li>
+                    <li>
+                      <a href="formularios"><i class="fa fa-edit"></i> Formularios</a>
+                    </li>
+                  {{/if}}
                 </ul>
               </div>
             </div>
@@ -938,6 +940,7 @@
 
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", () => {
+      {{#if investment_by_country}}
       let chart = new Morris.Bar({
         element: 'chart',
         data: [
@@ -955,6 +958,7 @@
         hideHover:"auto",
         resize: true
       });
+      {{/if}}
 
       {{#if error}}
         console.error(error);

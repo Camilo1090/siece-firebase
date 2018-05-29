@@ -1,4 +1,4 @@
-'use strict';const admin = require('firebase-admin');
+'use strict';var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}const admin = require('firebase-admin');
 let db = admin.firestore();
 
 
@@ -29,97 +29,78 @@ exports.getReport = (req, res) => {
 
 };
 
-function financiamientoAnual(req, res, data) {
-  let params = req.body;
-  const years = params.to_year - params.from_year + 1;
-  if (years >= 0 && years <= 10) {
-    let institutionQuery = db.collection('reports').
-    where('reported_year', '>=', params.from_year).
-    where('reported_year', '<=', params.to_year);
-    institutionQuery.get().then(querySnapshot => {
-      if (querySnapshot.empty) {
-        console.log('No documents found.');
-        data.error = 'La consulta no ha arrojado resultados.';
-        return res.render('select-report', data);
-      } else {
-        let institutions = querySnapshot.docs.map(doc => doc.data());
-        // institutions.sort();
-        // console.log(institutions);
-        let userCache = {};
-        let results = [];
-        let promiseChain = Promise.resolve();
-        for (let i = params.from_year; i <= params.to_year; i++) {
-          let result = { reported_year: Number(i) };
-          results.push(result);
-        }
-        for (let i = 0; i < institutions.length; i++) {
-          if (institutions[i].programs && institutions[i].programs.length > 0) {
-            let total_investment = 0;
-            let total_credits = 0;
-            for (let j = 0; j < institutions[i].programs.length; j++) {
-              const program = institutions[i].programs[j];
-              // console.log(program);
-              if (program.investment && program.credit_pais && program.credit_pais.new && program.credit_pais.old &&
-              program.credit_exterior && program.credit_exterior.new && program.credit_exterior.old) {
-                // console.log(program.investment);
-                total_investment += program.investment;
-                total_credits += program.credit_pais.new + program.credit_pais.old + program.credit_exterior.new + program.credit_exterior.old;
+const financiamientoAnual = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+    const formData = req.body;
+    const years = formData.to_year - formData.from_year + 1;
+    if (years >= 0 && years <= 10) {
+      const reportsSnapshot = yield db.collection('reports').
+      where('reported_year', '>=', Number(formData.from_year)).
+      where('reported_year', '<=', Number(formData.to_year)).
+      get();
+      try {
+        if (reportsSnapshot.empty) {
+          console.log('No documents found.');
+          data.warning = 'No hay datos reportados en el periodo seleccionado.';
+        } else {
+          let reports = reportsSnapshot.docs.map(function (doc) {return doc.data();});
+          // console.log(reports);
+          let userCache = {};
+          let results = [];
+          for (let i = formData.from_year; i <= formData.to_year; i++) {
+            let result = { reported_year: Number(i) };
+            results.push(result);
+          }
+          for (let i = 0; i < reports.length; i++) {
+            if (reports[i].programs && reports[i].programs.length > 0) {
+              let total_investment = 0;
+              let total_credits = 0;
+              for (let j = 0; j < reports[i].programs.length; j++) {
+                const program = reports[i].programs[j];
+                // console.log(program);
+                if (program.investment && program.credit_pais && program.credit_pais.new && program.credit_pais.old &&
+                program.credit_exterior && program.credit_exterior.new && program.credit_exterior.old) {
+                  // console.log(program.investment);
+                  total_investment += program.investment;
+                  total_credits += program.credit_pais.new + program.credit_pais.old + program.credit_exterior.new + program.credit_exterior.old;
+                }
+              }
+
+              const indicatorValue = total_investment / total_credits;
+              if (indicatorValue) {
+                // console.log(indicatorValue);
+                if (userCache[reports[i].user_id]) {
+                  results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                } else {
+                  const userRecord = yield admin.auth().getUser(reports[i].user_id);
+                  userCache[reports[i].user_id] = userRecord.displayName;
+                  results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                }
               }
             }
-
-            const indicatorValue = total_investment / total_credits;
-            if (indicatorValue) {
-              // console.log(indicator);
-              const makeNextPromise = (institution, indicatorValue) => () => {
-                if (userCache[institution.user_id]) {
-                  return Promise.resolve().then(() => {
-                    return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
-                  });
-                } else {
-                  return admin.auth().getUser(institution.user_id).
-                  then(userRecord => {
-                    userCache[institution.user_id] = userRecord.displayName;
-                    return results[institution.reported_year - params.from_year][userCache[institution.user_id]] = indicatorValue;
-                  }).
-                  catch(error => {
-                    console.log('Error getting user', error);
-                    data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
-                    return res.render('select-report', data);
-                  });
-                }
-              };
-
-              promiseChain = promiseChain.then(makeNextPromise(institutions[i], indicatorValue));
-            }
           }
-        }
 
-        return promiseChain.then(() => {
+          let institutionNames = [];
+          Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
+
           data.chart_results = results;
-          data.table_results = tableResults(results, userCache);
-          data.institution_names = Object.values(userCache);
+          data.table_results = tableResults(results, userCache, institutionNames);
+          data.institution_names = institutionNames;
           console.log(data.chart_results, data.table_results);
-          return res.render('select-report', data);
-        }).catch(err => {
-          console.log('Error getting document', err);
-          data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
-          return res.render('select-report', data);
-        });
+        }
+        return res.render('select-report', data);
+      } catch (error) {
+        console.log('Error: ', error);
+        data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+        return res.render('select-report', data);
       }
-    }).catch(err => {
-      console.log('Error getting document', err);
-      data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+    } else {
+      data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
-    });
-  } else {
-    data.error = 'Rango de años invalido. (0 <= rango <= 10)';
-    return res.render('select-report', data);
-  }
-}
+    }
+  });return function financiamientoAnual(_x, _x2, _x3) {return _ref.apply(this, arguments);};})();
 
-function tableResults(chartResults, userCache) {
+const tableResults = (chartResults, userCache, institutionNames) => {
   let tableResults = [];
-  const institutionNames = Object.values(userCache);
   for (let i = 0; i < institutionNames.length; i++) {
     let result = { institution_name: institutionNames[i], indicators: [] };
     for (let j = 0; j < chartResults.length; j++) {
@@ -134,4 +115,4 @@ function tableResults(chartResults, userCache) {
   }
 
   return tableResults;
-}
+};

@@ -22,29 +22,31 @@ exports.getIndex = async (req, res) => {
     // await batch.commit();
     if (querySnapshot.empty) {
       console.log('No documents found.');
-    }
-    let reports = querySnapshot.docs.map(doc => doc.data());
-    console.log(reports);
-    topStatistics(reports, data);
-    await investmentByCountry(reports, data);
-    await investmentByInstitution(reports, data, res);
-    data.investment_by_institution.sort((a, b) => {
-      if (a.amount > b.amount)
-        return -1;
-      return 1;
-    });
-    data.investment_by_institution = data.investment_by_institution.slice(0, 4);
-    if (data.investment_by_institution.length > 0) {
-      const maxAmount = data.investment_by_institution[0].amount;
-      data.investment_by_institution.forEach((item) => {
-        item.progress = item.amount / maxAmount * 100;
-        item.amount = item.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    } else {
+      console.log('Documents found.');
+      let reports = querySnapshot.docs.map(doc => doc.data());
+      // console.log(reports);
+      topStatistics(reports, data);
+      await investmentByCountry(reports, data);
+      await investmentByInstitution(reports, data, res);
+      data.investment_by_institution.sort((a, b) => {
+        if (a.amount > b.amount)
+          return -1;
+        return 1;
       });
+      data.investment_by_institution = data.investment_by_institution.slice(0, 4);
+      if (data.investment_by_institution.length > 0) {
+        const maxAmount = data.investment_by_institution[0].amount;
+        data.investment_by_institution.forEach((item) => {
+          item.progress = item.amount / maxAmount * 100;
+          item.amount = item.amount.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+        });
+      }
     }
     console.log(data);
     return res.render('index', data);
   } catch(error) {
-    console.log('Error getting documents', error);
+    console.log('Error: ', error);
     data.error = 'Error al consultar la base de datos';
     return res.render('index', data);
   }

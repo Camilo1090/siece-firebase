@@ -117,6 +117,11 @@
                     {{success}}
                   </div>
                 {{/if}}
+                {{#if warning}}
+                  <div id="message" class="alert alert-warning" role="alert">
+                    {{warning}}
+                  </div>
+                {{/if}}
                 {{#if error}}
                   <div id="message" class="alert alert-danger" role="alert">
                     {{error}}
@@ -286,7 +291,7 @@
 
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", () => {
-        {{#if chart_results.[0].institution_name}}
+        {{#if chart_results}}
           let chart = new Morris.Line({
             element: 'chart',
             data: [

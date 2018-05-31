@@ -2,13 +2,13 @@
 let db = admin.firestore();
 
 
-exports.listReports = (req, res) => {
+exports.listIndicators = (req, res) => {
   let data = { user: req.user, is_admin: req.is_admin };
 
   return res.render('select-report', data);
 };
 
-exports.getReport = (req, res) => {
+exports.getIndicator = (req, res) => {
   let data = { user: req.user, is_admin: req.is_admin };
   data.selected_report = req.body.report;
   data.from_year = req.body.from_year;

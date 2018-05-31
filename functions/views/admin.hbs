@@ -40,7 +40,6 @@
             <div class="clearfix"></div>
 
             <!-- menu profile quick info -->
-            {{#if user}}
             <div class="profile clearfix">
               <div class="profile_pic">
                 <img src="img.jpg" alt="..." class="img-circle profile_img">
@@ -50,7 +49,6 @@
                 <h2>{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}</h2>
               </div>
             </div>
-            {{/if}}
             <!-- /menu profile quick info -->
             <br />
             <!-- sidebar menu -->
@@ -95,18 +93,14 @@
               </div>
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
-                  {{#if user}}
-                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      <img src="img.jpg" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
-                      <span class=" fa fa-angle-down"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-usermenu pull-right">
-                      <li><a href="perfil"> Perfil</a></li>
-                      <li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
-                    </ul>
-                  {{else}}
-                    <a href="login"><i class="fa fa-sign-in pull-right mt-1"></i> Iniciar Sesión</a>
-                  {{/if}}
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="img.jpg" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="perfil"> Perfil</a></li>
+                    <li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
+                  </ul>
                 </li>
               </ul>
             </nav>
@@ -124,11 +118,6 @@
                     {{success}}
                   </div>
                 {{/if}}
-                {{#if is_admin}}
-                  <div id="message" class="alert alert-success" role="alert">
-                    Usted es un usuario administrador
-                  </div>
-                {{/if}}
                 {{#if warning}}
                   <div id="message" class="alert alert-warning" role="alert">
                     {{warning}}
@@ -141,36 +130,23 @@
                 {{/if}}
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Seleccionar un Indicador para visualizar</h2>
+                    <h2>Consultar Reportes</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <form id="demo-form2" class="form-label-left" data-parsley-validate method="post">
                       <div class="form-group">
-                        <label class="col-xs-12" for="report">
-                          Indicador
+                        <label class="col-xs-12" for="name">
+                          Ingresar Año Reportado
                         </label>
                         <div class="col-xs-6">
-                          <select class="select2_single form-control" id="report" tabindex="-1" name="report" required>
-                            <option></option>
-                            <option value="financiamiento_anual">Financiamiento de CE anual</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-xs-12 pt">
-                          Periodo
-                        </label>
-                        <div class="col-xs-6">
-                          <label for="from_year">Desde: </label>
-                          <input type="number" id="from_year" maxlength="4" minlength="4" min="1950" max="2018" name="from_year" required>
-                          <label for="to_year">Hasta: </label>
-                          <input type="number" id="to_year" maxlength="4" minlength="4" min="1950" max="2018" name="to_year" required>
+                          <input type="number" id="name" name="reported_year" class="form-control" min="1995"
+                                 max="2018" maxlength="4" minlength="4" value="{{reported_year}}" required>
                         </div>
                       </div>
                       <div class="form-group">
                         <div class="col-xs-12 pt">
-                          <button type="submit" class="btn btn-success">Ver Indicador</button>
+                          <button type="submit" class="btn btn-success">Consultar Reportes</button>
                         </div>
                       </div>
                     </form>
@@ -180,45 +156,42 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Tabla</h2>
+                    <h2>Formularios</h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
                     <table id="forms-datatable" class="table table-striped table-bordered">
                       <thead>
-                      <tr>
-                        <th>Institución/Año</th>
-                        {{#each table_results.0.indicators}}
-                          <th>{{this.reported_year}}</th>
-                        {{/each}}
-                      </tr>
+                        <tr>
+                          <th>Institución</th>
+                          <th>Año Reportado</th>
+                          <th>Estado</th>
+                          <th>Fecha de Creación</th>
+                          <th>Última Actualización</th>
+                          <th>Acciones</th>
+                        </tr>
                       </thead>
                       <tbody>
-                      {{#each table_results}}
-                        <tr>
-                          <td>{{this.institution_name}}</td>
-                          {{#each this.indicators}}
-                            {{#if this.value}}
-                              <td>{{this.value}}</td>
-                            {{else}}
-                              <td>-</td>
-                            {{/if}}
-                          {{/each}}
-                        </tr>
-                      {{/each}}
+                        {{#each reports}}
+                          <tr>
+                            <td>{{this.institution_name}}</td>
+                            <td>{{this.reported_year}}</td>
+                            <td>{{this.status}}</td>
+                            <td>{{this.created_at}}</td>
+                            <td>{{this.updated_at}}</td>
+                            <td>
+                              {{#if this.reviewable}}
+                                <a href="admin/review?user={{this.user_id}}&reported_year={{this.reported_year}}">
+                                  <i class="fa fa-list"></i>
+                                </a>
+                              {{else}}
+                                -
+                              {{/if}}
+                            </td>
+                          </tr>
+                        {{/each}}
                       </tbody>
                     </table>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Gráfico</h2>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div id="chart"></div>
                   </div>
                 </div>
               </div>
@@ -249,85 +222,34 @@
     <!-- iCheck -->
     <script src="icheck.min.js"></script>
     <!-- Parsley -->
-    <script src="parsley.min.js"></script>
+    <!--<script src="parsley.min.js"></script>-->
     <!-- i18n/es.js-->
-    <script src="es.js"></script>
+    <!--<script src="es.js"></script>-->
     <!-- Datatables -->
     <script src="jquery.dataTables.min.js"></script>
     <script src="dataTables.bootstrap.min.js"></script>
     <script src="dataTables.responsive.min.js"></script>
     <script src="responsive.bootstrap.js"></script>
     <script src="jszip.min.js"></script>
-    <!-- morris.js -->
-    <script src="raphael.min.js"></script>
-    <script src="morris.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="custom.min.js"></script>
 
     <script type="text/javascript">
-      $(document).ready(() => {
-        {{#if selected_report}}
-          $("#report option[value={{selected_report}}]").attr("selected", true);
-        {{/if}}
-
-        {{#if from_year}}
-          $("#from_year").val("{{from_year}}");
-        {{/if}}
-
-        {{#if to_year}}
-          $("#to_year").val("{{to_year}}");
-        {{/if}}
-
-        <!--{{#if results}}-->
-          <!--console.log({{{results}}});-->
-        <!--{{/if}}-->
-
-        $("#forms-datatable").DataTable({
-          "language": {
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "Sin datos para mostrar",
-            "info": "Página _PAGE_ de _PAGES_",
-            "infoEmpty": "Sin registros",
-            "infoFiltered": "(filtrado de _MAX_ registros totales)",
-            "search": "Filtrar:",
-            "paginate": {
-              "first":      "Primera",
-              "last":       "Última",
-              "next":       "Siguiente",
-              "previous":   "Anterior"
-            }
+      $("#forms-datatable").DataTable({
+        "language": {
+          "lengthMenu": "Mostrar _MENU_ registros por página",
+          "zeroRecords": "Sin datos para mostrar",
+          "info": "Página _PAGE_ de _PAGES_",
+          "infoEmpty": "Sin registros",
+          "infoFiltered": "(filtrado de _MAX_ registros totales)",
+          "search": "Filtrar:",
+          "paginate": {
+            "first":      "Primera",
+            "last":       "Última",
+            "next":       "Siguiente",
+            "previous":   "Anterior"
           }
-        });
-      })
-    </script>
-
-    <script type="text/javascript">
-      document.addEventListener("DOMContentLoaded", () => {
-        {{#if chart_results}}
-          let chart = new Morris.Line({
-            element: 'chart',
-            data: [
-              {{#each chart_results}}
-                {
-                  {{#each this}}
-                    '{{@key}}': '{{this}}',
-                  {{/each}}
-                },
-              {{/each}}
-            ],
-            xkey: 'reported_year',
-            ykeys: [
-              {{#each institution_names}}
-                '{{this}}',
-              {{/each}}
-            ],
-            labels: [
-              {{#each institution_names}}
-                '{{this}}',
-              {{/each}}
-            ]
-          });
-        {{/if}}
+        }
       });
     </script>
   </body>

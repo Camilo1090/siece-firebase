@@ -3,9 +3,7 @@ const admin = require('firebase-admin');
 let db = admin.firestore();
 
 exports.getIndex = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res) {
-    let data = {};
-    if (req.user)
-    data.user = req.user;
+    let data = { user: req.user, is_admin: req.is_admin };
     const reportedYear =
     2016;
     // ((new Date()).getFullYear() - 1).toString();

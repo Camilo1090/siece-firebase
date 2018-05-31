@@ -1,25 +1,28 @@
 const express = require('express');
-const router = express.Router();
+// const router = express.Router();
 
 let dir = 'es7';
 if (process.env['NODE_ENV'] === 'production')
   dir = 'es5';
 
+const firebaseUser = require('./utils/'+dir+'/firebaseUser');
+
 const indexController = require('./controllers/'+dir+'/index.controller');
 const formController = require('./controllers/'+dir+'/form.controller');
 const profileController = require('./controllers/'+dir+'/profile.controller');
-const reportsController = require('./controllers/'+dir+'/reports.controller');
+const indicatorsController = require('./controllers/'+dir+'/indicators.controller');
+const adminController = require('./controllers/'+dir+'/admin.controller');
 
 
-module.exports = (app, authentication) => {
-  router.use(authentication);
+module.exports = (app) => {
+  app.use(firebaseUser.validateFirebaseIdToken);
 
-  router.get('/', (req, res) => {
+  app.get('/', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     return res.render('landing');
   });
 
-  router.get('/login', (req, res) => {
+  app.get('/login', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return res.redirect('/index');
@@ -27,7 +30,7 @@ module.exports = (app, authentication) => {
       return res.render('login');
   });
 
-  router.post('/login', (req, res) => {
+  app.post('/login', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       return res.redirect('/index');
@@ -35,7 +38,7 @@ module.exports = (app, authentication) => {
       return res.render('login');
   });
 
-  router.get('/index', (req, res) => {
+  app.get('/index', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     let data = {};
     if (req.user)
@@ -43,63 +46,125 @@ module.exports = (app, authentication) => {
     return indexController.getIndex(req, res);
   });
 
-  router.get('/perfil', (req, res) => {
+  app.get('/perfil', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return profileController.getProfile(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return profileController.getProfile(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.post('/perfil', (req, res) => {
+  app.post('/perfil', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return profileController.saveProfile(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return profileController.getProfile(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.get('/formularios', (req, res) => {
+  app.get('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.getReports(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return formController.getReports(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.post('/formularios', (req, res) => {
+  app.post('/formularios', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.createReport(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return formController.createReport(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.get('/formularios/:reported_year', (req, res) => {
+  app.get('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.getReport(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return formController.getReport(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.post('/formularios/:reported_year', (req, res) => {
+  app.post('/formularios/:reported_year', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
-      return formController.processReport(req, res);
+      if (req.is_admin)
+        return res.redirect('/index');
+      else
+        return formController.processReport(req, res);
     else
       return res.redirect('/login');
   });
 
-  router.get('/indicadores', (req, res) => {
+  app.get('/indicadores', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
-    return reportsController.listReports(req, res);
+    return indicatorsController.listIndicators(req, res);
   });
 
-  router.post('/indicadores', (req, res) => {
+  app.post('/indicadores', (req, res) => {
     res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
-    return reportsController.getReport(req, res);
+    return indicatorsController.getIndicator(req, res);
   });
 
-  app.use('/', router);
+  app.get('/admin', (req, res) => {
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    if (req.user)
+      if (req.is_admin)
+        return adminController.getReports(req, res);
+      else
+        return res.redirect('/index');
+    else
+      return res.redirect('/login');
+  });
+
+  app.post('/admin', (req, res) => {
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    if (req.user)
+      if (req.is_admin)
+        return adminController.getReports(req, res);
+      else
+        return res.redirect('/index');
+    else
+      return res.redirect('/login');
+  });
+
+  app.get('/admin/review', (req, res) => {
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    if (req.user)
+      if (req.is_admin)
+        return adminController.reviewReport(req, res);
+      else
+        return res.redirect('/index');
+    else
+      return res.redirect('/login');
+  });
+
+  app.post('/admin/review', (req, res) => {
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    if (req.user)
+      if (req.is_admin)
+        return adminController.acceptOrDeclineReport(req, res);
+      else
+        return res.redirect('/index');
+    else
+      return res.redirect('/login');
+  });
+
+  // app.use('/', router);
 };

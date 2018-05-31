@@ -1,6 +1,7 @@
 'use strict';
 
 const admin = require('firebase-admin');
+const db = admin.firestore();
 const cookieParser = require('cookie-parser')();
 
 // Express middleware that checks if a Firebase ID Tokens is passed in the `Authorization` HTTP
@@ -8,24 +9,25 @@ const cookieParser = require('cookie-parser')();
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
 // `Authorization: Bearer <Firebase ID Token>`.
 // When decoded successfully, the ID Token content will be added as `req.user`.
-const validateFirebaseIdToken = (req, res, next) => {
+const validateFirebaseIdToken = async (req, res, next) => {
   console.log('Check if request is authorized with Firebase ID token');
 
-  return getIdTokenFromRequest(req, res).then(idToken => {
+  try {
+    const idToken = await getIdTokenFromRequest(req, res);
     if (idToken)
       return addDecodedIdTokenToRequest(idToken, req, next);
     else
       return next();
-  }).catch(err => {
-    console.log(err);
+  } catch(error) {
+    console.log(error);
     return next();
-  });
+  }
 };
 
 /**
  * Returns a Promise with the Firebase ID Token if found in the Authorization or the __session cookie.
  */
-function getIdTokenFromRequest(req, res) {
+const getIdTokenFromRequest = (req, res) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
     console.log('Found "Authorization" header');
     // Read the ID Token from the Authorization header.
@@ -42,25 +44,30 @@ function getIdTokenFromRequest(req, res) {
       }
     });
   });
-}
+};
 
 /**
  * Returns a Promise with the Decoded ID Token and adds it to req.user.
  */
-function addDecodedIdTokenToRequest(idToken, req, next) {
-  return admin.auth().verifyIdToken(idToken).then(decodedIdToken => {
-    return admin.auth().getUser(decodedIdToken.uid).then(userRecord => {
-      req.user = userRecord;
-      console.log('ID Token correctly decoded', userRecord);
-      return next();
-    }).catch(error => {
-      console.error('Error getting user after verifying ID token:', error);
-      return next();
-    });
-  }).catch(error => {
+const addDecodedIdTokenToRequest = async (idToken, req, next) => {
+  try {
+    const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+    console.log('ID Token correctly decoded for: ', decodedIdToken.uid);
+    const userRecord = await admin.auth().getUser(decodedIdToken.uid);
+    console.log('Successfully got user: ', userRecord.uid);
+    req.user = userRecord;
+    const usersSnapshot = await db.collection('users')
+      .where('user_id', '==', userRecord.uid)
+      .get();
+    if (usersSnapshot.size === 1 && usersSnapshot.docs[0].data().is_admin) {
+      req.is_admin = true;
+      console.log('Admin user request');
+    }
+    return next();
+  } catch(error) {
     console.error('Error while verifying Firebase ID token:', error);
     return next();
-  });
-}
+  }
+};
 
 exports.validateFirebaseIdToken = validateFirebaseIdToken;

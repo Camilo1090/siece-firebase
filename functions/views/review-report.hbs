@@ -157,7 +157,7 @@
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="user_name">Nombre de la Institución</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input id="institution_name" class="form-control" type="text" value="{{user.displayName}}" readonly>
+                          <input id="institution_name" class="form-control" type="text" value="{{report.institution_name}}" readonly>
                         </div>
                       </div>
                       <!-- pregunta 9 -->
@@ -173,126 +173,126 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="gubernamental" id="source_gubernamental" name="sources">
+                              <input type="checkbox" value="gubernamental" id="source_gubernamental" name="sources" disabled>
                               Recursos gubernamentales:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_gubernamental_amount">USD</label>
-                              <input type="number" disabled id="source_gubernamental_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_gubernamental_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="privado" id="source_privado" name="sources">
+                              <input type="checkbox" value="privado" id="source_privado" name="sources" disabled>
                               Recursos privados:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_privado_amount">USD</label>
-                              <input type="number" disabled id="source_privado_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_privado_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="nacional" id="source_nacional" name="sources">
+                              <input type="checkbox" value="nacional" id="source_nacional" name="sources" disabled>
                               Créditos nacionales:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_nacional_amount">USD</label>
-                              <input type="number" disabled id="source_nacional_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_nacional_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="donaciones" id="source_donaciones" name="sources">
+                              <input type="checkbox" value="donaciones" id="source_donaciones" name="sources" disabled>
                               Donaciones y filantropía:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_donaciones_amount">USD</label>
-                              <input type="number" disabled id="source_donaciones_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_donaciones_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="cartera" id="source_cartera" name="sources">
+                              <input type="checkbox" value="cartera" id="source_cartera" name="sources" disabled>
                               Recuperación de la cartera / cobranza:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_cartera_amount">USD</label>
-                              <input type="number" disabled id="source_cartera_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_cartera_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="terceros" id="source_terceros" name="sources">
+                              <input type="checkbox" value="terceros" id="source_terceros" name="sources" disabled>
                               Adminitración de recursos de terceros:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_terceros_amount">USD</label>
-                              <input type="number" disabled id="source_terceros_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_terceros_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="cooperacion" id="source_cooperacion" name="sources">
+                              <input type="checkbox" value="cooperacion" id="source_cooperacion" name="sources" disabled>
                               Fondos de cooperación (nacionales o internacionales):
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_cooperacion_amount">USD</label>
-                              <input type="number" disabled id="source_cooperacion_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_cooperacion_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="impuestos" id="source_impuestos" name="sources">
+                              <input type="checkbox" value="impuestos" id="source_impuestos" name="sources" disabled>
                               Impuestos, tasas y contribuciones:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_impuestos_amount">USD</label>
-                              <input type="number" disabled id="source_impuestos_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_impuestos_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="titularizacion" id="source_titularizacion" name="sources">
+                              <input type="checkbox" value="titularizacion" id="source_titularizacion" name="sources" disabled>
                               Titularización:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_titularizacion_amount">USD</label>
-                              <input type="number" disabled id="source_titularizacion_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_titularizacion_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="propios" id="source_propios" name="sources">
+                              <input type="checkbox" value="propios" id="source_propios" name="sources" disabled>
                               Recursos propios:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_propios_amount">USD</label>
-                              <input type="number" disabled id="source_propios_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_propios_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-md-5">
-                              <input type="checkbox" value="inversiones" id="source_inversiones" name="sources">
+                              <input type="checkbox" value="inversiones" id="source_inversiones" name="sources" disabled>
                               Recursos propios:
                             </label>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_inversiones_amount">USD</label>
-                              <input type="number" disabled id="source_inversiones_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_inversiones_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <div class="col-xs-12 col-md-5">
                               <label>
-                                <input type="checkbox" value="otra" id="source_otra" name="sources">
+                                <input type="checkbox" value="otra" id="source_otra" name="sources" disabled>
                                 Otra
                               </label>
                               <label for="source_otra_name"></label>
-                              <input type="text" disabled id="source_otra_name" name="source_otra_name">
+                              <input type="text" id="source_otra_name" name="source_otra_name" readonly>
                             </div>
                             <div class="col-xs-12 col-md-7">
                               <label for="source_otra_amount">USD</label>
-                              <input type="number" disabled id="source_otra_amount" name="source_amounts" min="0">
+                              <input type="number" id="source_otra_amount" name="source_amounts" min="0" readonly>
                             </div>
                           </div>
                         </div>
@@ -306,15 +306,15 @@
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
                             <label>
-                              <input type="radio" value="si" id="regulated_si" name="regulated">
+                              <input type="radio" value="si" id="regulated_si" name="regulated" disabled>
                               Sí
                             </label>
                             <label for="regulating_entity">Indique la entidad reguladora: </label>
-                            <input type="text" id="regulating_entity" name="regulating_entity" disabled>
+                            <input type="text" id="regulating_entity" name="regulating_entity" readonly>
                           </div>
                           <div class="radio">
                             <label>
-                              <input type="radio" value="no" id="regulated_no" name="regulated">
+                              <input type="radio" value="no" id="regulated_no" name="regulated" disabled>
                               No
                             </label>
                           </div>
@@ -328,15 +328,15 @@
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
                             <label>
-                              <input type="radio" value="si" id="credit_rating_si" name="credit_rating">
+                              <input type="radio" value="si" id="credit_rating_si" name="credit_rating" disabled>
                               Sí
                             </label>
                             <label for="rating_agency">Indique la agencia calificadora: </label>
-                            <input type="text" id="rating_agency" name="rating_agency" disabled>
+                            <input type="text" id="rating_agency" name="rating_agency" readonly>
                           </div>
                           <div class="radio">
                             <label>
-                              <input type="radio" value="no" id="credit_rating_no" name="credit_rating">
+                              <input type="radio" value="no" id="credit_rating_no" name="credit_rating" disabled>
                               No
                             </label>
                           </div>
@@ -349,7 +349,7 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 mt-1">
                           <select class="select2_single form-control" id="program_quantity" name="program_quantity"
-                                  tabindex="-1" onchange="changePanelsQuantity(this.value)">
+                                  tabindex="-1" onchange="changePanelsQuantity(this.value)" disabled>
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -378,7 +378,7 @@
                           </span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="total_investment" name="total_investment" class="form-control mt-2" min="0">
+                          <input type="number" id="total_investment" name="total_investment" class="form-control mt-2" min="0" readonly>
                         </div>
                       </div>
                       <!-- pregunta 24 -->
@@ -388,7 +388,7 @@
                           desde su fundación
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input type="number" id="total_students" name="total_students" class="form-control mt-1" min="0" step="1">
+                          <input type="number" id="total_students" name="total_students" class="form-control mt-1" min="0" step="1" readonly>
                         </div>
                       </div>
                       <!-- pregunta 25 -->
@@ -403,22 +403,22 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="current_portfolio_pais" name="current_portfolio">
+                              <input type="checkbox" value="pais" id="current_portfolio_pais" name="current_portfolio" disabled>
                               Crédito país:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="current_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_pais_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" id="current_portfolio_pais_amount" name="current_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="current_portfolio_exterior" name="current_portfolio">
+                              <input type="checkbox" value="exterior" id="current_portfolio_exterior" name="current_portfolio" disabled>
                               Crédito exterior:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="current_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_exterior_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" id="current_portfolio_exterior_amount" name="current_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                         </div>
@@ -431,11 +431,11 @@
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
                             <label for="current_portfolio_male">Masculino: </label>
-                            <input type="number" id="current_portfolio_male" name="current_portfolio_male" min="0">
+                            <input type="number" id="current_portfolio_male" name="current_portfolio_male" min="0" readonly>
                           </div>
                           <div>
                             <label for="current_portfolio_female">Femenino: </label>
-                            <input type="number" id="current_portfolio_female" name="current_portfolio_female" min="0">
+                            <input type="number" id="current_portfolio_female" name="current_portfolio_female" min="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -451,22 +451,22 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="pastdue_portfolio_pais" name="pastdue_portfolio">
+                              <input type="checkbox" value="pais" id="pastdue_portfolio_pais" name="pastdue_portfolio" disabled>
                               Estudios en el país:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="pastdue_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" id="pastdue_portfolio_pais_amount" name="pastdue_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="pastdue_portfolio_exterior" name="pastdue_portfolio">
+                              <input type="checkbox" value="exterior" id="pastdue_portfolio_exterior" name="pastdue_portfolio" disabled>
                               Estudios en el exterior:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="pastdue_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" id="pastdue_portfolio_exterior_amount" name="pastdue_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                         </div>
@@ -479,11 +479,11 @@
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
                             <label for="pastdue_portfolio_male">Masculino: </label>
-                            <input type="number" id="pastdue_portfolio_male" name="pastdue_portfolio_male" min="0">
+                            <input type="number" id="pastdue_portfolio_male" name="pastdue_portfolio_male" min="0" readonly>
                           </div>
                           <div>
                             <label for="pastdue_portfolio_female">Femenino: </label>
-                            <input type="number" id="pastdue_portfolio_female" name="pastdue_portfolio_female" min="0">
+                            <input type="number" id="pastdue_portfolio_female" name="pastdue_portfolio_female" min="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -514,22 +514,22 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="execution_portfolio_pais" name="execution_portfolio">
+                              <input type="checkbox" value="pais" id="execution_portfolio_pais" name="execution_portfolio" disabled>
                               Estudios en el país:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="execution_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="execution_portfolio_pais_amount" name="execution_portfolio_amounts" min="0">
+                              <input type="number" id="execution_portfolio_pais_amount" name="execution_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
                             <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="execution_portfolio_exterior" name="execution_portfolio">
+                              <input type="checkbox" value="exterior" id="execution_portfolio_exterior" name="execution_portfolio" disabled>
                               Estudios en el exterior:
                             </label>
                             <div class="col-xs-12 col-sm-9">
                               <label for="execution_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0">
+                              <input type="number" id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0" readonly>
                             </div>
                           </div>
                         </div>
@@ -542,11 +542,11 @@
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div>
                             <label for="execution_portfolio_male">Masculino: </label>
-                            <input type="number" id="execution_portfolio_male" name="execution_portfolio_male" min="0">
+                            <input type="number" id="execution_portfolio_male" name="execution_portfolio_male" min="0" readonly>
                           </div>
                           <div>
                             <label for="execution_portfolio_female">Femenino: </label>
-                            <input type="number" id="execution_portfolio_female" name="execution_portfolio_female" min="0">
+                            <input type="number" id="execution_portfolio_female" name="execution_portfolio_female" min="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -558,41 +558,41 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="cambio" id="risks_cambio" name="risks">
+                              <input type="checkbox" value="cambio" id="risks_cambio" name="risks" disabled>
                               Tipos de cambio
                             </label>
                           </div>
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="interes" id="risks_interes" name="risks">
+                              <input type="checkbox" value="interes" id="risks_interes" name="risks" disabled>
                               Tasa de interés
                             </label>
                           </div>
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="prepago" id="risks_prepago" name="risks">
+                              <input type="checkbox" value="prepago" id="risks_prepago" name="risks" disabled>
                               Prepago
                             </label>
                           </div>
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="incumplimiento" id="risks_incumplimiento" name="risks">
+                              <input type="checkbox" value="incumplimiento" id="risks_incumplimiento" name="risks" disabled>
                               Incumplimiento
                             </label>
                           </div>
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="fallecimiento" id="risks_fallecimiento" name="risks">
+                              <input type="checkbox" value="fallecimiento" id="risks_fallecimiento" name="risks" disabled>
                               Fallecimiento del cliente
                             </label>
                           </div>
                           <div class="checkbox">
                             <label>
-                              <input type="checkbox" value="otra" id="risks_otra" name="risks">
+                              <input type="checkbox" value="otra" id="risks_otra" name="risks" disabled>
                               Otra
                             </label>
                             <label for="risks_other"></label>
-                            <input type="text" disabled id="risks_other" name="risks_other">
+                            <input type="text" id="risks_other" name="risks_other" readonly>
                           </div>
                         </div>
                       </div>
@@ -603,7 +603,7 @@
                           incumplimiento de pagos por parte de los deudores.
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <textarea class="form-control mt-1" rows="3" id="risk_increasing_actions" name="risk_increasing_actions"></textarea>
+                          <textarea class="form-control mt-1" rows="3" id="risk_increasing_actions" name="risk_increasing_actions" readonly></textarea>
                         </div>
                       </div>
                       <!-- pregunta 30 -->
@@ -612,7 +612,7 @@
                           12. Acciones que lleva a cabo su institución para mitigar los riesgos de no pago.
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <textarea class="form-control mt-1" rows="3" id="risk_mitigating_actions" name="risk_mitigating_actions"></textarea>
+                          <textarea class="form-control mt-1" rows="3" id="risk_mitigating_actions" name="risk_mitigating_actions" readonly></textarea>
                         </div>
                       </div>
                       <!-- pregunta 31 -->
@@ -623,7 +623,7 @@
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
                             <label>
-                              <input type="radio" value="si" id="non_payment_risk_si" name="non_payment_risk">
+                              <input type="radio" value="si" id="non_payment_risk_si" name="non_payment_risk" disabled>
                               Sí
                             </label>
                             <div class="ml-2">
@@ -641,13 +641,13 @@
                                   Otra
                                 </label>
                                 <label for="non_payment_risk_si_other"></label>
-                                <input type="text" disabled id="non_payment_risk_si_other" name="non_payment_risk_si_other">
+                                <input type="text" id="non_payment_risk_si_other" name="non_payment_risk_si_other" readonly>
                               </div>
                             </div>
                           </div>
                           <div class="radio">
                             <label>
-                              <input type="radio" value="no" id="non_payment_risk_no" name="non_payment_risk">
+                              <input type="radio" value="no" id="non_payment_risk_no" name="non_payment_risk" disabled>
                               No
                             </label>
                           </div>
@@ -661,11 +661,11 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div>
                             <label for="male_students">Masculino: </label>
-                            <input type="number" id="male_students" name="male_students" min="0">
+                            <input type="number" id="male_students" name="male_students" min="0" readonly>
                           </div>
                           <div>
                             <label for="female_students">Femenino: </label>
-                            <input type="number" id="female_students" name="female_students" min="0">
+                            <input type="number" id="female_students" name="female_students" min="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -678,15 +678,15 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div>
                             <label for="high_students">Alto: </label>
-                            <input type="number" id="high_students" name="high_students" min="0">
+                            <input type="number" id="high_students" name="high_students" min="0" readonly>
                           </div>
                           <div>
                             <label for="medium_students">Medio: </label>
-                            <input type="number" id="medium_students" name="medium_students" min="0">
+                            <input type="number" id="medium_students" name="medium_students" min="0" readonly>
                           </div>
                           <div>
                             <label for="low_students">Bajo: </label>
-                            <input type="number" id="low_students" name="low_students" min="0">
+                            <input type="number" id="low_students" name="low_students" min="0" readonly>
                           </div>
                         </div>
                       </div>
@@ -699,7 +699,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="mt-2">
                             <label for="graduate_percentage"></label>
-                            <input type="number" id="graduate_percentage" name="graduate_percentage" min="0" step="0.1" max="100">
+                            <input type="number" id="graduate_percentage" name="graduate_percentage" min="0" step="0.1" max="100" readonly>
                           </div>
                         </div>
                       </div>
@@ -712,29 +712,28 @@
                         <div class="col-md-9 col-sm-9 col-xs-12">
                           <div class="radio">
                             <label>
-                              <input type="radio" value="si" id="benefits_si" name="benefits">
+                              <input type="radio" value="si" id="benefits_si" name="benefits" disabled>
                               Sí
                             </label>
                             <label for="benefits_cuales">¿Cuáles?: </label>
-                            <input type="text" id="benefits_cuales" name="benefits_cuales" disabled>
+                            <input type="text" id="benefits_cuales" name="benefits_cuales" readonly>
                           </div>
                           <div class="radio">
                             <label>
-                              <input type="radio" value="no" id="benefits_no" name="benefits">
+                              <input type="radio" value="no" id="benefits_no" name="benefits" disabled>
                               No
                             </label>
                           </div>
                         </div>
                       </div>
+                      <input type="hidden" id="accepted" name="accepted">
                       <!-- fin preguntas -->
                       <div class="ln_solid"></div>
                       <!-- botones -->
                       <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-9">
-                          {{#if report}}
-                            <button type="submit" class="btn btn-success">Solo Guardar</button>
-                            <button type="button" class="btn btn-success" onclick="sendForReview()">Guardar y Enviar para Revisión</button>
-                          {{/if}}
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-10">
+                          <button type="button" class="btn btn-danger" onclick="declineReport()">Rechazar</button>
+                          <button type="button" class="btn btn-success" onclick="acceptReport()">Aceptar</button>
                         </div>
                       </div>
                     </form>
@@ -797,184 +796,30 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-      $("input:radio[name=type]").change(function() {
-        var textField = $("#type_other");
-        textField.val("").attr("disabled", true).removeAttr("required");
-        if ($("#type_otra").is(":checked")) {
-          textField.removeAttr("disabled").attr("required", true).focus();
-        }
-      });
-
-      $("input:radio[name=character]").change(function() {
-        var textField = $("#character_other");
-        textField.val("").attr("disabled", true).removeAttr("required");
-        if ($("#character_otra").is(":checked")) {
-          textField.removeAttr("disabled").attr("required", true).focus();
-        }
-      });
-
-      $("input:radio[name=has_platform]").change(function() {
-        $("#platform_ownership_propia, #platform_ownership_terceros").attr("disabled", true).removeAttr("required").removeAttr("checked");
-        if ($("#has_platform_si").is(":checked")) {
-          $("#platform_ownership_propia, #platform_ownership_terceros").attr("required", true).removeAttr("disabled");
-        }
-      });
-
-      $("input:checkbox[name=sources]").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#"+$(this).attr("id")+"_amount").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#"+$(this).attr("id")+"_amount").val("");
-      });
-
-      $("#source_otra").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#source_otra_name").attr("disabled", !checked).attr("required", checked);
-        $("#source_otra_amount").attr("disabled", !checked).attr("required", checked);
-        if (!checked) {
-          $("#source_otra_name").val("");
-          $("#source_otra_amount").val("");
-        }
-      });
-
-      $("input:radio[name=regulated]").change(function() {
-        $("#regulating_entity").val("").attr("disabled", true).removeAttr("required");
-        if ($("#regulated_si").is(":checked")) {
-          $("#regulating_entity").attr("required", true).removeAttr("disabled");
-        }
-      });
-
-      $("input:radio[name=credit_rating]").change(function() {
-        $("#rating_agency").val("").attr("disabled", true).removeAttr("required");
-        if ($("#credit_rating_si").is(":checked")) {
-          $("#rating_agency").attr("required", true).removeAttr("disabled");
-        }
-      });
-
-      $("body").on("change", ".rate", function() {
-        // console.log($(this).attr("name"));
-        $("#"+$(this).attr("name")+"_percentage").val("");
-        if ($("#"+$(this).attr("name")+"_fija").is(":checked")) {
-          $("#"+$(this).attr("name")+"_label").html('Porcentaje anual: ');
-          $("#"+$(this).attr("name")+"_percentage").attr("required", true).removeAttr("disabled");
-        } else if ($("#"+$(this).attr("name")+"_variable").is(":checked")) {
-          $("#"+$(this).attr("name")+"_label").html('Porcentaje promedio anual: ');
-          $("#"+$(this).attr("name")+"_percentage").attr("required", true).removeAttr("disabled");
-        }
-      });
-
-      $("body").on("change", ".repayment", function() {
-        // console.log($(this).attr("name"));
-        var textField = $("#"+$(this).attr("name")+"_other");
-        textField.val("").attr("disabled", true).removeAttr("required");
-        if ($("#"+$(this).attr("name")+"_otra").is(":checked")) {
-          textField.removeAttr("disabled").attr("required", true).focus();
-        }
-      });
-
-      $("body").on("change", ".warranties", function() {
-        // console.log($(this).attr("name"));
-        if ($("#"+$(this).attr("name")+"_otra").is(":checked")) {
-          $("#"+$(this).attr("name")+"_other").removeAttr("disabled").attr("required", true);
-        } else {
-          $("#"+$(this).attr("name")+"_other").val("").removeAttr("required").attr("disabled", true);
-        }
-      });
-
-      $("body").on("change", ".guarantors", function() {
-        // console.log($(this).attr("name"));
-        if ($("#"+$(this).attr("name")+"_otra").is(":checked")) {
-          $("#"+$(this).attr("name")+"_other").removeAttr("disabled").attr("required", true);
-        } else {
-          $("#"+$(this).attr("name")+"_other").val("").removeAttr("required").attr("disabled", true);
-        }
-      });
-
-      // $("body").on("change", ".credit", function() {
-      //   console.log($(this).attr("name"));
-      //   if ($("#"+$(this).attr("name")+"_pais").is(":checked") || $("#"+$(this).attr("name")+"_exterior").is(":checked")) {
-      //     $("#" + $(this).attr("name") + "_new").attr("required", true).removeAttr("disabled");
-      //     $("#" + $(this).attr("name") + "_old").attr("required", true).removeAttr("disabled");
-      //   }
-      // });
-
-      $("input:checkbox[name=current_portfolio]").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#"+$(this).attr("id")+"_amount").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#"+$(this).attr("id")+"_amount").val("");
-      });
-
-      $("input:checkbox[name=pastdue_portfolio]").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#"+$(this).attr("id")+"_amount").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#"+$(this).attr("id")+"_amount").val("");
-      });
-
-      $("input:checkbox[name=execution_portfolio]").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#"+$(this).attr("id")+"_amount").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#"+$(this).attr("id")+"_amount").val("");
-      });
-
-      $("#risks_otra").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $(this).is(":checked");
-        $("#risks_other").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#risks_other").val("");
-      });
-
-      $("input:radio[name=non_payment_risk]").change(function() {
-        $("#non_payment_risk_si_universidades, #non_payment_risk_si_publico, #non_payment_risk_si_otra").attr("disabled", true).removeAttr("required").removeAttr("checked");
-        $("#non_payment_risk_si_other").attr("disabled", true).val("").removeAttr("required");
-        if ($("#non_payment_risk_si").is(":checked")) {
-          $("#non_payment_risk_si_universidades, #non_payment_risk_si_publico, #non_payment_risk_si_otra").attr("required", true).removeAttr("disabled");
-          $("#non_payment_risk_si_universidades").attr("checked", true);
-        }
-      });
-
-      $("input:radio[name=non_payment_risk_si]").change(function() {
-        // console.log($(this).attr("id"));
-        var checked = $("#non_payment_risk_si_otra").is(":checked");
-        $("#non_payment_risk_si_other").attr("disabled", !checked).attr("required", checked);
-        if (!checked)
-          $("#non_payment_risk_si_other").val("");
-      });
-
-      $("input:radio[name=benefits]").change(function() {
-        $("#benefits_cuales").val("").attr("disabled", true).removeAttr("required");
-        if ($("#benefits_si").is(":checked")) {
-          $("#benefits_cuales").removeAttr("disabled").attr("required", true);
-        }
-      });
 
       {{#each report.funding_sources as |obj|}}
         $("#source_{{obj.source}}").attr("checked", true);
-        $("#source_{{obj.source}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
+        $("#source_{{obj.source}}_amount").val("{{obj.amount}}");
+        // .attr("required", true).removeAttr("disabled");
         {{#if obj.name}}
-          $("#source_otra_name").val("{{obj.name}}").attr("required", true).removeAttr("disabled");
+          $("#source_otra_name").val("{{obj.name}}");
+          // .attr("required", true).removeAttr("disabled");
         {{/if}}
       {{/each}}
 
       {{#if report.regulated}}
         $("#regulated_{{report.regulated}}").attr("checked", true);
         if ($("#regulated_si").is(":checked")) {
-          $("#regulating_entity").val("{{report.regulating_entity}}").attr("required", true).removeAttr("disabled");
+          $("#regulating_entity").val("{{report.regulating_entity}}");
+          // .attr("required", true).removeAttr("disabled");
         }
       {{/if}}
 
       {{#if report.credit_rating}}
         $("#credit_rating_{{report.credit_rating}}").attr("checked", true);
         if ($("#credit_rating_si").is(":checked")) {
-          $("#rating_agency").val("{{report.rating_agency}}").attr("required", true).removeAttr("disabled");
+          $("#rating_agency").val("{{report.rating_agency}}");
+          // .attr("required", true).removeAttr("disabled");
         }
       {{/if}}      
 
@@ -988,7 +833,8 @@
 
       {{#each report.current_portfolio as |obj|}}
         $("#current_portfolio_{{obj.name}}").attr("checked", true);
-        $("#current_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
+        $("#current_portfolio_{{obj.name}}_amount").val("{{obj.amount}}");
+        // .attr("required", true).removeAttr("disabled");
       {{/each}}
 
       {{#if report.current_portfolio_male}}
@@ -1009,7 +855,8 @@
 
       {{#each report.pastdue_portfolio as |obj|}}
         $("#pastdue_portfolio_{{obj.name}}").attr("checked", true);
-        $("#pastdue_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
+        $("#pastdue_portfolio_{{obj.name}}_amount").val("{{obj.amount}}");
+        // .attr("required", true).removeAttr("disabled");
       {{/each}}
 
       {{#if report.pastdue_portfolio_male}}
@@ -1022,7 +869,8 @@
 
       {{#each report.execution_portfolio as |obj|}}
         $("#execution_portfolio_{{obj.name}}").attr("checked", true);
-        $("#execution_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
+        $("#execution_portfolio_{{obj.name}}_amount").val("{{obj.amount}}");
+        // .attr("required", true).removeAttr("disabled");
       {{/each}}
 
       {{#if report.execution_portfolio_male}}
@@ -1037,7 +885,8 @@
         $("#risks_{{risk}}").attr("checked", true);
       {{/each}}
       if ($("#risks_otra").is(":checked")) {
-        $("#risks_other").val("{{report.risks_other}}").attr("required", true).removeAttr("disabled");
+        $("#risks_other").val("{{report.risks_other}}");
+        // .attr("required", true).removeAttr("disabled");
       }
 
       {{#if report.risk_increasing_actions}}
@@ -1051,11 +900,12 @@
       {{#if report.non_payment_risk}}
         $("#non_payment_risk_{{report.non_payment_risk.risk}}").attr("checked", true);
         if ($("#non_payment_risk_si").is(":checked"))
-          $("#non_payment_risk_si_universidades, #non_payment_risk_si_publico, #non_payment_risk_si_otra").attr("required", true).removeAttr("disabled");
+          // $("#non_payment_risk_si_universidades, #non_payment_risk_si_publico, #non_payment_risk_si_otra").attr("required", true).removeAttr("disabled");
         {{#if report.non_payment_risk.name}}
           $("#non_payment_risk_si_{{report.non_payment_risk.name}}").attr("checked", true);
           {{#if report.non_payment_risk.other}}
-            $("#non_payment_risk_si_other").val("{{report.non_payment_risk.other}}").attr("required", true).removeAttr("disabled");
+            $("#non_payment_risk_si_other").val("{{report.non_payment_risk.other}}");
+            // .attr("required", true).removeAttr("disabled");
           {{/if}}
         {{/if}}
       {{/if}}
@@ -1087,7 +937,8 @@
       {{#if report.benefits}}
         $("#benefits_{{report.benefits.option}}").attr("checked", true);
         if ($("#benefits_si").is(":checked"))
-          $("#benefits_cuales").val("{{report.benefits.names}}").attr("required", true).removeAttr("disabled");
+          $("#benefits_cuales").val("{{report.benefits.names}}");
+        // .attr("required", true).removeAttr("disabled");
       {{/if}}
 
       {{#if report.programs}}
@@ -1110,12 +961,14 @@
           {{/if}}
           {{#if obj.rate}}
             $("#program"+({{index}}+1)+"_rate_{{obj.rate.type}}").attr("checked", true);
-            $("#program"+({{index}}+1)+"_rate_percentage").val("{{obj.rate.percentage}}").attr("required", true).removeAttr("disabled");
+            $("#program"+({{index}}+1)+"_rate_percentage").val("{{obj.rate.percentage}}");
+            // .attr("required", true).removeAttr("disabled");
           {{/if}}
           {{#if obj.repayment}}
             $("#program"+({{index}}+1)+"_repayment_{{obj.repayment.type}}").attr("checked", true);
             if ($("#program"+({{index}}+1)+"_repayment_otra").is(":checked"))
-              $("#program"+({{index}}+1)+"_repayment_other").val("{{obj.repayment.other}}").attr("required", true).removeAttr("disabled");
+              $("#program"+({{index}}+1)+"_repayment_other").val("{{obj.repayment.other}}");
+            // .attr("required", true).removeAttr("disabled");
           {{/if}}
           {{#if obj.grace}}
             $("#program"+({{index}}+1)+"_grace").val("{{obj.grace}}");
@@ -1125,14 +978,16 @@
               $("#program"+({{index}}+1)+"_warranties_{{warranty}}").attr("checked", true);
             {{/each}}
             if ($("#program"+({{index}}+1)+"_warranties_otra").is(":checked"))
-              $("#program"+({{index}}+1)+"_warranties_other").val("{{obj.warranties_other}}").attr("required", true).removeAttr("disabled");
+              $("#program"+({{index}}+1)+"_warranties_other").val("{{obj.warranties_other}}");
+            // .attr("required", true).removeAttr("disabled");
           {{/if}}
           {{#if obj.guarantors}}
             {{#each obj.guarantors as |guarantor|}}
               $("#program"+({{index}}+1)+"_guarantors_{{guarantor}}").attr("checked", true);
             {{/each}}
             if ($("#program"+({{index}}+1)+"_guarantors_otra").is(":checked"))
-              $("#program"+({{index}}+1)+"_guarantors_other").val("{{obj.guarantors_other}}").attr("required", true).removeAttr("disabled");
+              $("#program"+({{index}}+1)+"_guarantors_other").val("{{obj.guarantors_other}}");
+            // .attr("required", true).removeAttr("disabled");
           {{/if}}
           {{#if obj.credit_pais}}
             $("#program"+({{index}}+1)+"_credit_pais_new").val("{{obj.credit_pais.new}}");
@@ -1159,7 +1014,7 @@
       let target_quantity = value - current_quantity;
       if (target_quantity > 0) {
         for (let i = current_quantity + 1; i <= value; i++) {
-          var html = `
+          let html = `
             <div class="x_panel">
               <div class="x_title">
                 <h2>Programa ${i} </h2>
@@ -1178,13 +1033,13 @@
                   <div class="col-md-9 col-sm-9 col-xs-12">
                     <div class="radio">
                       <label>
-                        <input class="level" type="radio" value="pregrado" id="${'program'+i+'_level_pregrado'}" name="${'program'+i+'_level'}" checked required>
+                        <input class="level" type="radio" value="pregrado" id="${'program'+i+'_level_pregrado'}" name="${'program'+i+'_level'}" disabled>
                         Pregrado
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input class="level" type="radio" value="posgrado" id="${'program'+i+'_level_posgrado'}" name="${'program'+i+'_level'}">
+                        <input class="level" type="radio" value="posgrado" id="${'program'+i+'_level_posgrado'}" name="${'program'+i+'_level'}" disabled>
                         Posgrado
                       </label>
                     </div>
@@ -1195,7 +1050,7 @@
                     1. Nombre del Programa o Línea de C.E.
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="${'program'+i+'_name'}" name="${'program'+i+'_name'}" class="form-control" required>
+                    <input type="text" id="${'program'+i+'_name'}" name="${'program'+i+'_name'}" class="form-control" readonly>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1204,7 +1059,7 @@
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="number" id="${'program'+i+'_beneficiaries'}" name="${'program'+i+'_beneficiaries'}" class="mt-1"
-                           min="0" step="1">
+                           min="0" step="1" readonly>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1213,7 +1068,7 @@
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="number" id="${'program'+i+'_term'}" name="${'program'+i+'_term'}" class="mt-1"
-                           min="1" step="1">
+                           min="1" step="1" readonly>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1222,7 +1077,7 @@
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="number" id="${'program'+i+'_investment'}" name="${'program'+i+'_investment'}" class="mt-2"
-                           min="0">
+                           min="0" readonly>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1232,18 +1087,18 @@
                   <div class="col-md-9 col-sm-9 col-xs-12">
                     <div class="radio">
                       <label>
-                        <input class="rate" type="radio" value="fija" id="${'program'+i+'_rate_fija'}" name="${'program'+i+'_rate'}">
+                        <input class="rate" type="radio" value="fija" id="${'program'+i+'_rate_fija'}" name="${'program'+i+'_rate'}" disabled>
                         Fija
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input class="rate" type="radio" value="variable" id="${'program'+i+'_rate_variable'}" name="${'program'+i+'_rate'}">
+                        <input class="rate" type="radio" value="variable" id="${'program'+i+'_rate_variable'}" name="${'program'+i+'_rate'}" disabled>
                         Variable
                       </label>
                     </div>
                     <label id="${'program'+i+'_rate_label'}" for="${'program'+i+'_rate_percentage'}">Porcentaje anual: </label>
-                    <input type="number" id="${'program'+i+'_rate_percentage'}" name="${'program'+i+'_rate_percentage'}" min="0" disabled> %
+                    <input type="number" id="${'program'+i+'_rate_percentage'}" name="${'program'+i+'_rate_percentage'}" min="0" readonly> %
                   </div>
                 </div>
                 <div class="form-group">
@@ -1257,29 +1112,29 @@
                   <div class="col-md-9 col-sm-9 col-xs-12">
                     <div class="radio">
                       <label>
-                        <input class="repayment" type="radio" value="fijo" id="${'program'+i+'_repayment_fijo'}" name="${'program'+i+'_repayment'}">
+                        <input class="repayment" type="radio" value="fijo" id="${'program'+i+'_repayment_fijo'}" name="${'program'+i+'_repayment'}" disabled>
                         Fijo
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input class="repayment" type="radio" value="creciente" id="${'program'+i+'_repayment_creciente'}" name="${'program'+i+'_repayment'}">
+                        <input class="repayment" type="radio" value="creciente" id="${'program'+i+'_repayment_creciente'}" name="${'program'+i+'_repayment'}" disabled>
                         Creciente
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input class="repayment" type="radio" value="salario" id="${'program'+i+'_repayment_salario'}" name="${'program'+i+'_repayment'}">
+                        <input class="repayment" type="radio" value="salario" id="${'program'+i+'_repayment_salario'}" name="${'program'+i+'_repayment'}" disabled>
                         En función del salario
                       </label>
                     </div>
                     <div class="radio">
                       <label>
-                        <input class="repayment" type="radio" value="otra" id="${'program'+i+'_repayment_otra'}" name="${'program'+i+'_repayment'}">
+                        <input class="repayment" type="radio" value="otra" id="${'program'+i+'_repayment_otra'}" name="${'program'+i+'_repayment'}" disabled>
                         Otra
                       </label>
                       <label for="${'program'+i+'_repayment_other'}"></label>
-                      <input type="text" disabled id="${'program'+i+'_repayment_other'}" name="${'program'+i+'_repayment_other'}">
+                      <input type="text" id="${'program'+i+'_repayment_other'}" name="${'program'+i+'_repayment_other'}" readonly>
                     </div>
                   </div>
                 </div>
@@ -1292,7 +1147,7 @@
                     </span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="number" id="${'program'+i+'_grace'}" class="mt-1" min="0" step="0.1">
+                    <input type="number" id="${'program'+i+'_grace'}" class="mt-1" min="0" step="0.1" readonly>
                   </div>
                 </div>
                 <div class="form-group">
@@ -1302,41 +1157,41 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="personal" id="${'program'+i+'_warranties_personal'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="personal" id="${'program'+i+'_warranties_personal'}" name="${'program'+i+'_warranties'}" disabled>
                         Personal (codeudor, obligado solidario)
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="real" id="${'program'+i+'_warranties_real'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="real" id="${'program'+i+'_warranties_real'}" name="${'program'+i+'_warranties'}" disabled>
                         Real (pagaré, hipoteca)
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="mixta" id="${'program'+i+'_warranties_mixta'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="mixta" id="${'program'+i+'_warranties_mixta'}" name="${'program'+i+'_warranties'}" disabled>
                         Mixta
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="seguro" id="${'program'+i+'_warranties_seguro'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="seguro" id="${'program'+i+'_warranties_seguro'}" name="${'program'+i+'_warranties'}" disabled>
                         Seguro de vida
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="no" id="${'program'+i+'_warranties_no'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="no" id="${'program'+i+'_warranties_no'}" name="${'program'+i+'_warranties'}" disabled>
                         No tiene
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="warranties" type="checkbox" value="otra" id="${'program'+i+'_warranties_otra'}" name="${'program'+i+'_warranties'}">
+                        <input class="warranties" type="checkbox" value="otra" id="${'program'+i+'_warranties_otra'}" name="${'program'+i+'_warranties'}" disabled>
                         Otra
                       </label>
                       <label for="${'program'+i+'_warranties_other'}"></label>
-                      <input type="text" disabled id="${'program'+i+'_warranties_other'}" name="${'program'+i+'_warranties_other'}">
+                      <input type="text" id="${'program'+i+'_warranties_other'}" name="${'program'+i+'_warranties_other'}" readonly>
                     </div>
                   </div>
                 </div>
@@ -1347,23 +1202,23 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="checkbox">
                       <label>
-                        <input class="guarantors" type="checkbox" value="estudiante" id="${'program'+i+'_guarantors_estudiante'}" name="${'program'+i+'_guarantors'}">
+                        <input class="guarantors" type="checkbox" value="estudiante" id="${'program'+i+'_guarantors_estudiante'}" name="${'program'+i+'_guarantors'}" disabled>
                         El mismo estudiante
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="guarantors" type="checkbox" value="padre" id="${'program'+i+'_guarantors_padre'}" name="${'program'+i+'_guarantors'}">
+                        <input class="guarantors" type="checkbox" value="padre" id="${'program'+i+'_guarantors_padre'}" name="${'program'+i+'_guarantors'}" disabled>
                         Padre de familia
                       </label>
                     </div>
                     <div class="checkbox">
                       <label>
-                        <input class="guarantors" type="checkbox" value="otra" id="${'program'+i+'_guarantors_otra'}" name="${'program'+i+'_guarantors'}">
+                        <input class="guarantors" type="checkbox" value="otra" id="${'program'+i+'_guarantors_otra'}" name="${'program'+i+'_guarantors'}" disabled>
                         Otra
                       </label>
                       <label for="${'program'+i+'_guarantors_other'}"></label>
-                      <input type="text" disabled id="${'program'+i+'_guarantors_other'}" name="${'program'+i+'_guarantors_other'}">
+                      <input type="text" id="${'program'+i+'_guarantors_other'}" name="${'program'+i+'_guarantors_other'}" readonly>
                     </div>
                   </div>
                 </div>
@@ -1374,11 +1229,11 @@
                   <div class="col-md-6 col-sm-6 col-xs-12 pt">
                     <div>
                       <label for="${'program'+i+'_credit_pais_new'}">Créditos nuevos: </label>
-                      <input type="number" id="${'program'+i+'_credit_pais_new'}" name="${'program'+i+'_credit_pais_new'}" min="0">
+                      <input type="number" id="${'program'+i+'_credit_pais_new'}" name="${'program'+i+'_credit_pais_new'}" min="0" readonly>
                     </div>
                     <div>
                       <label for="${'program'+i+'_credit_pais_old'}">Créditos antiguos: </label>
-                      <input type="number" id="${'program'+i+'_credit_pais_old'}" name="${'program'+i+'_credit_pais_old'}" min="0">
+                      <input type="number" id="${'program'+i+'_credit_pais_old'}" name="${'program'+i+'_credit_pais_old'}" min="0" readonly>
                     </div>
                   </div>
                 </div>
@@ -1389,11 +1244,11 @@
                   <div class="col-md-6 col-sm-6 col-xs-12 pt">
                     <div>
                       <label for="${'program'+i+'_credit_exterior_new'}">Créditos nuevos: </label>
-                      <input type="number" id="${'program'+i+'_credit_exterior_new'}" name="${'program'+i+'_credit_exterior_new'}" min="0">
+                      <input type="number" id="${'program'+i+'_credit_exterior_new'}" name="${'program'+i+'_credit_exterior_new'}" min="0" readonly>
                     </div>
                     <div>
                       <label for="${'program'+i+'_credit_exterior_old'}">Créditos antiguos: </label>
-                      <input type="number" id="${'program'+i+'_credit_exterior_old'}" name="${'program'+i+'_credit_exterior_old'}" min="0">
+                      <input type="number" id="${'program'+i+'_credit_exterior_old'}" name="${'program'+i+'_credit_exterior_old'}" min="0" readonly>
                     </div>
                   </div>
                 </div>
@@ -1410,11 +1265,14 @@
       }
     }
 
-    function sendForReview() {
-      $('<input />').attr('type', 'hidden')
-          .attr('name', "complete")
-          .attr('value', 1)
-          .appendTo('#demo-form2');
+    function acceptReport() {
+      $("#accepted").attr('value', 1);
+
+      document.getElementById('demo-form2').submit();
+    }
+
+    function declineReport() {
+      $("#accepted").attr('value', 0);
 
       document.getElementById('demo-form2').submit();
     }

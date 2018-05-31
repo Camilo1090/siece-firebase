@@ -2,18 +2,14 @@ const admin = require('firebase-admin');
 let db = admin.firestore();
 
 
-exports.listReports = (req, res) => {
-  let data = {};
-  if (req.user)
-    data.user = req.user;
+exports.listIndicators = (req, res) => {
+  let data = { user: req.user, is_admin: req.is_admin };
 
   return res.render('select-report', data);
 };
 
-exports.getReport = (req, res) => {
-  let data = {};
-  if (req.user)
-    data.user = req.user;
+exports.getIndicator = (req, res) => {
+  let data = { user: req.user, is_admin: req.is_admin };
   data.selected_report = req.body.report;
   data.from_year = req.body.from_year;
   data.to_year = req.body.to_year;

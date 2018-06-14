@@ -70,7 +70,7 @@ exports.saveProfile = async (req, res) => {
           result = await db.collection('users').doc().set(institution);
         } else {
           institution.updated_at = (new Date()).toUTCString();
-          let institutionRef = querySnapshot.docs[0].ref;
+          let institutionRef = usersSnapshot.docs[0].ref;
           result = await institutionRef.set(institution, { merge: true });
         }
         console.log('Data saved: ', result);

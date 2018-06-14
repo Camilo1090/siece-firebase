@@ -63,7 +63,7 @@ module.exports = (app) => {
       if (req.is_admin)
         return res.redirect('/index');
       else
-        return profileController.getProfile(req, res);
+        return profileController.saveProfile(req, res);
     else
       return res.redirect('/login');
   });

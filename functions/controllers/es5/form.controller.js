@@ -81,7 +81,19 @@ exports.createReport = (() => {var _ref2 = (0, _asyncToGenerator3.default)(funct
       if (reportsSnapshot.empty) {
         console.log('No documents found.');
       } else {
-        data.reports = reportsSnapshot.docs.map(function (doc) {return doc.data();});
+        data.reports = reportsSnapshot.docs.map(function (doc) {
+          let report = doc.data();
+          report = {
+            // institution_name: await getInstitutionName(report.user_id),
+            user_id: report.user_id,
+            reported_year: report.reported_year,
+            status: report.status,
+            created_at: report.created_at,
+            updated_at: report.updated_at,
+            editable: report.status === 'Incompleto' };
+
+          return report;
+        });
       }
       return res.render('select-form', data);
     } catch (error) {

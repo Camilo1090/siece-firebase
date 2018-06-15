@@ -69,7 +69,7 @@ module.exports = (app) => {
   });
 
   app.get('/formularios', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       if (req.is_admin)
         return res.redirect('/index');
@@ -80,7 +80,7 @@ module.exports = (app) => {
   });
 
   app.post('/formularios', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       if (req.is_admin)
         return res.redirect('/index');
@@ -91,7 +91,7 @@ module.exports = (app) => {
   });
 
   app.get('/formularios/:reported_year', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       if (req.is_admin)
         return res.redirect('/index');
@@ -102,7 +102,7 @@ module.exports = (app) => {
   });
 
   app.post('/formularios/:reported_year', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     if (req.user)
       if (req.is_admin)
         return res.redirect('/index');
@@ -113,12 +113,12 @@ module.exports = (app) => {
   });
 
   app.get('/indicadores', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     return indicatorsController.listIndicators(req, res);
   });
 
   app.post('/indicadores', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
     return indicatorsController.getIndicator(req, res);
   });
 

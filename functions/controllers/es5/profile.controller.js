@@ -60,10 +60,13 @@ exports.saveProfile = (() => {var _ref2 = (0, _asyncToGenerator3.default)(functi
 
           institution.has_platform = formData.has_platform;
 
-          institution.platform_ownership = formData.platform_ownership;
+          if (institution.has_platform === 'si') {
+            institution.platform_ownership = formData.platform_ownership;
+          }
 
           const newProfile = usersSnapshot.empty;
           let result = null;
+          console.log(institution);
           if (newProfile) {
             institution.created_at = new Date().toUTCString();
             institution.updated_at = new Date().toUTCString();

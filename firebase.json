@@ -2,6 +2,12 @@
   "hosting": {
     "public": "public",
     "rewrites": [{
+      "source": "vendor/**",
+      "destination": "/vendor"
+    },{
+      "source": "build/**",
+      "destination": "/build"
+    }, {
       "source": "**",
       "function": "app"
     }],

@@ -29,11 +29,12 @@ const financiamientoAnual = async (req, res, data) => {
   const formData = req.body;
   const years = formData.to_year - formData.from_year + 1;
   if (years >= 0 && years <= 10) {
-    const reportsSnapshot = await db.collection('reports')
-      .where('reported_year', '>=', Number(formData.from_year))
-      .where('reported_year', '<=', Number(formData.to_year))
-      .get();
     try {
+      const reportsSnapshot = await db.collection('reports')
+        // .where('status', '==', 'Aceptado')
+        .where('reported_year', '>=', Number(formData.from_year))
+        .where('reported_year', '<=', Number(formData.to_year))
+        .get();
       if (reportsSnapshot.empty) {
         console.log('No documents found.');
         data.warning = 'No hay datos reportados en el periodo seleccionado.';
@@ -46,31 +47,48 @@ const financiamientoAnual = async (req, res, data) => {
           let result = { reported_year: Number(i) };
           results.push(result);
         }
+
         for (let i = 0; i < reports.length; i++) {
-          if (reports[i].programs && reports[i].programs.length > 0) {
-            let total_investment = 0;
-            let total_credits = 0;
+          let total_investment = 0;
+          let total_credits = 0;
+          if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
               // console.log(program);
-              if (program.investment && program.credit_pais && program.credit_pais.new && program.credit_pais.old
-                && program.credit_exterior && program.credit_exterior.new && program.credit_exterior.old) {
-                // console.log(program.investment);
-                total_investment += program.investment;
-                total_credits += program.credit_pais.new + program.credit_pais.old + program.credit_exterior.new + program.credit_exterior.old;
+              if (program.investment)
+                total_investment += Number(program.investment);
+              
+              if (program.credit_pais) {
+                if (program.credit_pais.new)
+                  total_credits += Number(program.credit_pais.new);
+
+                if (program.credit_pais.old)
+                  total_credits += Number(program.credit_pais.old);
+              }
+
+              if (program.credit_exterior) {
+                if (program.credit_exterior.new)
+                  total_credits += Number(program.credit_exterior.new);
+
+                if (program.credit_exterior.old)
+                  total_credits += Number(program.credit_exterior.old);
               }
             }
+          }
 
-            const indicatorValue = total_investment / total_credits;
-            if (indicatorValue) {
-              // console.log(indicatorValue);
-              if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
-              } else {
-                const userRecord = await admin.auth().getUser(reports[i].user_id);
-                userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
-              }
+          // if (total_credits === 0)
+          //   total_credits = 1;
+
+          let indicatorValue = total_investment / total_credits;
+          if (indicatorValue) {
+            // console.log(indicatorValue);
+            indicatorValue = indicatorValue.toFixed(2);
+            if (userCache[reports[i].user_id]) {
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+            } else {
+              const userRecord = await admin.auth().getUser(reports[i].user_id);
+              userCache[reports[i].user_id] = userRecord.displayName;
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
             }
           }
         }
@@ -102,8 +120,9 @@ const tableResults = (chartResults, userCache, institutionNames) => {
     for (let j = 0; j < chartResults.length; j++) {
       let indicator = { reported_year: chartResults[j].reported_year };
       const indicatorValue = chartResults[j][result.institution_name];
-      if (indicatorValue)
-        indicator.value = indicatorValue;
+      if (indicatorValue) {
+        indicator.value = Number(indicatorValue);
+      }
       // console.log(indicator);
       result.indicators.push(indicator);
     }

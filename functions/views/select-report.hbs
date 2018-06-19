@@ -18,11 +18,11 @@
     <!--&lt;!&ndash; iCheck &ndash;&gt;-->
     <!--<link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">-->
     <!--&lt;!&ndash; Datatables &ndash;&gt;-->
-    <!--<link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">-->
-    <!--<link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">-->
-    <!--<link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">-->
-    <!--<link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">-->
-    <!--<link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="dataTables.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="buttons.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="fixedHeader.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="responsive.bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="scroller.bootstrap.min.css" rel="stylesheet">-->
 
     <!--&lt;!&ndash; Custom Theme Style &ndash;&gt;-->
     <!--<link href="../build/css/custom.min.css" rel="stylesheet">-->
@@ -189,7 +189,7 @@
                       <tr>
                         <th>Institución/Año</th>
                         {{#each table_results.0.indicators}}
-                          <th>{{this.reported_year}}</th>
+                          <th class="years">{{this.reported_year}}</th>
                         {{/each}}
                       </tr>
                       </thead>
@@ -198,11 +198,12 @@
                         <tr>
                           <td>{{this.institution_name}}</td>
                           {{#each this.indicators}}
-                            {{#if this.value}}
-                              <td>{{this.value}}</td>
-                            {{else}}
-                              <td>-</td>
-                            {{/if}}
+                            <td>{{this.value}}</td>
+                            <!--{{#if this.value}}-->
+                              <!--<td>{{this.value}}</td>-->
+                            <!--{{else}}-->
+                              <!--<td>-</td>-->
+                            <!--{{/if}}-->
                           {{/each}}
                         </tr>
                       {{/each}}
@@ -239,30 +240,30 @@
     </div>
 
     <!-- jQuery -->
-    <script src="jquery.min.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
     <!-- Bootstrap -->
-    <script src="bootstrap.min.js"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- FastClick -->
-    <script src="fastclick.js"></script>
+    <script src="vendor/js/fastclick.js"></script>
     <!-- NProgress -->
-    <script src="nprogress.js"></script>
+    <script src="vendor/nprogress/nprogress.js"></script>
     <!-- iCheck -->
     <script src="icheck.min.js"></script>
     <!-- Parsley -->
-    <script src="parsley.min.js"></script>
+    <script src="vendor/parsley/parsley.min.js"></script>
     <!-- i18n/es.js-->
-    <script src="es.js"></script>
+    <script src="vendor/js/es.js"></script>
     <!-- Datatables -->
-    <script src="jquery.dataTables.min.js"></script>
-    <script src="dataTables.bootstrap.min.js"></script>
-    <script src="dataTables.responsive.min.js"></script>
-    <script src="responsive.bootstrap.js"></script>
-    <script src="jszip.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="vendor/datatables/dataTables.responsive.min.js"></script>
+    <script src="vendor/datatables/responsive.bootstrap.js"></script>
+    <script src="vendor/datatables/jszip.min.js"></script>
     <!-- morris.js -->
-    <script src="raphael.min.js"></script>
-    <script src="morris.min.js"></script>
+    <script src="vendor/morris/raphael.min.js"></script>
+    <script src="vendor/morris/morris.min.js"></script>
     <!-- Custom Theme Scripts -->
-    <script src="custom.min.js"></script>
+    <script src="build/js/custom.min.js"></script>
 
     <script type="text/javascript">
       $(document).ready(() => {
@@ -296,7 +297,18 @@
               "next":       "Siguiente",
               "previous":   "Anterior"
             }
-          }
+          },
+          "ordering": true,
+          "columnDefs": [
+            {
+              "render": function (data, type, row) {
+                if (type === 'display')
+                  return 'USD ' + Number(data).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                return Number(data);
+              },
+              "targets": 'years'
+            }
+          ]
         });
       })
     </script>

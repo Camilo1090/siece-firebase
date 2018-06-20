@@ -1,10 +1,11 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 // let db = admin.firestore();
 
 const express = require('express');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 // const session = require('express-session');
 // const engines = require('consolidate');
 // const flash = require('express-flash');
@@ -13,13 +14,17 @@ const exphbs = require('express-handlebars');
 const routes = require('./routes');
 
 const app = express();
+app.use(cors({
+  credentials: true
+}));
+app.use(cookieParser());
+
 // let sessionStore = new session.MemoryStore;
 
 // app.engine('hbs', engines.handlebars);
 app.engine('hbs', exphbs({ defaultLayout: 'main' }));
 app.set('views', './views');
 app.set('view engine', 'hbs');
-// app.use(cookieParser('keyboard cat'));
 // app.use(session({
 //   cookie: { maxAge: 60000 },
 //   store: sessionStore,

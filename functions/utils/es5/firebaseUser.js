@@ -15,9 +15,10 @@ const validateFirebaseIdToken = (() => {var _ref = (0, _asyncToGenerator3.defaul
     try {
       const idToken = yield getIdTokenFromRequest(req, res);
       if (idToken)
-      return addDecodedIdTokenToRequest(idToken, req, next);else
-
-      return next();
+      return addDecodedIdTokenToRequest(idToken, req, next);
+      // return validateFirebaseSessionCookie()
+      else
+        return next();
     } catch (error) {
       console.log(error);
       return next();
@@ -70,4 +71,35 @@ const addDecodedIdTokenToRequest = (() => {var _ref2 = (0, _asyncToGenerator3.de
     }
   });return function addDecodedIdTokenToRequest(_x4, _x5, _x6) {return _ref2.apply(this, arguments);};})();
 
+const validateFirebaseSessionCookie = (() => {var _ref3 = (0, _asyncToGenerator3.default)(function* (req, res, next) {
+    const sessionCookie = req.cookies.__session;
+    // Verify the session cookie. In this case an additional check is added to detect
+    // if the user's Firebase session was revoked, user deleted/disabled, etc.
+    if (sessionCookie) {
+      console.log('Found "__session" cookie');
+      try {
+        const decodedIdToken = yield admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
+        console.log('ID Token correctly decoded for: ', decodedIdToken.uid);
+        const userRecord = yield admin.auth().getUser(decodedIdToken.uid);
+        console.log('Successfully got user: ', userRecord.uid);
+        req.user = userRecord;
+        const usersSnapshot = yield db.collection('users').
+        where('user_id', '==', userRecord.uid).
+        get();
+        if (usersSnapshot.size === 1 && usersSnapshot.docs[0].data().is_admin) {
+          req.is_admin = true;
+          console.log('Admin user request');
+        }
+        return next();
+      } catch (error) {
+        console.error('Error while verifying Firebase Session Cookie:', error);
+        return next();
+      }
+    }
+
+    console.log('Session Cookie not found, proceeding...');
+    return next();
+  });return function validateFirebaseSessionCookie(_x7, _x8, _x9) {return _ref3.apply(this, arguments);};})();
+
 exports.validateFirebaseIdToken = validateFirebaseIdToken;
+exports.validateFirebaseSessionCookie = validateFirebaseSessionCookie;

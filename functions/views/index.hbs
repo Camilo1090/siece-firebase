@@ -107,8 +107,12 @@
                       <span class=" fa fa-angle-down"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-usermenu pull-right">
-                      <li><a href="perfil"> Perfil</a></li>
-                      <li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
+                      {{#if is_admin}}
+                      {{else}}
+                        <li><a href="perfil"> Perfil</a></li>
+                      {{/if}}
+                      <!--<li><a onclick="firebase.auth().signOut()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>-->
+                      <li><a onclick="logout()"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
                     </ul>
                   {{else}}
                     <a href="login"><i class="fa fa-sign-in pull-right mt-1"></i> Iniciar Sesión</a>

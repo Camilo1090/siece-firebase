@@ -16,6 +16,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
     const idToken = await getIdTokenFromRequest(req, res);
     if (idToken)
       return addDecodedIdTokenToRequest(idToken, req, next);
+      // return validateFirebaseSessionCookie()
     else
       return next();
   } catch(error) {
@@ -70,4 +71,35 @@ const addDecodedIdTokenToRequest = async (idToken, req, next) => {
   }
 };
 
+const validateFirebaseSessionCookie = async (req, res, next) => {
+  const sessionCookie = req.cookies.__session;
+  // Verify the session cookie. In this case an additional check is added to detect
+  // if the user's Firebase session was revoked, user deleted/disabled, etc.
+  if (sessionCookie) {
+    console.log('Found "__session" cookie');
+    try {
+      const decodedIdToken = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
+      console.log('ID Token correctly decoded for: ', decodedIdToken.uid);
+      const userRecord = await admin.auth().getUser(decodedIdToken.uid);
+      console.log('Successfully got user: ', userRecord.uid);
+      req.user = userRecord;
+      const usersSnapshot = await db.collection('users')
+        .where('user_id', '==', userRecord.uid)
+        .get();
+      if (usersSnapshot.size === 1 && usersSnapshot.docs[0].data().is_admin) {
+        req.is_admin = true;
+        console.log('Admin user request');
+      }
+      return next();
+    } catch (error) {
+      console.error('Error while verifying Firebase Session Cookie:', error);
+      return next();
+    }
+  }
+
+  console.log('Session Cookie not found, proceeding...');
+  return next();
+};
+
 exports.validateFirebaseIdToken = validateFirebaseIdToken;
+exports.validateFirebaseSessionCookie = validateFirebaseSessionCookie;

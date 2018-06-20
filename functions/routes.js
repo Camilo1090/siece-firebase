@@ -7,6 +7,7 @@ if (process.env['NODE_ENV'] === 'production')
 
 const firebaseUser = require('./utils/'+dir+'/firebaseUser');
 
+const authController = require('./controllers/'+dir+'/auth.controller');
 const indexController = require('./controllers/'+dir+'/index.controller');
 const formController = require('./controllers/'+dir+'/form.controller');
 const profileController = require('./controllers/'+dir+'/profile.controller');
@@ -15,7 +16,8 @@ const adminController = require('./controllers/'+dir+'/admin.controller');
 
 
 module.exports = (app) => {
-  app.use(firebaseUser.validateFirebaseIdToken);
+  // app.use(firebaseUser.validateFirebaseIdToken);
+  app.use(firebaseUser.validateFirebaseSessionCookie);
 
   app.get('/', (req, res) => {
     // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
@@ -35,7 +37,17 @@ module.exports = (app) => {
     if (req.user)
       return res.redirect('/index');
     else
-      return res.render('login');
+      return authController.login(req, res);
+      // return res.render('login');
+  });
+
+  app.get('/logout', (req, res) => {
+    // res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+    if (req.user)
+      return authController.logout(req, res);
+    else
+      return res.redirect('/index');
+    // return res.render('login');
   });
 
   app.get('/index', (req, res) => {

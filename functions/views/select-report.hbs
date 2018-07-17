@@ -155,9 +155,27 @@
                           Indicador
                         </label>
                         <div class="col-xs-6">
-                          <select class="select2_single form-control" id="report" tabindex="-1" name="report" required>
+                          <select class="select2_single form-control" id="reports" tabindex="-1" name="report" required>
                             <option></option>
                             <option value="financiamiento_anual">Financiamiento de CE anual</option>
+                            <option value="financiamiento_beneficiario">Financiamiento de CE por beneficiario</option>
+                            <option value="financiamiento_institucion">Financiamiento de CE total por institucion</option>
+                            <option value="financiamiento_fuentes">Financiamiento de CE por fuentes</option>
+                            <option value="variacion_anual">Variación de CE anual</option>
+                            <option value="asignacion_lugar">Asignación de CE por lugar de estudios</option>
+                            <option value="asignacion_nivel">Asignación de CE por nivel de estudios</option>
+                            <option value="asignacion_genero">Asignación de CE por género</option>
+                            <option value="asignacion_nuevo">Asignación de CE nuevo anual</option>
+                            <option value="asignacion_nuevo_nivel">Asignación de CE nuevo por nivel de estudios</option>
+                            <option value="variacion_cartera">Variación anual de la cartera</option>
+                            <option value="cartera_vigente_lugar">Cartera vigente por lugar de estudios</option>
+                            <option value="cartera_vigente_genero">Cartera vigente por género</option>
+                            <option value="cartera_vencida">Cartera vencida total</option>
+                            <option value="cartera_vencida_lugar">Cartera vencida por lugar de estudios</option>
+                            <option value="cartera_vencida_genero">Cartera vencida por género</option>
+                            <option value="empleado_beneficiario">Eficiencia empleado-beneficiario</option>
+                            <option value="regulacion">Proporción de ICE reguladas</option>
+                            <option value="calificacion">Proporción de ICE calificadas</option>
                           </select>
                         </div>
                       </div>
@@ -165,11 +183,62 @@
                         <label class="col-xs-12 pt">
                           Periodo
                         </label>
-                        <div class="col-xs-6">
+                        <div class="col-xs-12">
                           <label for="from_year">Desde: </label>
                           <input type="number" id="from_year" maxlength="4" minlength="4" min="1950" max="2018" name="from_year" required>
                           <label for="to_year">Hasta: </label>
                           <input type="number" id="to_year" maxlength="4" minlength="4" min="1950" max="2018" name="to_year" required>
+                        </div>
+                      </div>
+                      <div id="sources_container" class="form-group" hidden>
+                        <label class="col-xs-12" for="sources">Fuente: </label>
+                        <div class="col-xs-6">
+                          <select class="select2_single form-control" id="sources" tabindex="-1" name="source">
+                            <option></option>
+                            <option value="gubernamental">Recursos gubernamentales</option>
+                            <option value="privado">Recursos privados</option>
+                            <option value="nacional">Créditos nacionales</option>
+                            <option value="internacional">Créditos internacionales</option>
+                            <option value="donaciones">Donaciones y filantropía</option>
+                            <option value="cartera">Recuperación de la cartera / cobranza</option>
+                            <option value="terceros">Administración de recursos de terceros</option>
+                            <option value="cooperacion">Fondos de cooperación</option>
+                            <option value="impuestos">Impuestos, tasas y contribuciones</option>
+                            <option value="titularizacion">Titularización</option>
+                            <option value="propios">Recursos propios</option>
+                            <option value="inversiones">Inversiones</option>
+                            <option value="otra">Otra</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="places_container" class="form-group" hidden>
+                        <label class="col-xs-12" for="places">Lugar: </label>
+                        <div class="col-xs-6">
+                          <select class="select2_single form-control" id="places" tabindex="-1" name="place">
+                            <option></option>
+                            <option value="pais">País</option>
+                            <option value="exterior">Exterior</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="levels_container" class="form-group" hidden>
+                        <label class="col-xs-12" for="levels">Nivel: </label>
+                        <div class="col-xs-6">
+                          <select class="select2_single form-control" id="levels" tabindex="-1" name="level">
+                            <option></option>
+                            <option value="pregrado">Pregrado</option>
+                            <option value="posgrado">Posgrado</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div id="sex_container" class="form-group" hidden>
+                        <label class="col-xs-12" for="sex">Género: </label>
+                        <div class="col-xs-6">
+                          <select class="select2_single form-control" id="sex" tabindex="-1" name="sex">
+                            <option></option>
+                            <option value="female">Femenino</option>
+                            <option value="male">Masculino</option>
+                          </select>
                         </div>
                       </div>
                       <div class="form-group">
@@ -306,24 +375,106 @@
           "columnDefs": [
             {
               "render": function (data, type, row) {
-                if (type === 'display')
-                  return 'USD ' + Number(data).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                if (type === 'display') {
+                  const valueType = '{{type}}';
+                  if (valueType === 'money')
+                    return 'USD ' + Number(data).toLocaleString('en-US', {style: 'currency', currency: 'USD'});
+                  else if (valueType === 'percentage')
+                    return Number(data) + ' %';
+                  else if (valueType === 'number')
+                    return Number(data);
+                }
                 return Number(data);
               },
               "targets": 'years'
             }
           ]
         });
+
+        $("#reports").change(() => {
+          if ($("#reports").val() === 'financiamiento_fuentes') {
+            $("#sources_container").show().attr('required', true);
+            $("#sources").attr('required', true);
+          } else if ($("#reports").val() === 'asignacion_lugar' || $("#reports").val() === 'asignacion_nuevo'
+              || $("#reports").val() === 'cartera_vigente_lugar' || $("#reports").val() === 'cartera_vencida_lugar') {
+            $("#places_container").show().attr('required', true);
+            $("#places").attr('required', true);
+          } else if ($("#reports").val() === 'asignacion_nivel') {
+            $("#levels_container").show().attr('required', true);
+            $("#levels").attr('required', true);
+          } else if ($("#reports").val() === 'asignacion_genero' || $("#reports").val() === 'cartera_vigente_genero'
+              || $("#reports").val() === 'cartera_vencida_genero') {
+            $("#sex_container").show().attr('required', true);
+            $("#sex").attr('required', true);
+          } else if ($("#reports").val() === 'asignacion_nuevo_nivel') {
+            $("#places_container").show().attr('required', true);
+            $("#places").attr('required', true);
+            $("#levels_container").show().attr('required', true);
+            $("#levels").attr('required', true);
+          } else {
+            $("#sources_container").hide().removeAttr('required');
+            $("#sources").removeAttr('required');
+            $("#places_container").hide().removeAttr('required');
+            $("#places").removeAttr('required');
+            $("#levels_container").hide().removeAttr('required');
+            $("#levels").removeAttr('required');
+            $("#sex_container").hide().removeAttr('required');
+            $("#sex").removeAttr('required');
+          }
+        });
+
+        {{#if selected_report}}
+          $("#reports option[value={{selected_report}}]").attr("selected", true);
+          $("#reports").trigger("change");
+        {{/if}}
+        {{#if source}}
+          $("#sources option[value={{source}}]").attr("selected", true);
+        {{/if}}
+        {{#if place}}
+          $("#places option[value={{place}}]").attr("selected", true);
+        {{/if}}
+        {{#if level}}
+          $("#levels option[value={{level}}]").attr("selected", true);
+        {{/if}}
+        {{#if sex}}
+          $("#sex option[value={{sex}}]").attr("selected", true);
+        {{/if}}
       })
     </script>
 
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", () => {
-        {{#if chart_results}}
-          let chart = new Morris.Line({
+        let chart;
+        {{#if line_chart_results}}
+          chart = new Morris.Line({
             element: 'chart',
             data: [
-              {{#each chart_results}}
+              {{#each line_chart_results}}
+                {
+                  {{#each this}}
+                    '{{@key}}': '{{this}}',
+                  {{/each}}
+                },
+              {{/each}}
+            ],
+            xkey: 'reported_year',
+            ykeys: [
+              {{#each institution_names}}
+                '{{this}}',
+              {{/each}}
+            ],
+            labels: [
+              {{#each institution_names}}
+                '{{this}}',
+              {{/each}}
+            ]
+          });
+        {{/if}}
+        {{#if bar_chart_results}}
+          chart = new Morris.Bar({
+            element: 'chart',
+            data: [
+              {{#each bar_chart_results}}
                 {
                   {{#each this}}
                     '{{@key}}': '{{this}}',

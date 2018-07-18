@@ -444,6 +444,8 @@
 
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", () => {
+        const colors = ['#e6194b', '#3cb44b', '#008080', '#0082c8', '#f58231', '#911eb4', '#800000', '#f032e6',
+          '#aa6e28', '#808000', '#ffd8b1', '#000080'];
         let chart;
         {{#if line_chart_results}}
           chart = new Morris.Line({
@@ -492,7 +494,10 @@
               {{#each institution_names}}
                 '{{this}}',
               {{/each}}
-            ]
+            ],
+            barColors: (row, series, type) => {
+              return colors[series.index];
+            }
           });
         {{/if}}
       });

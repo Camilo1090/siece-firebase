@@ -416,23 +416,43 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="current_portfolio_pais" name="current_portfolio">
-                              Crédito país:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_pais" id="current_portfolio_pregrado_pais" name="current_portfolio">
+                              Crédito país (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="current_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_pais_amount" name="current_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="current_portfolio_pregrado_pais_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_pregrado_pais_amount" name="current_portfolio_amounts" min="0">
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="current_portfolio_exterior" name="current_portfolio">
-                              Crédito exterior:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_exterior" id="current_portfolio_pregrado_exterior" name="current_portfolio">
+                              Crédito exterior (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="current_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_exterior_amount" name="current_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="current_portfolio_pregrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_pregrado_exterior_amount" name="current_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_pais" id="current_portfolio_posgrado_pais" name="current_portfolio">
+                              Crédito país (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="current_portfolio_posgrado_pais_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_posgrado_pais_amount" name="current_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_exterior" id="current_portfolio_posgrado_exterior" name="current_portfolio">
+                              Crédito exterior (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="current_portfolio_posgrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="current_portfolio_posgrado_exterior_amount" name="current_portfolio_amounts" min="0">
                             </div>
                           </div>
                         </div>
@@ -443,13 +463,21 @@
                           7A. Monto de la cartera vigente por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
-                          <div>
-                            <label for="current_portfolio_male">Masculino: </label>
-                            <input type="number" id="current_portfolio_male" name="current_portfolio_male" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="current_portfolio_pregrado_male">Masculino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_male" name="current_portfolio_pregrado_male" min="0">
                           </div>
-                          <div>
-                            <label for="current_portfolio_female">Femenino: </label>
-                            <input type="number" id="current_portfolio_female" name="current_portfolio_female" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="current_portfolio_pregrado_female">Femenino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_female" name="current_portfolio_pregrado_female" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="current_portfolio_posgrado_male">Masculino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_male" name="current_portfolio_posgrado_male" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="current_portfolio_posgrado_female">Femenino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_female" name="current_portfolio_posgrado_female" min="0">
                           </div>
                         </div>
                       </div>
@@ -464,23 +492,43 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="pastdue_portfolio_pais" name="pastdue_portfolio">
-                              Estudios en el país:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_pais" id="pastdue_portfolio_pregrado_pais" name="pastdue_portfolio">
+                              Crédito país (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="pastdue_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="pastdue_portfolio_pregrado_pais_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_pregrado_pais_amount" name="pastdue_portfolio_amounts" min="0">
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="pastdue_portfolio_exterior" name="pastdue_portfolio">
-                              Estudios en el exterior:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_exterior" id="pastdue_portfolio_pregrado_exterior" name="pastdue_portfolio">
+                              Crédito exterior (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="pastdue_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="pastdue_portfolio_pregrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_pregrado_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_pais" id="pastdue_portfolio_posgrado_pais" name="pastdue_portfolio">
+                              Crédito país (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="pastdue_portfolio_posgrado_pais_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_posgrado_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_exterior" id="pastdue_portfolio_posgrado_exterior" name="pastdue_portfolio">
+                              Crédito exterior (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="pastdue_portfolio_posgrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="pastdue_portfolio_posgrado_exterior_amount" name="pastdue_portfolio_amounts" min="0">
                             </div>
                           </div>
                         </div>
@@ -491,31 +539,24 @@
                           8A. Monto de la cartera vencida por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
-                          <div>
-                            <label for="pastdue_portfolio_male">Masculino: </label>
-                            <input type="number" id="pastdue_portfolio_male" name="pastdue_portfolio_male" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pastdue_portfolio_pregrado_male">Masculino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_male" name="pastdue_portfolio_pregrado_male" min="0">
                           </div>
-                          <div>
-                            <label for="pastdue_portfolio_female">Femenino: </label>
-                            <input type="number" id="pastdue_portfolio_female" name="pastdue_portfolio_female" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pastdue_portfolio_pregrado_female">Femenino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_female" name="pastdue_portfolio_pregrado_female" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pastdue_portfolio_posgrado_male">Masculino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_male" name="pastdue_portfolio_posgrado_male" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pastdue_portfolio_posgrado_female">Femenino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_female" name="pastdue_portfolio_posgrado_female" min="0">
                           </div>
                         </div>
                       </div>
-                      <!--<div class="form-group">-->
-                        <!--<label class="col-md-3 col-sm-3 col-xs-12 control-label">-->
-                          <!--16. Distribución del monto de la cartera vigente (USD al cierre del año fiscal)-->
-                        <!--</label>-->
-                        <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
-                          <!--<div>-->
-                            <!--<label for="studying_beneficiaries_amount">Beneficiarios que están estudiando: </label>-->
-                            <!--<input type="number" id="studying_beneficiaries_amount" name="studying_beneficiaries_amount" min="0">-->
-                          <!--</div>-->
-                          <!--<div>-->
-                            <!--<label for="graduated_beneficiaries_amount">Beneficiarios que concluyeron sus estudios: </label>-->
-                            <!--<input type="number" id="graduated_beneficiaries_amount" name="graduated_beneficiaries_amount" min="0">-->
-                          <!--</div>-->
-                        <!--</div>-->
-                      <!--</div>-->
                       <!-- pregunta 27 -->
                       <div class="form-group">
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
@@ -527,23 +568,43 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="pais" id="execution_portfolio_pais" name="execution_portfolio">
-                              Estudios en el país:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_pais" id="execution_portfolio_pregrado_pais" name="execution_portfolio">
+                              Crédito país (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="execution_portfolio_pais_amount">USD</label>
-                              <input type="number" disabled id="execution_portfolio_pais_amount" name="execution_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="execution_portfolio_pregrado_pais_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_pregrado_pais_amount" name="execution_portfolio_amounts" min="0">
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
-                            <label class="col-xs-12 col-sm-3">
-                              <input type="checkbox" value="exterior" id="execution_portfolio_exterior" name="execution_portfolio">
-                              Estudios en el exterior:
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="pregrado_exterior" id="execution_portfolio_pregrado_exterior" name="execution_portfolio">
+                              Crédito exterior (pregrado):
                             </label>
-                            <div class="col-xs-12 col-sm-9">
-                              <label for="execution_portfolio_exterior_amount">USD</label>
-                              <input type="number" disabled id="execution_portfolio_exterior_amount" name="execution_portfolio_amounts" min="0">
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="execution_portfolio_pregrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_pregrado_exterior_amount" name="execution_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_pais" id="execution_portfolio_posgrado_pais" name="execution_portfolio">
+                              Crédito país (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="execution_portfolio_posgrado_pais_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_posgrado_pais_amount" name="execution_portfolio_amounts" min="0">
+                            </div>
+                          </div>
+                          <div class="checkbox col-xs-12">
+                            <label class="col-xs-12 col-sm-4">
+                              <input type="checkbox" value="posgrado_exterior" id="execution_portfolio_posgrado_exterior" name="execution_portfolio">
+                              Crédito exterior (posgrado):
+                            </label>
+                            <div class="col-xs-12 col-sm-8">
+                              <label for="execution_portfolio_posgrado_exterior_amount">USD</label>
+                              <input type="number" disabled id="execution_portfolio_posgrado_exterior_amount" name="execution_portfolio_amounts" min="0">
                             </div>
                           </div>
                         </div>
@@ -554,13 +615,21 @@
                           9A. Monto de la cartera en ejecución por género (USD)
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
-                          <div>
-                            <label for="execution_portfolio_male">Masculino: </label>
-                            <input type="number" id="execution_portfolio_male" name="execution_portfolio_male" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="execution_portfolio_pregrado_male">Masculino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="execution_portfolio_pregrado_male" name="execution_portfolio_pregrado_male" min="0">
                           </div>
-                          <div>
-                            <label for="execution_portfolio_female">Femenino: </label>
-                            <input type="number" id="execution_portfolio_female" name="execution_portfolio_female" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="execution_portfolio_pregrado_female">Femenino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="execution_portfolio_pregrado_female" name="execution_portfolio_pregrado_female" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="execution_portfolio_posgrado_male">Masculino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="execution_portfolio_posgrado_male" name="execution_portfolio_posgrado_male" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="execution_portfolio_posgrado_female">Femenino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="execution_portfolio_posgrado_female" name="execution_portfolio_posgrado_female" min="0">
                           </div>
                         </div>
                       </div>
@@ -672,14 +741,22 @@
                         <label class="col-md-3 col-sm-3 col-xs-12 control-label">
                           14. Número de estudiantes atendidos con Crédito Educativo, por sexo
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div>
-                            <label for="male_students">Masculino: </label>
-                            <input type="number" id="male_students" name="male_students" min="0">
+                        <div class="col-md-6 col-sm-6 col-xs-12 mt-1">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_male_students">Masculino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pregrado_male_students" name="pregrado_male_students" min="0">
                           </div>
-                          <div>
-                            <label for="female_students">Femenino: </label>
-                            <input type="number" id="female_students" name="female_students" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_female_students">Femenino (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pregrado_female_students" name="pregrado_female_students" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_male_students">Masculino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="posgrado_male_students" name="posgrado_male_students" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_female_students">Femenino (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="posgrado_female_students" name="posgrado_female_students" min="0">
                           </div>
                         </div>
                       </div>
@@ -689,18 +766,30 @@
                           15. Número de estudiantes atendidos con Crédito Educativo, de acuerdo con su nivel
                           socioeconómico
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div>
-                            <label for="high_students">Alto: </label>
-                            <input type="number" id="high_students" name="high_students" min="0">
+                        <div class="col-md-6 col-sm-6 col-xs-12 mt-1">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_high_students">Alto (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pregrado_high_students" name="pregrado_high_students" min="0">
                           </div>
-                          <div>
-                            <label for="medium_students">Medio: </label>
-                            <input type="number" id="medium_students" name="medium_students" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_medium_students">Medio (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pregrado_medium_students" name="pregrado_medium_students" min="0">
                           </div>
-                          <div>
-                            <label for="low_students">Bajo: </label>
-                            <input type="number" id="low_students" name="low_students" min="0">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_low_students">Bajo (pregrado): </label>
+                            <input class="col-sm-3" type="number" id="pregrado_low_students" name="pregrado_low_students" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_high_students">Alto (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="posgrado_high_students" name="posgrado_high_students" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_medium_students">Medio (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="posgrado_medium_students" name="posgrado_medium_students" min="0">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_low_students">Bajo (posgrado): </label>
+                            <input class="col-sm-3" type="number" id="posgrado_low_students" name="posgrado_low_students" min="0">
                           </div>
                         </div>
                       </div>
@@ -710,10 +799,14 @@
                           16. Porcentaje de graduación de beneficiarios de C.E. de pregrado, de la(s) cohorte(s)
                           que debería(n) graduarse en el año que se está reportando
                         </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="mt-2">
-                            <label for="graduate_percentage"></label>
-                            <input type="number" id="graduate_percentage" name="graduate_percentage" min="0" step="0.1" max="100">
+                        <div class="col-md-6 col-sm-6 col-xs-12 mt-1">
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="pregrado_graduate_percentage">Pregrado: </label>
+                            <input class="col-sm-3" type="number" id="pregrado_graduate_percentage" name="pregrado_graduate_percentage" min="0" step="0.1" max="100">
+                          </div>
+                          <div class="col-xs-12">
+                            <label class="col-sm-3" for="posgrado_graduate_percentage">Posgrado: </label>
+                            <input class="col-sm-3" type="number" id="posgrado_graduate_percentage" name="posgrado_graduate_percentage" min="0" step="0.1" max="100">
                           </div>
                         </div>
                       </div>
@@ -723,20 +816,52 @@
                           17. La institución ofrece beneficios o estímulos para favorecer
                           la graduación de los beneficiarios
                         </label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="si" id="benefits_si" name="benefits">
-                              Sí
-                            </label>
-                            <label for="benefits_cuales">¿Cuáles?: </label>
-                            <input type="text" id="benefits_cuales" name="benefits_cuales" disabled>
-                          </div>
-                          <div class="radio">
-                            <label>
-                              <input type="radio" value="no" id="benefits_no" name="benefits">
-                              No
-                            </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12 mt-1">
+                          <div class="col-xs-12">
+                            <div class="col-sm-3">
+                              <strong class="col-xs-12">Pregrado</strong>
+                              <div class="col-xs-12">
+                                <div class="radio col-sm-3">
+                                  <label>
+                                    <input type="radio" value="si" id="pregrado_benefits_si" name="pregrado_benefits">
+                                    Sí
+                                  </label>
+                                </div>
+                                <div class="radio col-sm-3">
+                                  <label>
+                                    <input type="radio" value="no" id="pregrado_benefits_no" name="pregrado_benefits">
+                                    No
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-xs-12 mt-1">
+                                <label class="col-xs-12" for="pregrado_benefits_cuales">¿Cuáles?</label>
+                                <textarea id="pregrado_benefits_cuales" name="pregrado_benefits_cuales" disabled>
+                                </textarea>
+                              </div>
+                            </div>
+                            <div class="col-sm-3">
+                              <strong class="col-xs-12">Posgrado</strong>
+                              <div class="col-xs-12">
+                                <div class="radio col-sm-3">
+                                  <label>
+                                    <input type="radio" value="si" id="posgrado_benefits_si" name="posgrado_benefits">
+                                    Sí
+                                  </label>
+                                </div>
+                                <div class="radio col-sm-3">
+                                  <label>
+                                    <input type="radio" value="no" id="posgrado_benefits_no" name="posgrado_benefits">
+                                    No
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-xs-12 mt-1">
+                                <label class="col-xs-12" for="posgrado_benefits_cuales">¿Cuáles?</label>
+                                <textarea id="posgrado_benefits_cuales" name="posgrado_benefits_cuales" disabled>
+                                </textarea>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -963,10 +1088,17 @@
           $("#non_payment_risk_si_other").val("");
       });
 
-      $("input:radio[name=benefits]").change(function() {
-        $("#benefits_cuales").val("").attr("disabled", true).removeAttr("required");
-        if ($("#benefits_si").is(":checked")) {
-          $("#benefits_cuales").removeAttr("disabled").attr("required", true);
+      $("input:radio[name=pregrado_benefits]").change(function() {
+        $("#pregrado_benefits_cuales").val("").attr("disabled", true).removeAttr("required");
+        if ($("#pregrado_benefits_si").is(":checked")) {
+          $("#pregrado_benefits_cuales").removeAttr("disabled").attr("required", true);
+        }
+      });
+
+      $("input:radio[name=posgrado_benefits]").change(function() {
+        $("#posgrado_benefits_cuales").val("").attr("disabled", true).removeAttr("required");
+        if ($("#posgrado_benefits_si").is(":checked")) {
+          $("#posgrado_benefits_cuales").removeAttr("disabled").attr("required", true);
         }
       });
 
@@ -1005,12 +1137,20 @@
         $("#current_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if report.current_portfolio_male}}
-        $("#current_portfolio_male").val("{{report.current_portfolio_male}}");
+      {{#if report.current_portfolio_pregrado_male}}
+        $("#current_portfolio_pregrado_male").val("{{report.current_portfolio_pregrado_male}}");
       {{/if}}
 
-      {{#if report.current_portfolio_female}}
-        $("#current_portfolio_female").val("{{report.current_portfolio_female}}");
+      {{#if report.current_portfolio_pregrado_female}}
+        $("#current_portfolio_pregrado_female").val("{{report.current_portfolio_pregrado_female}}");
+      {{/if}}
+
+      {{#if report.current_portfolio_posgrado_male}}
+        $("#current_portfolio_posgrado_male").val("{{report.current_portfolio_posgrado_male}}");
+      {{/if}}
+
+      {{#if report.current_portfolio_posgrado_female}}
+        $("#current_portfolio_posgrado_female").val("{{report.current_portfolio_posgrado_female}}");
       {{/if}}
 
       <!--{{#if report.studying_beneficiaries_amount}}-->
@@ -1026,12 +1166,20 @@
         $("#pastdue_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if report.pastdue_portfolio_male}}
-        $("#pastdue_portfolio_male").val("{{report.pastdue_portfolio_male}}");
+      {{#if report.pastdue_portfolio_pregrado_male}}
+        $("#pastdue_portfolio_pregrado_male").val("{{report.pastdue_portfolio_pregrado_male}}");
       {{/if}}
 
-      {{#if report.pastdue_portfolio_female}}
-        $("#pastdue_portfolio_female").val("{{report.pastdue_portfolio_female}}");
+      {{#if report.pastdue_portfolio_pregrado_female}}
+        $("#pastdue_portfolio_pregrado_female").val("{{report.pastdue_portfolio_pregrado_female}}");
+      {{/if}}
+
+      {{#if report.pastdue_portfolio_posgrado_male}}
+        $("#pastdue_portfolio_posgrado_male").val("{{report.pastdue_portfolio_posgrado_male}}");
+      {{/if}}
+
+      {{#if report.pastdue_portfolio_posgrado_female}}
+        $("#pastdue_portfolio_posgrado_female").val("{{report.pastdue_portfolio_posgrado_female}}");
       {{/if}}
 
       {{#each report.execution_portfolio as |obj|}}
@@ -1039,12 +1187,20 @@
         $("#execution_portfolio_{{obj.name}}_amount").val("{{obj.amount}}").attr("required", true).removeAttr("disabled");
       {{/each}}
 
-      {{#if report.execution_portfolio_male}}
-        $("#execution_portfolio_male").val("{{report.execution_portfolio_male}}");
+      {{#if report.execution_portfolio_pregrado_male}}
+        $("#execution_portfolio_pregrado_male").val("{{report.execution_portfolio_pregrado_male}}");
       {{/if}}
 
-      {{#if report.execution_portfolio_female}}
-        $("#execution_portfolio_female").val("{{report.execution_portfolio_female}}");
+      {{#if report.execution_portfolio_pregrado_female}}
+        $("#execution_portfolio_pregrado_female").val("{{report.execution_portfolio_pregrado_female}}");
+      {{/if}}
+
+      {{#if report.execution_portfolio_posgrado_male}}
+        $("#execution_portfolio_posgrado_male").val("{{report.execution_portfolio_posgrado_male}}");
+      {{/if}}
+
+      {{#if report.execution_portfolio_posgrado_female}}
+        $("#execution_portfolio_posgrado_female").val("{{report.execution_portfolio_posgrado_female}}");
       {{/if}}
 
       {{#each report.risks as |risk|}}
@@ -1074,34 +1230,64 @@
         {{/if}}
       {{/if}}
 
-      {{#if report.male_students}}
-        $("#male_students").val("{{report.male_students}}");
+      {{#if report.pregrado_male_students}}
+        $("#pregrado_male_students").val("{{report.pregrado_male_students}}");
       {{/if}}
 
-      {{#if report.female_students}}
-        $("#female_students").val("{{report.female_students}}");
+      {{#if report.pregrado_female_students}}
+        $("#pregrado_female_students").val("{{report.pregrado_female_students}}");
       {{/if}}
 
-      {{#if report.high_students}}
-        $("#high_students").val("{{report.high_students}}");
+      {{#if report.posgrado_male_students}}
+        $("#posgrado_male_students").val("{{report.posgrado_male_students}}");
       {{/if}}
 
-      {{#if report.medium_students}}
-        $("#medium_students").val("{{report.medium_students}}");
+      {{#if report.posgrado_female_students}}
+        $("#posgrado_female_students").val("{{report.posgrado_female_students}}");
       {{/if}}
 
-      {{#if report.low_students}}
-        $("#low_students").val("{{report.low_students}}");
+      {{#if report.pregrado_high_students}}
+        $("#pregrado_high_students").val("{{report.pregrado_high_students}}");
       {{/if}}
 
-      {{#if report.graduate_percentage}}
-        $("#graduate_percentage").val("{{report.graduate_percentage}}");
+      {{#if report.pregrado_medium_students}}
+        $("#pregrado_medium_students").val("{{report.pregrado_medium_students}}");
       {{/if}}
 
-      {{#if report.benefits}}
-        $("#benefits_{{report.benefits.option}}").attr("checked", true);
-        if ($("#benefits_si").is(":checked"))
-          $("#benefits_cuales").val("{{report.benefits.names}}").attr("required", true).removeAttr("disabled");
+      {{#if report.pregrado_low_students}}
+        $("#pregrado_low_students").val("{{report.pregrado_low_students}}");
+      {{/if}}
+
+      {{#if report.posgrado_high_students}}
+        $("#posgrado_high_students").val("{{report.posgrado_high_students}}");
+      {{/if}}
+
+      {{#if report.posgrado_medium_students}}
+        $("#posgrado_medium_students").val("{{report.posgrado_medium_students}}");
+      {{/if}}
+
+      {{#if report.posgrado_low_students}}
+        $("#posgrado_low_students").val("{{report.posgrado_low_students}}");
+      {{/if}}
+
+      {{#if report.pregrado_graduate_percentage}}
+        $("#pregrado_graduate_percentage").val("{{report.pregrado_graduate_percentage}}");
+      {{/if}}
+
+      {{#if report.posgrado_graduate_percentage}}
+        $("#posgrado_graduate_percentage").val("{{report.posgrado_graduate_percentage}}");
+      {{/if}}
+
+      {{#if report.pregrado_benefits}}
+        $("#pregrado_benefits_{{report.pregrado_benefits.option}}").attr("checked", true);
+        if ($("#pregrado_benefits_si").is(":checked"))
+          $("#pregrado_benefits_cuales").val("{{report.pregrado_benefits.names}}").attr("required", true).removeAttr("disabled");
+      {{/if}}
+
+      {{#if report.posgrado_benefits}}
+        $("#posgrado_benefits_{{report.posgrado_benefits.option}}").attr("checked", true);
+        if ($("#posgrado_benefits_si").is(":checked"))
+          $("#posgrado_benefits_cuales").val("{{report.posgrado_benefits.names}}").attr("required", true).removeAttr("disabled");
       {{/if}}
 
       {{#if report.programs}}

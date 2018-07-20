@@ -46,7 +46,7 @@
                 <img src="img.jpg" alt="..." class="img-circle profile_img">
               </div>
               <div class="profile_info">
-                <span>Bienvenido,</span>
+                <span>Bienvenido, </span>
                 <h2>{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}</h2>
               </div>
             </div>
@@ -168,18 +168,21 @@
                             <option value="asignacion_nuevo">Asignación de CE nuevo anual</option>
                             <option value="asignacion_nuevo_nivel">Asignación de CE nuevo por nivel de estudios</option>
                             <option value="variacion_cartera">Variación anual de la cartera</option>
+                            <option value="cartera_vigente_nivel">Cartera vigente por nivel de estudios</option>
                             <option value="cartera_vigente_lugar">Cartera vigente por lugar de estudios</option>
                             <option value="cartera_vigente_genero">Cartera vigente por género</option>
                             <option value="cartera_vencida">Cartera vencida total</option>
+                            <option value="cartera_vencida_nivel">Cartera vencida por nivel de estudios</option>
                             <option value="cartera_vencida_lugar">Cartera vencida por lugar de estudios</option>
                             <option value="cartera_vencida_genero">Cartera vencida por género</option>
                             <option value="empleado_beneficiario">Eficiencia empleado-beneficiario</option>
+                            <option value="plataforma">Plataforma tecnológica</option>
                             <option value="regulacion">Proporción de ICE reguladas</option>
                             <option value="calificacion">Proporción de ICE calificadas</option>
                           </select>
                         </div>
                       </div>
-                      <div class="form-group">
+                      <div id="period_container" class="form-group">
                         <label class="col-xs-12 pt">
                           Periodo
                         </label>
@@ -256,27 +259,31 @@
                     <h2>Tabla</h2>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+                  <div id="table-container" class="x_content">
                     <table id="forms-datatable" class="table table-striped table-bordered">
                       <thead>
                       <tr>
                         <th>Institución/Año</th>
                         {{#each table_results.0.indicators}}
-                          <th class="years">{{this.reported_year}}</th>
+                          <th class="{{../type}}">{{this.reported_year}}</th>
+                          {{#../additional_columns as |column|}}
+                            <th class="{{column.format}}">{{column.name}}</th>
+                          {{/../additional_columns}}
                         {{/each}}
                       </tr>
                       </thead>
                       <tbody>
-                      {{#each table_results}}
+                      {{#each table_results as |result|}}
                         <tr>
-                          <td>{{this.institution_name}}</td>
-                          {{#each this.indicators}}
-                            <td>{{this.value}}</td>
-                            <!--{{#if this.value}}-->
-                              <!--<td>{{this.value}}</td>-->
-                            <!--{{else}}-->
-                              <!--<td>-</td>-->
-                            <!--{{/if}}-->
+                          <td>{{result.institution_name}}</td>
+                          {{#each result.indicators as |indicator|}}
+                            {{#each indicator.values as |value|}}
+                              {{#if value}}
+                                <td>{{value}}</td>
+                              {{else}}
+                                <td>0</td>
+                              {{/if}}
+                            {{/each}}
                           {{/each}}
                         </tr>
                       {{/each}}
@@ -375,23 +382,42 @@
           "columnDefs": [
             {
               "render": function (data, type, row) {
-                if (type === 'display') {
-                  const valueType = '{{type}}';
-                  if (valueType === 'money')
-                    return 'USD ' + Number(data).toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-                  else if (valueType === 'percentage')
-                    return Number(data) + ' %';
-                  else if (valueType === 'number')
-                    return Number(data);
-                }
+                if (type === 'display')
+                  return 'USD ' + Number(data).toLocaleString('en-US', {style: 'currency', currency: 'USD'});
                 return Number(data);
               },
-              "targets": 'years'
-            }
+              "targets": 'money'
+            },
+            {
+              "render": function (data, type, row) {
+                if (type === 'display')
+                  return Number(data) + ' %';
+                return Number(data);
+              },
+              "targets": 'percentage'
+            },
+            {
+              "render": function (data, type, row) {
+                return Number(data);
+              },
+              "targets": 'number'
+            },
           ]
         });
 
         $("#reports").change(() => {
+          $("#sources_container").hide().removeAttr('required');
+          $("#sources").removeAttr('required');
+          $("#places_container").hide().removeAttr('required');
+          $("#places").removeAttr('required');
+          $("#levels_container").hide().removeAttr('required');
+          $("#levels").removeAttr('required');
+          $("#sex_container").hide().removeAttr('required');
+          $("#sex").removeAttr('required');
+          $("#period_container").show().attr('required', true);
+          $("#from_year").attr('required', true);
+          $("#to_year").attr('required', true);
+
           if ($("#reports").val() === 'financiamiento_fuentes') {
             $("#sources_container").show().attr('required', true);
             $("#sources").attr('required', true);
@@ -399,7 +425,8 @@
               || $("#reports").val() === 'cartera_vigente_lugar' || $("#reports").val() === 'cartera_vencida_lugar') {
             $("#places_container").show().attr('required', true);
             $("#places").attr('required', true);
-          } else if ($("#reports").val() === 'asignacion_nivel') {
+          } else if ($("#reports").val() === 'asignacion_nivel' || $("#reports").val() === 'cartera_vigente_nivel'
+              || $("#reports").val() === 'cartera_vencida_nivel') {
             $("#levels_container").show().attr('required', true);
             $("#levels").attr('required', true);
           } else if ($("#reports").val() === 'asignacion_genero' || $("#reports").val() === 'cartera_vigente_genero'
@@ -411,15 +438,10 @@
             $("#places").attr('required', true);
             $("#levels_container").show().attr('required', true);
             $("#levels").attr('required', true);
-          } else {
-            $("#sources_container").hide().removeAttr('required');
-            $("#sources").removeAttr('required');
-            $("#places_container").hide().removeAttr('required');
-            $("#places").removeAttr('required');
-            $("#levels_container").hide().removeAttr('required');
-            $("#levels").removeAttr('required');
-            $("#sex_container").hide().removeAttr('required');
-            $("#sex").removeAttr('required');
+          } else if ($("#reports").val() === 'plataforma') {
+            $("#period_container").hide().attr('required', true);
+            $("#from_year").removeAttr('required', true);
+            $("#to_year").removeAttr('required', true);
           }
         });
 
@@ -454,7 +476,11 @@
               {{#each line_chart_results}}
                 {
                   {{#each this}}
-                    '{{@key}}': '{{this}}',
+                    {{#if this.[0]}}
+                      '{{@key}}': '{{this.[0]}}',
+                    {{else}}
+                      '{{@key}}': '{{this}}',
+                    {{/if}}
                   {{/each}}
                 },
               {{/each}}
@@ -479,7 +505,7 @@
               {{#each bar_chart_results}}
                 {
                   {{#each this}}
-                    '{{@key}}': '{{this}}',
+                    '{{@key}}': '{{this.[0]}}',
                   {{/each}}
                 },
               {{/each}}

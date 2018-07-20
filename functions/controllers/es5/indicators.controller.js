@@ -49,6 +49,9 @@ exports.getIndicator = (req, res) => {
     case 'variacion_cartera':{
         return variacionCartera(req, res, data);
       }
+    case 'cartera_vigente_nivel':{
+        return carteraVigenteNivel(req, res, data);
+      }
     case 'cartera_vigente_lugar':{
         return carteraVigenteLugar(req, res, data);
       }
@@ -58,6 +61,9 @@ exports.getIndicator = (req, res) => {
     case 'cartera_vencida':{
         return carteraVencida(req, res, data);
       }
+    case 'cartera_vencida_nivel':{
+        return carteraVencidaNivel(req, res, data);
+      }
     case 'cartera_vencida_lugar':{
         return carteraVencidaLugar(req, res, data);
       }
@@ -66,6 +72,9 @@ exports.getIndicator = (req, res) => {
       }
     case 'empleado_beneficiario':{
         return empleadoBeneficiario(req, res, data);
+      }
+    case 'plataforma':{
+        return plataformaTecnologica(req, res, data);
       }
     case 'regulacion':{
         return regulacion(req, res, data);
@@ -102,6 +111,10 @@ const financiamientoAnual = (() => {var _ref = (0, _asyncToGenerator3.default)(f
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Inversión', format: 'money' },
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_investment = 0;
@@ -136,11 +149,11 @@ const financiamientoAnual = (() => {var _ref = (0, _asyncToGenerator3.default)(f
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_credits];
               }
             }
           }
@@ -149,9 +162,10 @@ const financiamientoAnual = (() => {var _ref = (0, _asyncToGenerator3.default)(f
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 3); // length of additional columns + indicator
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'money';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -188,6 +202,10 @@ const financiamientoBeneficiario = (() => {var _ref2 = (0, _asyncToGenerator3.de
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Inversión', format: 'money' },
+          { name: 'Total Beneficiarios', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_investment = 0;
@@ -210,11 +228,11 @@ const financiamientoBeneficiario = (() => {var _ref2 = (0, _asyncToGenerator3.de
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_beneficiaries];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_beneficiaries];
               }
             }
           }
@@ -223,9 +241,10 @@ const financiamientoBeneficiario = (() => {var _ref2 = (0, _asyncToGenerator3.de
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 3);
           data.institution_names = institutionNames;
           data.type = 'money';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -262,18 +281,24 @@ const financiamientoInstitucion = (() => {var _ref3 = (0, _asyncToGenerator3.def
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Inversión', format: 'money' },
+          { name: 'Total Estudiantes', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
-            let indicatorValue = reports[i].total_investment / reports[i].total_students;
+            const total_investment = reports[i].total_investment;
+            const total_students = reports[i].total_students;
+            let indicatorValue = total_investment / total_students;
             if (indicatorValue) {
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_students];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_investment, total_students];
               }
             }
           }
@@ -282,9 +307,10 @@ const financiamientoInstitucion = (() => {var _ref3 = (0, _asyncToGenerator3.def
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 3);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'money';
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -322,6 +348,9 @@ const financiamientoFuentes = (() => {var _ref4 = (0, _asyncToGenerator3.default
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Financiamiento', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_source_amount = 0;
@@ -341,11 +370,11 @@ const financiamientoFuentes = (() => {var _ref4 = (0, _asyncToGenerator3.default
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
               }
             }
           }
@@ -354,10 +383,11 @@ const financiamientoFuentes = (() => {var _ref4 = (0, _asyncToGenerator3.default
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           data.source = source;
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -424,11 +454,11 @@ const variacionAnual = (() => {var _ref5 = (0, _asyncToGenerator3.default)(funct
               // console.log(indicatorValue);
               // indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
               }
             }
           }
@@ -452,7 +482,7 @@ const variacionAnual = (() => {var _ref5 = (0, _asyncToGenerator3.default)(funct
           }
 
           data.line_chart_results = variationResults;
-          data.table_results = tableResults(variationResults, institutionNames);
+          data.table_results = tableResults(variationResults, institutionNames, 1);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           console.log(data.line_chart_results, data.table_results);
@@ -492,6 +522,9 @@ const asignacionLugar = (() => {var _ref6 = (0, _asyncToGenerator3.default)(func
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let place_credits = 0;
@@ -535,11 +568,11 @@ const asignacionLugar = (() => {var _ref6 = (0, _asyncToGenerator3.default)(func
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               }
             }
           }
@@ -548,10 +581,11 @@ const asignacionLugar = (() => {var _ref6 = (0, _asyncToGenerator3.default)(func
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'percentage';
           data.place = place;
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -589,6 +623,9 @@ const asignacionNivel = (() => {var _ref7 = (0, _asyncToGenerator3.default)(func
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let level_credits = 0;
@@ -632,11 +669,11 @@ const asignacionNivel = (() => {var _ref7 = (0, _asyncToGenerator3.default)(func
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               }
             }
           }
@@ -645,10 +682,11 @@ const asignacionNivel = (() => {var _ref7 = (0, _asyncToGenerator3.default)(func
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'percentage';
           data.level = level;
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -686,6 +724,9 @@ const asignacionGenero = (() => {var _ref8 = (0, _asyncToGenerator3.default)(fun
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_credits = reports[i].female_students + reports[i].male_students;
@@ -700,11 +741,11 @@ const asignacionGenero = (() => {var _ref8 = (0, _asyncToGenerator3.default)(fun
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               }
             }
           }
@@ -713,10 +754,11 @@ const asignacionGenero = (() => {var _ref8 = (0, _asyncToGenerator3.default)(fun
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'percentage';
           data.sex = sex;
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -754,6 +796,9 @@ const asignacionNuevo = (() => {var _ref9 = (0, _asyncToGenerator3.default)(func
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let new_credits = 0;
@@ -789,11 +834,11 @@ const asignacionNuevo = (() => {var _ref9 = (0, _asyncToGenerator3.default)(func
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               }
             }
           }
@@ -802,10 +847,11 @@ const asignacionNuevo = (() => {var _ref9 = (0, _asyncToGenerator3.default)(func
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'percentage';
           data.place = place;
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -844,6 +890,9 @@ const asignacionNuevoNivel = (() => {var _ref10 = (0, _asyncToGenerator3.default
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Créditos', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let new_credits = 0;
@@ -881,11 +930,11 @@ const asignacionNuevoNivel = (() => {var _ref10 = (0, _asyncToGenerator3.default
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
               }
             }
           }
@@ -894,11 +943,12 @@ const asignacionNuevoNivel = (() => {var _ref10 = (0, _asyncToGenerator3.default
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.bar_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 10);
           data.type = 'percentage';
           data.place = place;
           data.level = level;
+          data.additional_columns = additionalColumns;
           console.log(data.bar_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1004,7 +1054,83 @@ const variacionCartera = (() => {var _ref11 = (0, _asyncToGenerator3.default)(fu
     }
   });return function variacionCartera(_x31, _x32, _x33) {return _ref11.apply(this, arguments);};})();
 
-const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const carteraVigenteNivel = (() => {var _ref12 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+    const formData = req.body;
+    const level = formData.level;
+    const years = formData.to_year - formData.from_year + 1;
+    if (years >= 0 && years <= 10) {
+      try {
+        const reportsSnapshot = yield db.collection('reports').
+        where('status', '==', 'Aceptado').
+        where('reported_year', '>=', Number(formData.from_year)).
+        where('reported_year', '<=', Number(formData.to_year)).
+        get();
+        if (reportsSnapshot.empty) {
+          console.log('No documents found.');
+          data.warning = 'No hay datos reportados en el periodo seleccionado.';
+        } else {
+          let reports = reportsSnapshot.docs.map(function (doc) {return doc.data();});
+          // console.log(reports);
+          let userCache = {};
+          let results = [];
+          for (let i = formData.from_year; i <= formData.to_year; i++) {
+            let result = { reported_year: Number(i) };
+            results.push(result);
+          }
+          const additionalColumns = [
+          { name: 'Cartera Vigente', format: 'money' }];
+
+
+          for (let i = 0; i < reports.length; i++) {
+            let current_portfolio = 0;
+            let level_portfolio = 0;
+            if (reports[i].current_portfolio && reports[i].current_portfolio instanceof Array) {
+              for (let j = 0; j < reports[i].current_portfolio.length; j++) {
+                current_portfolio += Number(reports[i].current_portfolio[j].amount);
+                if (reports[i].current_portfolio[j].name === level + '_pais' ||
+                reports[i].current_portfolio[j].name === level + '_exterior')
+                level_portfolio += Number(reports[i].current_portfolio[j].amount);
+              }
+            }
+
+            let indicatorValue = level_portfolio / current_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              } else {
+                const userRecord = yield admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              }
+            }
+          }
+
+          let institutionNames = [];
+          Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
+
+          data.line_chart_results = results;
+          data.table_results = tableResults(results, institutionNames, 2);
+          data.institution_names = underscore.sample(institutionNames, 5);
+          data.type = 'percentage';
+          data.level = level;
+          data.additional_columns = additionalColumns;
+          console.log(data.line_chart_results, data.table_results);
+        }
+        return res.render('select-report', data);
+      } catch (error) {
+        console.log('Error: ', error);
+        data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+        return res.render('select-report', data);
+      }
+    } else {
+      data.error = 'Rango de años invalido. (0 <= rango <= 10)';
+      return res.render('select-report', data);
+    }
+  });return function carteraVigenteNivel(_x34, _x35, _x36) {return _ref12.apply(this, arguments);};})();
+
+const carteraVigenteLugar = (() => {var _ref13 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const place = formData.place;
     const years = formData.to_year - formData.from_year + 1;
@@ -1027,6 +1153,9 @@ const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Cartera Vigente', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let current_portfolio = 0;
@@ -1034,7 +1163,8 @@ const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)
             if (reports[i].current_portfolio && reports[i].current_portfolio instanceof Array) {
               for (let j = 0; j < reports[i].current_portfolio.length; j++) {
                 current_portfolio += Number(reports[i].current_portfolio[j].amount);
-                if (reports[i].current_portfolio[j].name === place)
+                if (reports[i].current_portfolio[j].name === 'pregrado_' + place ||
+                reports[i].current_portfolio[j].name === 'posgrado_' + place)
                 place_portfolio += Number(reports[i].current_portfolio[j].amount);
               }
             }
@@ -1044,11 +1174,11 @@ const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
               }
             }
           }
@@ -1057,10 +1187,11 @@ const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           data.place = place;
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1073,9 +1204,9 @@ const carteraVigenteLugar = (() => {var _ref12 = (0, _asyncToGenerator3.default)
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function carteraVigenteLugar(_x34, _x35, _x36) {return _ref12.apply(this, arguments);};})();
+  });return function carteraVigenteLugar(_x37, _x38, _x39) {return _ref13.apply(this, arguments);};})();
 
-const carteraVigenteGenero = (() => {var _ref13 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const carteraVigenteGenero = (() => {var _ref14 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const sex = formData.sex;
     const years = formData.to_year - formData.from_year + 1;
@@ -1098,25 +1229,29 @@ const carteraVigenteGenero = (() => {var _ref13 = (0, _asyncToGenerator3.default
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Cartera Vigente', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
-            let total_portfolio = reports[i].current_portfolio_male + reports[i].current_portfolio_female;
+            let total_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_pregrado_female +
+            reports[i].current_portfolio_posgrado_male + reports[i].current_portfolio_posgrado_female;
             let sex_portfolio = 0;
             if (sex === 'female') {
-              sex_portfolio = reports[i].current_portfolio_female;
+              sex_portfolio = reports[i].current_portfolio_pregrado_female + reports[i].current_portfolio_posgrado_female;
             } else {
-              sex_portfolio = reports[i].current_portfolio_male;
+              sex_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_posgrado_male;
             }
             let indicatorValue = sex_portfolio / total_portfolio * 100;
             if (indicatorValue) {
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               }
             }
           }
@@ -1125,10 +1260,11 @@ const carteraVigenteGenero = (() => {var _ref13 = (0, _asyncToGenerator3.default
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           data.sex = sex;
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1141,9 +1277,9 @@ const carteraVigenteGenero = (() => {var _ref13 = (0, _asyncToGenerator3.default
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function carteraVigenteGenero(_x37, _x38, _x39) {return _ref13.apply(this, arguments);};})();
+  });return function carteraVigenteGenero(_x40, _x41, _x42) {return _ref14.apply(this, arguments);};})();
 
-const carteraVencida = (() => {var _ref14 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const carteraVencida = (() => {var _ref15 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const years = formData.to_year - formData.from_year + 1;
     if (years >= 0 && years <= 10) {
@@ -1165,6 +1301,9 @@ const carteraVencida = (() => {var _ref14 = (0, _asyncToGenerator3.default)(func
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Cartera Vencida', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_portfolio = 0;
@@ -1191,11 +1330,11 @@ const carteraVencida = (() => {var _ref14 = (0, _asyncToGenerator3.default)(func
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               }
             }
           }
@@ -1204,9 +1343,10 @@ const carteraVencida = (() => {var _ref14 = (0, _asyncToGenerator3.default)(func
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1219,9 +1359,85 @@ const carteraVencida = (() => {var _ref14 = (0, _asyncToGenerator3.default)(func
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function carteraVencida(_x40, _x41, _x42) {return _ref14.apply(this, arguments);};})();
+  });return function carteraVencida(_x43, _x44, _x45) {return _ref15.apply(this, arguments);};})();
 
-const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const carteraVencidaNivel = (() => {var _ref16 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+    const formData = req.body;
+    const level = formData.level;
+    const years = formData.to_year - formData.from_year + 1;
+    if (years >= 0 && years <= 10) {
+      try {
+        const reportsSnapshot = yield db.collection('reports').
+        where('status', '==', 'Aceptado').
+        where('reported_year', '>=', Number(formData.from_year)).
+        where('reported_year', '<=', Number(formData.to_year)).
+        get();
+        if (reportsSnapshot.empty) {
+          console.log('No documents found.');
+          data.warning = 'No hay datos reportados en el periodo seleccionado.';
+        } else {
+          let reports = reportsSnapshot.docs.map(function (doc) {return doc.data();});
+          // console.log(reports);
+          let userCache = {};
+          let results = [];
+          for (let i = formData.from_year; i <= formData.to_year; i++) {
+            let result = { reported_year: Number(i) };
+            results.push(result);
+          }
+          const additionalColumns = [
+          { name: 'Cartera Vigente', format: 'money' }];
+
+
+          for (let i = 0; i < reports.length; i++) {
+            let pastdue_portfolio = 0;
+            let level_portfolio = 0;
+            if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
+              for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
+                pastdue_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+                if (reports[i].pastdue_portfolio[j].name === level + '_pais' ||
+                reports[i].pastdue_portfolio[j].name === level + '_exterior')
+                level_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+              }
+            }
+
+            let indicatorValue = level_portfolio / pastdue_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              } else {
+                const userRecord = yield admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              }
+            }
+          }
+
+          let institutionNames = [];
+          Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
+
+          data.line_chart_results = results;
+          data.table_results = tableResults(results, institutionNames, 2);
+          data.institution_names = underscore.sample(institutionNames, 5);
+          data.type = 'percentage';
+          data.level = level;
+          data.additional_columns = additionalColumns;
+          console.log(data.line_chart_results, data.table_results);
+        }
+        return res.render('select-report', data);
+      } catch (error) {
+        console.log('Error: ', error);
+        data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+        return res.render('select-report', data);
+      }
+    } else {
+      data.error = 'Rango de años invalido. (0 <= rango <= 10)';
+      return res.render('select-report', data);
+    }
+  });return function carteraVencidaNivel(_x46, _x47, _x48) {return _ref16.apply(this, arguments);};})();
+
+const carteraVencidaLugar = (() => {var _ref17 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const place = formData.place;
     const years = formData.to_year - formData.from_year + 1;
@@ -1244,6 +1460,9 @@ const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Cartera Vencida', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let pastdue_portfolio = 0;
@@ -1251,7 +1470,8 @@ const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)
             if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
               for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
                 pastdue_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
-                if (reports[i].pastdue_portfolio[j].name === place)
+                if (reports[i].pastdue_portfolio[j].name === 'pregrado_' + place ||
+                reports[i].pastdue_portfolio[j].name === 'posgrado_' + place)
                 place_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
               }
             }
@@ -1261,11 +1481,11 @@ const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
               }
             }
           }
@@ -1274,10 +1494,11 @@ const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           data.place = place;
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1290,9 +1511,9 @@ const carteraVencidaLugar = (() => {var _ref15 = (0, _asyncToGenerator3.default)
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function carteraVencidaLugar(_x43, _x44, _x45) {return _ref15.apply(this, arguments);};})();
+  });return function carteraVencidaLugar(_x49, _x50, _x51) {return _ref17.apply(this, arguments);};})();
 
-const carteraVencidaGenero = (() => {var _ref16 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const carteraVencidaGenero = (() => {var _ref18 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const sex = formData.sex;
     const years = formData.to_year - formData.from_year + 1;
@@ -1315,25 +1536,29 @@ const carteraVencidaGenero = (() => {var _ref16 = (0, _asyncToGenerator3.default
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Cartera Vencida', format: 'money' }];
+
 
           for (let i = 0; i < reports.length; i++) {
-            let total_portfolio = reports[i].pastdue_portfolio_male + reports[i].pastdue_portfolio_female;
+            let total_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_pregrado_female +
+            reports[i].pastdue_portfolio_posgrado_male + reports[i].pastdue_portfolio_posgrado_female;
             let sex_portfolio = 0;
             if (sex === 'female') {
-              sex_portfolio = reports[i].pastdue_portfolio_female;
+              sex_portfolio = reports[i].pastdue_portfolio_pregrado_female + reports[i].pastdue_portfolio_posgrado_female;
             } else {
-              sex_portfolio = reports[i].pastdue_portfolio_male;
+              sex_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_posgrado_male;
             }
             let indicatorValue = sex_portfolio / total_portfolio * 100;
             if (indicatorValue) {
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
               }
             }
           }
@@ -1342,10 +1567,11 @@ const carteraVencidaGenero = (() => {var _ref16 = (0, _asyncToGenerator3.default
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 2);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'percentage';
           data.sex = sex;
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1358,9 +1584,9 @@ const carteraVencidaGenero = (() => {var _ref16 = (0, _asyncToGenerator3.default
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function carteraVencidaGenero(_x46, _x47, _x48) {return _ref16.apply(this, arguments);};})();
+  });return function carteraVencidaGenero(_x52, _x53, _x54) {return _ref18.apply(this, arguments);};})();
 
-const empleadoBeneficiario = (() => {var _ref17 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const empleadoBeneficiario = (() => {var _ref19 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const years = formData.to_year - formData.from_year + 1;
     if (years >= 0 && years <= 10) {
@@ -1383,6 +1609,10 @@ const empleadoBeneficiario = (() => {var _ref17 = (0, _asyncToGenerator3.default
             let result = { reported_year: Number(i) };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total Beneficiarios', format: 'number' },
+          { name: 'Total Empleados', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             let total_students = 0;
@@ -1421,11 +1651,11 @@ const empleadoBeneficiario = (() => {var _ref17 = (0, _asyncToGenerator3.default
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_students, total_employees];
               } else {
                 const userRecord = yield admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_students, total_employees];
               }
             }
           }
@@ -1434,9 +1664,10 @@ const empleadoBeneficiario = (() => {var _ref17 = (0, _asyncToGenerator3.default
           Object.keys(userCache).forEach(function (key) {return institutionNames.push(userCache[key]);});
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, institutionNames);
+          data.table_results = tableResults(results, institutionNames, 3);
           data.institution_names = underscore.sample(institutionNames, 5);
           data.type = 'number';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1449,13 +1680,51 @@ const empleadoBeneficiario = (() => {var _ref17 = (0, _asyncToGenerator3.default
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function empleadoBeneficiario(_x49, _x50, _x51) {return _ref17.apply(this, arguments);};})();
+  });return function empleadoBeneficiario(_x55, _x56, _x57) {return _ref19.apply(this, arguments);};})();
 
-const plataformaTecnologica = (() => {var _ref18 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const plataformaTecnologica = (() => {var _ref20 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+    const formData = req.body;
+    const years = formData.to_year - formData.from_year + 1;
+    if (years >= 0 && years <= 10) {
+      try {
+        const usersSnapshot = yield db.collection('users').
+        get();
+        if (usersSnapshot.empty) {
+          console.log('No documents found.');
+          data.warning = 'No hay datos reportados en el periodo seleccionado.';
+        } else {
+          let users = usersSnapshot.docs.map(function (doc) {return doc.data();});
+          // console.log(reports);
+          let results = [];
+          for (let i = 0; i < users.length; i++) {
+            if (users[i].name && users[i].has_platform) {
+              let result = {
+                institution_name: users[i].name,
+                indicators: [{ reported_year: '¿Cuenta con Plataforma Tecnológica?', values: [users[i].has_platform] }] };
 
-  });return function plataformaTecnologica(_x52, _x53, _x54) {return _ref18.apply(this, arguments);};})();
+              results.push(result);
+            }
+          }
 
-const regulacion = (() => {var _ref19 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+          // data.line_chart_results = results;
+          data.table_results = results;
+          // data.institution_names = ['si', 'no'];
+          // data.type = 'percentage';
+          console.log(data.line_chart_results, data.table_results);
+        }
+        return res.render('select-report', data);
+      } catch (error) {
+        console.log('Error: ', error);
+        data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+        return res.render('select-report', data);
+      }
+    } else {
+      data.error = 'Rango de años invalido. (0 <= rango <= 10)';
+      return res.render('select-report', data);
+    }
+  });return function plataformaTecnologica(_x58, _x59, _x60) {return _ref20.apply(this, arguments);};})();
+
+const regulacion = (() => {var _ref21 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const years = formData.to_year - formData.from_year + 1;
     if (years >= 0 && years <= 10) {
@@ -1476,9 +1745,11 @@ const regulacion = (() => {var _ref19 = (0, _asyncToGenerator3.default)(function
             let result = { reported_year: Number(i), si: 0, no: 0 };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total ICE', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
-            console.log(reports[i].reported_year, reports[i].regulated);
             if (reports[i].regulated === 'si')
             results[reports[i].reported_year - formData.from_year].si += 1;else
             if (reports[i].regulated === 'no')
@@ -1487,19 +1758,19 @@ const regulacion = (() => {var _ref19 = (0, _asyncToGenerator3.default)(function
 
           for (let i = 0; i < results.length; i++) {
             const total = results[i].si + results[i].no;
+            const indicatorValue = results[i].si / total * 100;
             if (total > 0) {
-              results[i].si = results[i].si / total * 100;
-              results[i].no = results[i].no / total * 100;
-            } else {
+              results[i]['Instituciones Reguladas'] = [indicatorValue, total];
               delete results[i].si;
               delete results[i].no;
             }
           }
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, ['si', 'no']);
-          data.institution_names = ['si', 'no'];
+          data.table_results = tableResults(results, ['Instituciones Reguladas'], 2);
+          data.institution_names = ['Instituciones Reguladas'];
           data.type = 'percentage';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1512,9 +1783,9 @@ const regulacion = (() => {var _ref19 = (0, _asyncToGenerator3.default)(function
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function regulacion(_x55, _x56, _x57) {return _ref19.apply(this, arguments);};})();
+  });return function regulacion(_x61, _x62, _x63) {return _ref21.apply(this, arguments);};})();
 
-const calificacion = (() => {var _ref20 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
+const calificacion = (() => {var _ref22 = (0, _asyncToGenerator3.default)(function* (req, res, data) {
     const formData = req.body;
     const years = formData.to_year - formData.from_year + 1;
     if (years >= 0 && years <= 10) {
@@ -1535,6 +1806,9 @@ const calificacion = (() => {var _ref20 = (0, _asyncToGenerator3.default)(functi
             let result = { reported_year: Number(i), si: 0, no: 0 };
             results.push(result);
           }
+          const additionalColumns = [
+          { name: 'Total ICE', format: 'number' }];
+
 
           for (let i = 0; i < reports.length; i++) {
             console.log(reports[i].reported_year, reports[i].credit_rating);
@@ -1546,19 +1820,19 @@ const calificacion = (() => {var _ref20 = (0, _asyncToGenerator3.default)(functi
 
           for (let i = 0; i < results.length; i++) {
             const total = results[i].si + results[i].no;
+            const indicatorValue = results[i].si / total * 100;
             if (total > 0) {
-              results[i].si = results[i].si / total * 100;
-              results[i].no = results[i].no / total * 100;
-            } else {
+              results[i]['Instituciones Calificadas'] = [indicatorValue, total];
               delete results[i].si;
               delete results[i].no;
             }
           }
 
           data.line_chart_results = results;
-          data.table_results = tableResults(results, ['si', 'no']);
-          data.institution_names = ['si', 'no'];
+          data.table_results = tableResults(results, ['Instituciones Calificadas'], 2);
+          data.institution_names = ['Instituciones Calificadas'];
           data.type = 'percentage';
+          data.additional_columns = additionalColumns;
           console.log(data.line_chart_results, data.table_results);
         }
         return res.render('select-report', data);
@@ -1571,19 +1845,23 @@ const calificacion = (() => {var _ref20 = (0, _asyncToGenerator3.default)(functi
       data.error = 'Rango de años invalido. (0 <= rango <= 10)';
       return res.render('select-report', data);
     }
-  });return function calificacion(_x58, _x59, _x60) {return _ref20.apply(this, arguments);};})();
+  });return function calificacion(_x64, _x65, _x66) {return _ref22.apply(this, arguments);};})();
 
-const tableResults = (chartResults, institutionNames) => {
+const tableResults = (chartResults, institutionNames, indicatorsLength) => {
   let tableResults = [];
   for (let i = 0; i < institutionNames.length; i++) {
     let result = { institution_name: institutionNames[i], indicators: [] };
     for (let j = 0; j < chartResults.length; j++) {
       let indicator = { reported_year: chartResults[j].reported_year };
-      const indicatorValue = chartResults[j][result.institution_name];
-      if (indicatorValue) {
-        indicator.value = Number(indicatorValue);
+      const indicatorValues = chartResults[j][result.institution_name];
+      indicator.values = [];
+      for (let k = 0; k < indicatorsLength; k++) {
+        indicator.values.push(null);
       }
-      // console.log(indicator);
+      if (indicatorValues) {
+        indicator.values = indicatorValues;
+      }
+      console.log(indicator);
       result.indicators.push(indicator);
     }
     tableResults.push(result);

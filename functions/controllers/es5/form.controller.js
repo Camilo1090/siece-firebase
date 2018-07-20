@@ -201,12 +201,20 @@ exports.processReport = (() => {var _ref4 = (0, _asyncToGenerator3.default)(func
           }
           report.current_portfolio = current_portfolio;
 
-          if (formData.current_portfolio_male) {
-            report.current_portfolio_male = Number(formData.current_portfolio_male);
+          if (formData.current_portfolio_pregrado_male) {
+            report.current_portfolio_pregrado_male = Number(formData.current_portfolio_pregrado_male);
           }
 
-          if (formData.current_portfolio_female) {
-            report.current_portfolio_female = Number(formData.current_portfolio_female);
+          if (formData.current_portfolio_pregrado_female) {
+            report.current_portfolio_pregrado_female = Number(formData.current_portfolio_pregrado_female);
+          }
+
+          if (formData.current_portfolio_posgrado_male) {
+            report.current_portfolio_posgrado_male = Number(formData.current_portfolio_posgrado_male);
+          }
+
+          if (formData.current_portfolio_posgrado_female) {
+            report.current_portfolio_posgrado_female = Number(formData.current_portfolio_posgrado_female);
           }
 
           let pastdue_portfolio = [];
@@ -227,12 +235,20 @@ exports.processReport = (() => {var _ref4 = (0, _asyncToGenerator3.default)(func
           }
           report.pastdue_portfolio = pastdue_portfolio;
 
-          if (formData.pastdue_portfolio_male) {
-            report.pastdue_portfolio_male = Number(formData.pastdue_portfolio_male);
+          if (formData.pastdue_portfolio_pregrado_male) {
+            report.pastdue_portfolio_pregrado_male = Number(formData.pastdue_portfolio_pregrado_male);
           }
 
-          if (formData.pastdue_portfolio_female) {
-            report.pastdue_portfolio_female = Number(formData.pastdue_portfolio_female);
+          if (formData.pastdue_portfolio_pregrado_female) {
+            report.pastdue_portfolio_pregrado_female = Number(formData.pastdue_portfolio_pregrado_female);
+          }
+
+          if (formData.pastdue_portfolio_posgrado_male) {
+            report.pastdue_portfolio_posgrado_male = Number(formData.pastdue_portfolio_posgrado_male);
+          }
+
+          if (formData.pastdue_portfolio_posgrado_female) {
+            report.pastdue_portfolio_posgrado_female = Number(formData.pastdue_portfolio_posgrado_female);
           }
 
           let execution_portfolio = [];
@@ -253,12 +269,20 @@ exports.processReport = (() => {var _ref4 = (0, _asyncToGenerator3.default)(func
           }
           report.execution_portfolio = execution_portfolio;
 
-          if (formData.execution_portfolio_male) {
-            report.execution_portfolio_male = Number(formData.execution_portfolio_male);
+          if (formData.execution_portfolio_pregrado_male) {
+            report.execution_portfolio_pregrado_male = Number(formData.execution_portfolio_pregrado_male);
           }
 
-          if (formData.execution_portfolio_female) {
-            report.execution_portfolio_female = Number(formData.execution_portfolio_female);
+          if (formData.execution_portfolio_pregrado_female) {
+            report.execution_portfolio_pregrado_female = Number(formData.execution_portfolio_pregrado_female);
+          }
+
+          if (formData.execution_portfolio_posgrado_male) {
+            report.execution_portfolio_posgrado_male = Number(formData.execution_portfolio_posgrado_male);
+          }
+
+          if (formData.execution_portfolio_posgrado_female) {
+            report.execution_portfolio_posgrado_female = Number(formData.execution_portfolio_posgrado_female);
           }
 
           let risks = [];
@@ -290,36 +314,68 @@ exports.processReport = (() => {var _ref4 = (0, _asyncToGenerator3.default)(func
             report.non_payment_risk = non_payment_risk;
           }
 
-          if (formData.male_students) {
-            report.male_students = Number(formData.male_students);
+          if (formData.pregrado_male_students) {
+            report.pregrado_male_students = Number(formData.pregrado_male_students);
           }
 
-          if (formData.female_students) {
-            report.female_students = Number(formData.female_students);
+          if (formData.pregrado_female_students) {
+            report.pregrado_female_students = Number(formData.pregrado_female_students);
           }
 
-          if (formData.high_students) {
-            report.high_students = Number(formData.high_students);
+          if (formData.posgrado_male_students) {
+            report.posgrado_male_students = Number(formData.posgrado_male_students);
           }
 
-          if (formData.medium_students) {
-            report.medium_students = Number(formData.medium_students);
+          if (formData.posgrado_female_students) {
+            report.posgrado_female_students = Number(formData.posgrado_female_students);
           }
 
-          if (formData.low_students) {
-            report.low_students = Number(formData.low_students);
+          if (formData.pregrado_high_students) {
+            report.pregrado_high_students = Number(formData.pregrado_high_students);
           }
 
-          if (formData.graduate_percentage) {
-            report.graduate_percentage = Number(formData.graduate_percentage);
+          if (formData.pregrado_medium_students) {
+            report.pregrado_medium_students = Number(formData.pregrado_medium_students);
           }
 
-          if (formData.benefits) {
+          if (formData.pregrado_low_students) {
+            report.pregrado_low_students = Number(formData.pregrado_low_students);
+          }
+
+          if (formData.posgrado_high_students) {
+            report.posgrado_high_students = Number(formData.posgrado_high_students);
+          }
+
+          if (formData.posgrado_medium_students) {
+            report.posgrado_medium_students = Number(formData.posgrado_medium_students);
+          }
+
+          if (formData.posgrado_low_students) {
+            report.posgrado_low_students = Number(formData.posgrado_low_students);
+          }
+
+          if (formData.pregrado_graduate_percentage) {
+            report.pregrado_graduate_percentage = Number(formData.pregrado_graduate_percentage);
+          }
+
+          if (formData.posgrado_graduate_percentage) {
+            report.posgrado_graduate_percentage = Number(formData.posgrado_graduate_percentage);
+          }
+
+          if (formData.pregrado_benefits) {
             let benefits = {};
-            benefits.option = formData.benefits;
-            if (formData.benefits_cuales)
-            benefits.names = formData.benefits_cuales;
-            report.benefits = benefits;
+            benefits.option = formData.pregrado_benefits;
+            if (formData.pregrado_benefits_cuales)
+            benefits.names = formData.pregrado_benefits_cuales;
+            report.pregrado_benefits = benefits;
+          }
+
+          if (formData.posgrado_benefits) {
+            let benefits = {};
+            benefits.option = formData.posgrado_benefits;
+            if (formData.posgrado_benefits_cuales)
+            benefits.names = formData.posgrado_benefits_cuales;
+            report.posgrado_benefits = benefits;
           }
 
           // programs

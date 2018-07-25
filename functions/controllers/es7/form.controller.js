@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
 
 
 exports.getReports = async (req, res) => {

@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
 const underscore = require('underscore');
 
 
@@ -166,7 +166,7 @@ const financiamientoAnual = async (req, res, data) => {
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'money';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -245,7 +245,7 @@ const financiamientoBeneficiario = async (req, res, data) => {
         data.institution_names = institutionNames;
         data.type = 'money';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -311,7 +311,7 @@ const financiamientoInstitucion = async (req, res, data) => {
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'money';
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -388,7 +388,7 @@ const financiamientoFuentes = async (req, res, data) => {
         data.type = 'percentage';
         data.source = source;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -485,7 +485,7 @@ const variacionAnual = async (req, res, data) => {
         data.table_results = tableResults(variationResults, institutionNames, 1);
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -586,7 +586,7 @@ const asignacionLugar = async (req, res, data) => {
         data.type = 'percentage';
         data.place = place;
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -687,7 +687,7 @@ const asignacionNivel = async (req, res, data) => {
         data.type = 'percentage';
         data.level = level;
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -759,7 +759,7 @@ const asignacionGenero = async (req, res, data) => {
         data.type = 'percentage';
         data.sex = sex;
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -852,7 +852,7 @@ const asignacionNuevo = async (req, res, data) => {
         data.type = 'percentage';
         data.place = place;
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -949,7 +949,7 @@ const asignacionNuevoNivel = async (req, res, data) => {
         data.place = place;
         data.level = level;
         data.additional_columns = additionalColumns;
-        console.log(data.bar_chart_results, data.table_results);
+        // console.log(data.bar_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1040,7 +1040,7 @@ const variacionCartera = async (req, res, data) => {
         data.table_results = tableResults(variationResults, institutionNames);
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1116,7 +1116,7 @@ const carteraVigenteNivel = async (req, res, data) => {
         data.type = 'percentage';
         data.level = level;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1192,7 +1192,7 @@ const carteraVigenteLugar = async (req, res, data) => {
         data.type = 'percentage';
         data.place = place;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1265,7 +1265,7 @@ const carteraVigenteGenero = async (req, res, data) => {
         data.type = 'percentage';
         data.sex = sex;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1347,7 +1347,7 @@ const carteraVencida = async (req, res, data) => {
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1423,7 +1423,7 @@ const carteraVencidaNivel = async (req, res, data) => {
         data.type = 'percentage';
         data.level = level;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1499,7 +1499,7 @@ const carteraVencidaLugar = async (req, res, data) => {
         data.type = 'percentage';
         data.place = place;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1572,7 +1572,7 @@ const carteraVencidaGenero = async (req, res, data) => {
         data.type = 'percentage';
         data.sex = sex;
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1668,7 +1668,7 @@ const empleadoBeneficiario = async (req, res, data) => {
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'number';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1710,7 +1710,7 @@ const plataformaTecnologica = async (req, res, data) => {
         data.table_results = results;
         // data.institution_names = ['si', 'no'];
         // data.type = 'percentage';
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1771,7 +1771,7 @@ const regulacion = async (req, res, data) => {
         data.institution_names = ['Instituciones Reguladas'];
         data.type = 'percentage';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {
@@ -1833,7 +1833,7 @@ const calificacion = async (req, res, data) => {
         data.institution_names = ['Instituciones Calificadas'];
         data.type = 'percentage';
         data.additional_columns = additionalColumns;
-        console.log(data.line_chart_results, data.table_results);
+        // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
     } catch(error) {

@@ -28,7 +28,7 @@
       <a class="hiddenanchor" id="signin"></a>
 
       <div class="container-fluid mt-3">
-        <h1 class="col-xs-12 text-center">Sistema de Información de Estadísticas sobre Crédito Educativo, SIECE</h1>
+        <h1 class="col-xs-12 text-center fa-3x">Sistema de Información de Estadísticas sobre Crédito Educativo, SIECE</h1>
       </div>
       <div class="login_wrapper">
         <div class="animate form login_form">
@@ -50,23 +50,6 @@
               </div>
 
               <div class="clearfix"></div>
-
-              <div class="separator">
-                <!--<p class="change_link">New to site?-->
-                  <!--<a href="signup" class="to_register"> Create Account </a>-->
-                <!--</p>-->
-
-                <div class="clearfix"></div>
-                <br />
-
-                <div>
-                  <h1><i class="fa fa-paw"></i> SIECE</h1>
-                  <p>© 2018 APICE</p>
-                </div>
-                <div class="container-fluid">
-                  <img class="col-xs-12" src="Banner-APICE.png">
-                </div>
-              </div>
             </div>
           </section>
         </div>
@@ -107,6 +90,23 @@
           <!--</section>-->
         <!--</div>-->
       </div>
+      <div class="container-fluid col-xs-12" style="margin-top: 320px;">
+        <div class="separator col-xs-4 col-xs-offset-4">
+          <!--<div class="clearfix"></div>-->
+          <br />
+          <div class="col-xs-12 col-lg-8 col-lg-offset-2">
+            <div class="col-xs-12">
+              <a href="index"><img class="img-responsive" src="siece-logo.png"></a>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <a href="http://web.apice.org.co"><img class="img-responsive" src="APICE.jpg"></a>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <a href="https://es.unesco.org/"><img class="img-responsive" src="UNESCO.png"></a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!--<script src="cookie.js"></script>-->
     <script type="text/javascript">
@@ -122,10 +122,10 @@
           const email = txtEmail.value;
           const pass = txtPassword.value;
           firebase.auth().signInWithEmailAndPassword(email, pass)
-              .then(user => {
+              .then(userCredential => {
                 // checkCookie();
                 console.log('logged in');
-                return user.getIdToken();
+                return userCredential.user.getIdToken();
                     // .then(idToken => {
                       // fetch('/login', {
                       //   method: 'POST',
@@ -150,6 +150,7 @@
                 return postIdTokenToLogin('/login', idToken);
               })
               .then(response => {
+                // console.log(response);
                 document.cookie = response;
               })
               .then(() => {
@@ -213,6 +214,7 @@
               message = 'Usuario o contraseña incorrectos';
               break;
             default:
+              message = 'Error inesperado';
               console.log('unrecognized/unimplemented error code');
               break;
           }

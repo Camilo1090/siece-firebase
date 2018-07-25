@@ -36,8 +36,11 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-
-              <a href="index" class="site_title"><i class="fa fa-paw"></i> <span>SIECE</span></a>
+              <a href="index" class="site_title">
+                <!--<i class="fa fa-paw"></i> -->
+                <img src="siece.png">
+                <span>SIECE</span>
+              </a>
             </div>
 
             <div class="clearfix"></div>
@@ -46,7 +49,7 @@
             {{#if user}}
               <div class="profile clearfix">
                 <div class="profile_pic">
-                  <img src="img.jpg" alt="..." class="img-circle profile_img">
+                  <img src="img.png" alt="..." class="img-circle profile_img">
                 </div>
                 <div class="profile_info">
                   <span>Bienvenido,</span>
@@ -92,19 +95,24 @@
         <!-- top navigation -->
         <div class="top_nav">
           <div class="nav_menu">
-            <nav>
+            <nav class="navbar">
               <div class="nav toggle">
                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
               </div>
-              <a href="http://web.apice.org.co">
-                <img src="Banner-APICE.png">
-              </a>
+              <div class="navbar-brand">
+                <span style="color: #73879C">
+                  <strong>Información General de Crédito Educativo en el último Año Reportado</strong>
+                </span>
+              </div>
+              <!--<a href="http://web.apice.org.co">-->
+                <!--<img src="Banner-APICE.png">-->
+              <!--</a>-->
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   {{#if user}}
                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                      <img src="img.jpg" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
-                      <span class=" fa fa-angle-down"></span>
+                      <img src="img.png" alt="">{{#if user.displayName}}{{user.displayName}}{{else}}{{user.email}}{{/if}}
+                      <span class="fa fa-angle-down"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                       {{#if is_admin}}
@@ -139,7 +147,7 @@
               <!--<span class="count_bottom"><i class="green">4% </i> From last Week</span>-->
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <h4 class="count_top"><i class="fa fa-edit"></i> Reportes Realizados</h4>
+              <h4 class="count_top"><i class="fa fa-edit"></i> N° de Instituciones</h4>
               <div class="count">
                 {{#if forms}}
                   {{forms}}
@@ -183,7 +191,7 @@
               <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <h4 class="count_top"><i class="fa fa-money"></i> Monto Total Invertido</h4>
+              <h4 class="count_top"><i class="fa fa-money"></i> Total invertido en dólares</h4>
               <h4 class="green custom-count">
                 {{#if total_investment}}
                   USD {{total_investment}}
@@ -202,7 +210,7 @@
 
                 <div class="row x_title">
                   <div class="col-md-6">
-                    <h3>Inversión por País</h3>
+                    <h3>Inversión en Crédito Educativo por País</h3>
                   </div>
                   <!--<div class="col-md-6">-->
                     <!--<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">-->
@@ -309,13 +317,11 @@
                 </div>
                 <div class="x_content">
                   <p>
-                    Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el
-                    texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se
-                    dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un
-                    libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en
-                    documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación
-                    de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de
-                    autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
+                    La Asociación Panamericana de Instituciones de Crédito Educativo, APICE, presenta el Sistema de
+                    Información Estadístico sobre Crédito Educativo - SIECE, que cuenta con estadísticas de los
+                    distintos países e instituciones de América Latina y el Caribe relacionadas con el tema. El SIECE
+                    permitirá estrechar la cooperación entre actores nacionales e internacionales para compartir
+                    información estandarizada, válida, confiable, actualizada y oportuna sobre crédito educativo.
                   </p>
                   <!--<h4>App Usage across versions</h4>-->
                   <!--<div class="widget_summary">-->
@@ -424,15 +430,19 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                  <p>
-                    Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el
-                    texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se
-                    dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un
-                    libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en
-                    documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación
-                    de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de
-                    autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
-                  </p>
+                  <ul>
+                    <li>Identificar las variables pertinentes para la construcción de indicadores de interés general de
+                      los beneficiarios de la información de crédito educativo.</li>
+                    <li>Identificar las fuentes e instituciones que pueden suministrar la información necesaria que se
+                      difundirá mediante el sistema de información.</li>
+                    <li>Definir un mecanismo de acopio y manejo de la información recopilada para facilitar la
+                      construcción de estadísticas e indicadores de apoyo al crédito educativo.</li>
+                    <li>Definir estrategias que permitan realizar la búsqueda de información primaria y secundaria, su
+                      procesamiento, análisis, y la construcción de indicadores y estadísticas, que se
+                      compartirán entre los beneficiarios.</li>
+                    <li>Conformar redes de apoyo e intercambio de información entre los actores nacionales e
+                      internacionales.</li>
+                  </ul>
                   <!--<table class="" style="width:100%">-->
                     <!--<tr>-->
                       <!--<th style="width:37%;">-->
@@ -515,14 +525,15 @@
                 </div>
                 <div class="x_content">
                   <p>
-                    Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el
-                    texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se
-                    dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un
-                    libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en
-                    documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación
-                    de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de
-                    autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
+                    Como beneficiarios principales de la información que se maneja en el SIECE, se han identificado los siguientes:
                   </p>
+                  <ul>
+                    <li>Organismos internacionales.</li>
+                    <li>Entidades gubernamentales de los países de América Latina y el Caribe.</li>
+                    <li>Instituciones, programas y servicios de crédito educativo e instituciones de educación superior
+                      de los países de América Latina y el Caribe.</li>
+                    <li>Sociedad civil, investigadores, académicos y estudiantes interesados en el tema.</li>
+                  </ul>
                   <!--<div class="dashboard-widget-content">-->
                     <!--<ul class="quick-list">-->
                       <!--<li><i class="fa fa-calendar-o"></i><a href="#">Settings</a>-->

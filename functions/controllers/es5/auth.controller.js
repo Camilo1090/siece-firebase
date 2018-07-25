@@ -20,7 +20,7 @@ exports.login = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (re
     try {
       const sessionCookie = yield admin.auth().createSessionCookie(idToken, { expiresIn });
       // Set cookie policy for session cookie.
-      const options = { maxAge: expiresIn, httpOnly: false, secure: false };
+      const options = { maxAge: expiresIn, httpOnly: false, secure: false, path: '/' };
       res.cookie('__session', sessionCookie, options);
       // console.log('cookie: ', res.cookie);
       // const decodedIdToken = await admin.auth().verifySessionCookie(sessionCookie, true);

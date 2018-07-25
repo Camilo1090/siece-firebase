@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 
+
 exports.login = async (req, res) => {
   const formData = req.body;
   const data = {};
@@ -20,7 +21,7 @@ exports.login = async (req, res) => {
   try {
     const sessionCookie = await admin.auth().createSessionCookie(idToken, {expiresIn});
     // Set cookie policy for session cookie.
-    const options = {maxAge: expiresIn, httpOnly: false, secure: false};
+    const options = {maxAge: expiresIn, httpOnly: false, secure: false, path: '/'};
     res.cookie('__session', sessionCookie, options);
     // console.log('cookie: ', res.cookie);
     // const decodedIdToken = await admin.auth().verifySessionCookie(sessionCookie, true);

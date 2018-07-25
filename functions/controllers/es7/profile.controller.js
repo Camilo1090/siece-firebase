@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
+
 
 exports.getProfile = async (req, res) => {
   let data = { user: req.user };

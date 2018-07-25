@@ -1,18 +1,22 @@
-const express = require('express');
+const admin = require('firebase-admin');
+const db = admin.firestore();
+db.settings({
+  timestampsInSnapshots: true
+});
 // const router = express.Router();
 
-let dir = 'es7';
-if (process.env['NODE_ENV'] === 'production')
-  dir = 'es5';
+// let dir = 'es7';
+// if (process.env['NODE_ENV'] === 'production')
+//   dir = 'es5';
 
-const firebaseUser = require('./utils/'+dir+'/firebaseUser');
+const firebaseUser = require('./utils/es7/firebaseUser');
 
-const authController = require('./controllers/'+dir+'/auth.controller');
-const indexController = require('./controllers/'+dir+'/index.controller');
-const formController = require('./controllers/'+dir+'/form.controller');
-const profileController = require('./controllers/'+dir+'/profile.controller');
-const indicatorsController = require('./controllers/'+dir+'/indicators.controller');
-const adminController = require('./controllers/'+dir+'/admin.controller');
+const authController = require('./controllers/es7/auth.controller');
+const indexController = require('./controllers/es7/index.controller');
+const formController = require('./controllers/es7/form.controller');
+const profileController = require('./controllers/es7/profile.controller');
+const indicatorsController = require('./controllers/es7/indicators.controller');
+const adminController = require('./controllers/es7/admin.controller');
 
 
 module.exports = (app) => {

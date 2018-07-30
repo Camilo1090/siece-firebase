@@ -569,6 +569,51 @@
                             </div>
                           </div>
                         </div>
+                        <!-- pregunta 10 -->
+                        <div class="form-group">
+                          <label class="col-xs-12 control-label pt">
+                            9. ¿La Organización está regulada por la Comisión Bancaria o Superintendencia financiera,
+                            u otra autoridad financiera?
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="si" id="regulated_si" name="regulated">
+                                Sí
+                              </label>
+                              <label for="regulating_entity">Indique la entidad reguladora: </label>
+                              <input type="text" id="regulating_entity" name="regulating_entity" disabled>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="no" id="regulated_no" name="regulated">
+                                No
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- pregunta 11 -->
+                        <div class="form-group">
+                          <label class="col-xs-12 control-label pt">
+                            10. ¿La Organización cuenta con una calificación crediticia?
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="si" id="credit_rating_si" name="credit_rating">
+                                Sí
+                              </label>
+                              <label for="rating_agency">Indique la agencia calificadora: </label>
+                              <input type="text" id="rating_agency" name="rating_agency" disabled>
+                            </div>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" value="no" id="credit_rating_no" name="credit_rating">
+                                No
+                              </label>
+                            </div>
+                          </div>
+                        </div>
                         <div class="col-xs-12 pt">
                           <button class="btn btn-success" type="submit"><i class="fa fa-edit m-right-xs"></i>Guardar Cambios</button>
                         </div>
@@ -631,6 +676,20 @@
         }
       });
 
+      $("input:radio[name=regulated]").change(function() {
+        $("#regulating_entity").val("").attr("disabled", true).removeAttr("required");
+        if ($("#regulated_si").is(":checked")) {
+          $("#regulating_entity").attr("required", true).removeAttr("disabled");
+        }
+      });
+
+      $("input:radio[name=credit_rating]").change(function() {
+        $("#rating_agency").val("").attr("disabled", true).removeAttr("required");
+        if ($("#credit_rating_si").is(":checked")) {
+          $("#rating_agency").attr("required", true).removeAttr("disabled");
+        }
+      });
+
       {{#if institution.type}}
         $("#type_{{institution.type.name}}").attr("checked", true);
         if ($("#type_otra").is(":checked"))
@@ -670,6 +729,20 @@
           if ("{{institution.platform_ownership}}".length > 0) {
             $("#platform_ownership_{{institution.platform_ownership}}").attr("checked", true);
           }
+        }
+      {{/if}}
+
+      {{#if institution.regulated}}
+        $("#regulated_{{institution.regulated}}").attr("checked", true);
+        if ($("#regulated_si").is(":checked")) {
+          $("#regulating_entity").val("{{institution.regulating_entity}}").attr("required", true).removeAttr("disabled");
+        }
+      {{/if}}
+
+      {{#if institution.credit_rating}}
+        $("#credit_rating_{{institution.credit_rating}}").attr("checked", true);
+        if ($("#credit_rating_si").is(":checked")) {
+          $("#rating_agency").val("{{institution.rating_agency}}").attr("required", true).removeAttr("disabled");
         }
       {{/if}}
     });

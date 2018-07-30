@@ -43,6 +43,8 @@
 // });
 
 function logout() {
-  document.cookie = '__session=null;max-age=0';
+  console.log('logout');
+  document.cookie = '__session=;max-age=0;path=/;';
+  // console.log(document.cookie);
   window.location.replace('/index');
 }

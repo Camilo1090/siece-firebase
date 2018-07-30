@@ -17,69 +17,91 @@ exports.getIndicator = (req, res) => {
 
   switch (req.body.report) {
     case 'financiamiento_anual': {
+      data.indicator_name = 'Monto promedio de crédito educativo por año';
       return financiamientoAnual(req, res, data);
     }
     case 'financiamiento_beneficiario': {
+      data.indicator_name = 'Monto promedio de crédito educativo por beneficiario para el año que se reporta';
       return financiamientoBeneficiario(req, res, data);
     }
     case 'financiamiento_institucion': {
+      data.indicator_name = 'Monto promedio de crédito educativo por beneficiario desde el inicio del programa de CE hasta el año que se reporta';
       return financiamientoInstitucion(req, res, data);
     }
     case 'financiamiento_fuentes': {
+      data.indicator_name = 'Proporción de financiación de CE según fuente de financiamiento por año';
       return financiamientoFuentes(req, res, data);
     }
     case 'variacion_anual': {
+      data.indicator_name = 'Variación anual de CE';
       return variacionAnual(req, res, data);
     }
     case 'asignacion_lugar': {
+      data.indicator_name = 'Propoción de CE según el lugar de estudios';
       return asignacionLugar(req, res, data);
     }
     case 'asignacion_nivel': {
+      data.indicator_name = 'Propoción de CE según el nivel de estudios';
       return asignacionNivel(req, res, data);
     }
     case 'asignacion_genero': {
+      data.indicator_name = 'Propoción de CE según el género';
       return asignacionGenero(req, res, data);
     }
     case 'asignacion_nuevo': {
+      data.indicator_name = 'Proporción anual de CE nuevo según el lugar de estudios';
       return asignacionNuevo(req, res, data);
     }
     case 'asignacion_nuevo_nivel': {
+      data.indicator_name = 'Proporción anual de CE nuevo según el nivel de estudios';
       return asignacionNuevoNivel(req, res, data);
     }
     case 'variacion_cartera': {
+      data.indicator_name = 'Variación anual de la cartera';
       return variacionCartera(req, res, data);
     }
     case 'cartera_vigente_nivel': {
+      data.indicator_name = 'Proporción anual de la cartera vigente según el nivel de estudios';
       return carteraVigenteNivel(req, res, data);
     }
     case 'cartera_vigente_lugar': {
+      data.indicator_name = 'Proporción anual de la cartera vigente según el lugar de estudios';
       return carteraVigenteLugar(req, res, data);
     }
     case 'cartera_vigente_genero': {
+      data.indicator_name = 'Proporción anual de la cartera vigente según el género';
       return carteraVigenteGenero(req, res, data);
     }
     case 'cartera_vencida': {
+      data.indicator_name = 'Proporción anual de la cartera vencida';
       return carteraVencida(req, res, data);
     }
     case 'cartera_vencida_nivel': {
+      data.indicator_name = 'Proporción anual de la cartera vencida según el nivel de estudios';
       return carteraVencidaNivel(req, res, data);
     }
     case 'cartera_vencida_lugar': {
+      data.indicator_name = 'Proporción anual de la cartera vencida según el lugar de estudios';
       return carteraVencidaLugar(req, res, data);
     }
     case 'cartera_vencida_genero': {
+      data.indicator_name = 'Proporción anual de la cartera vencida según el género';
       return carteraVencidaGenero(req, res, data);
     }
     case 'empleado_beneficiario': {
+      data.indicator_name = 'Relación empleado-beneficiario de CE';
       return empleadoBeneficiario(req, res, data);
     }
     case 'plataforma': {
+      data.indicator_name = 'Proporción de ICE con plataforma tecnológica';
       return plataformaTecnologica(req, res, data);
     }
     case 'regulacion': {
+      data.indicator_name = 'Proporción de ICE reguladas';
       return regulacion(req, res, data);
     }
     case 'calificacion': {
+      data.indicator_name = 'Proporción de ICE calificadas';
       return calificacion(req, res, data);
     }
     default: {
@@ -1729,47 +1751,32 @@ const regulacion = async (req, res, data) => {
   const years = formData.to_year - formData.from_year + 1;
   if (years >= 0 && years <= 10) {
     try {
-      const reportsSnapshot = await db.collection('reports')
-        .where('status', '==', 'Aceptado')
-        .where('reported_year', '>=', Number(formData.from_year))
-        .where('reported_year', '<=', Number(formData.to_year))
+      const usersSnapshot = await db.collection('users')
         .get();
-      if (reportsSnapshot.empty) {
+      if (usersSnapshot.empty) {
         console.log('No documents found.');
         data.warning = 'No hay datos reportados en el periodo seleccionado.';
       } else {
-        let reports = reportsSnapshot.docs.map(doc => doc.data());
+        let users = usersSnapshot.docs.map(doc => doc.data());
         // console.log(reports);
         let results = [];
-        for (let i = formData.from_year; i <= formData.to_year; i++) {
-          let result = { reported_year: Number(i), si: 0, no: 0 };
-          results.push(result);
-        }
-        const additionalColumns = [
-          { name: 'Total ICE', format: 'number'}
-        ];
-
-        for (let i = 0; i < reports.length; i++) {
-          if (reports[i].regulated === 'si')
-            results[reports[i].reported_year - formData.from_year].si += 1;
-          else if (reports[i].regulated === 'no')
-            results[reports[i].reported_year - formData.from_year].no += 1;
-        }
-
-        for (let i = 0; i < results.length; i++) {
-          const total = results[i].si + results[i].no;
-          const indicatorValue = results[i].si / total * 100;
-          if (total > 0) {
-            results[i]['Instituciones Reguladas'] = [indicatorValue, total];
-            delete results[i].si;
-            delete results[i].no;
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].name && users[i].regulated) {
+            let result = {
+              institution_name: users[i].name,
+              indicators: [{reported_year: '¿Está la ICE regulada?', values: [users[i].regulated, users[i].regulating_entity]}]
+            };
+            results.push(result);
           }
         }
+        const additionalColumns = [
+          { name: 'Entidad Reguladora', format: 'text'}
+        ];
 
-        data.line_chart_results = results;
-        data.table_results = tableResults(results, ['Instituciones Reguladas'], 2);
-        data.institution_names = ['Instituciones Reguladas'];
-        data.type = 'percentage';
+        // data.line_chart_results = results;
+        data.table_results = results;
+        // data.institution_names = ['si', 'no'];
+        // data.type = 'percentage';
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
       }
@@ -1790,48 +1797,33 @@ const calificacion = async (req, res, data) => {
   const years = formData.to_year - formData.from_year + 1;
   if (years >= 0 && years <= 10) {
     try {
-      const reportsSnapshot = await db.collection('reports')
-        .where('status', '==', 'Aceptado')
-        .where('reported_year', '>=', Number(formData.from_year))
-        .where('reported_year', '<=', Number(formData.to_year))
+      const usersSnapshot = await db.collection('users')
         .get();
-      if (reportsSnapshot.empty) {
+      if (usersSnapshot.empty) {
         console.log('No documents found.');
         data.warning = 'No hay datos reportados en el periodo seleccionado.';
       } else {
-        let reports = reportsSnapshot.docs.map(doc => doc.data());
+        let users = usersSnapshot.docs.map(doc => doc.data());
         // console.log(reports);
         let results = [];
-        for (let i = formData.from_year; i <= formData.to_year; i++) {
-          let result = { reported_year: Number(i), si: 0, no: 0 };
-          results.push(result);
-        }
-        const additionalColumns = [
-          { name: 'Total ICE', format: 'number'}
-        ];
-
-        for (let i = 0; i < reports.length; i++) {
-          console.log(reports[i].reported_year, reports[i].credit_rating);
-          if (reports[i].credit_rating === 'si')
-            results[reports[i].reported_year - formData.from_year].si += 1;
-          else if (reports[i].credit_rating === 'no')
-            results[reports[i].reported_year - formData.from_year].no += 1;
-        }
-
-        for (let i = 0; i < results.length; i++) {
-          const total = results[i].si + results[i].no;
-          const indicatorValue = results[i].si / total * 100;
-          if (total > 0) {
-            results[i]['Instituciones Calificadas'] = [indicatorValue, total];
-            delete results[i].si;
-            delete results[i].no;
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].name && users[i].credit_rating) {
+            let result = {
+              institution_name: users[i].name,
+              indicators: [{reported_year: '¿Cuenta la ICE con calificación crediticia?',
+                values: [users[i].credit_rating, users[i].rating_agency]}]
+            };
+            results.push(result);
           }
         }
+        const additionalColumns = [
+          { name: 'Agencia Calificadora', format: 'text'}
+        ];
 
-        data.line_chart_results = results;
-        data.table_results = tableResults(results, ['Instituciones Calificadas'], 2);
-        data.institution_names = ['Instituciones Calificadas'];
-        data.type = 'percentage';
+        // data.line_chart_results = results;
+        data.table_results = results;
+        // data.institution_names = ['si', 'no'];
+        // data.type = 'percentage';
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
       }

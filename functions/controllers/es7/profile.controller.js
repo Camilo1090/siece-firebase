@@ -63,6 +63,24 @@ exports.saveProfile = async (req, res) => {
 
         if (institution.has_platform === 'si') {
           institution.platform_ownership = formData.platform_ownership;
+        } else {
+          institution.platform_ownership = '';
+        }
+
+        institution.regulated = formData.regulated;
+
+        if (institution.regulated === 'si') {
+          institution.regulating_entity = formData.regulating_entity;
+        } else {
+          institution.regulating_entity = '';
+        }
+
+        institution.credit_rating = formData.credit_rating;
+
+        if (institution.credit_rating === 'si') {
+          institution.rating_agency = formData.rating_agency;
+        } else {
+          institution.rating_agency = '';
         }
 
         const newProfile = usersSnapshot.empty;
@@ -143,6 +161,22 @@ const validateFormData = (formData) => {
   }
 
   if (formData.has_platform === 'si' && !formData.platform_ownership) {
+    return false;
+  }
+
+  if (!formData.regulated) {
+    return false;
+  }
+
+  if (formData.regulated === 'si' && !formData.regulating_entity) {
+    return false;
+  }
+
+  if (!formData.credit_rating) {
+    return false;
+  }
+
+  if (formData.credit_rating === 'si' && !formData.rating_agency) {
     return false;
   }
 

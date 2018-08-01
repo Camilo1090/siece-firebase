@@ -1,6 +1,7 @@
 'use strict';var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}const countries = require('i18n-iso-countries');
 const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
+
 
 exports.getIndex = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res) {
     let data = { user: req.user, is_admin: req.is_admin };
@@ -41,7 +42,7 @@ exports.getIndex = (() => {var _ref = (0, _asyncToGenerator3.default)(function* 
           });
         }
       }
-      console.log(data);
+      // console.log(data);
       return res.render('index', data);
     } catch (error) {
       console.log('Error: ', error);

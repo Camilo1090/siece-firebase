@@ -1,5 +1,6 @@
 'use strict';var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}const admin = require('firebase-admin');
 
+
 exports.login = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res) {
     const formData = req.body;
     const data = {};

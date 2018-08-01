@@ -1,5 +1,6 @@
 'use strict';var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
+
 
 exports.getProfile = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res) {
     let data = { user: req.user };
@@ -62,6 +63,24 @@ exports.saveProfile = (() => {var _ref2 = (0, _asyncToGenerator3.default)(functi
 
           if (institution.has_platform === 'si') {
             institution.platform_ownership = formData.platform_ownership;
+          } else {
+            institution.platform_ownership = '';
+          }
+
+          institution.regulated = formData.regulated;
+
+          if (institution.regulated === 'si') {
+            institution.regulating_entity = formData.regulating_entity;
+          } else {
+            institution.regulating_entity = '';
+          }
+
+          institution.credit_rating = formData.credit_rating;
+
+          if (institution.credit_rating === 'si') {
+            institution.rating_agency = formData.rating_agency;
+          } else {
+            institution.rating_agency = '';
           }
 
           const newProfile = usersSnapshot.empty;
@@ -142,6 +161,22 @@ const validateFormData = formData => {
   }
 
   if (formData.has_platform === 'si' && !formData.platform_ownership) {
+    return false;
+  }
+
+  if (!formData.regulated) {
+    return false;
+  }
+
+  if (formData.regulated === 'si' && !formData.regulating_entity) {
+    return false;
+  }
+
+  if (!formData.credit_rating) {
+    return false;
+  }
+
+  if (formData.credit_rating === 'si' && !formData.rating_agency) {
     return false;
   }
 

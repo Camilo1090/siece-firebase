@@ -1,5 +1,5 @@
 'use strict';var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}const admin = require('firebase-admin');
-let db = admin.firestore();
+const db = admin.firestore();
 
 
 exports.getReports = (() => {var _ref = (0, _asyncToGenerator3.default)(function* (req, res) {
@@ -164,16 +164,6 @@ exports.processReport = (() => {var _ref4 = (0, _asyncToGenerator3.default)(func
             }
           }
           report.funding_sources = sources;
-
-          if (formData.regulated) {
-            report.regulated = formData.regulated;
-            formData.regulating_entity ? report.regulating_entity = formData.regulating_entity : report.regulating_entity = '';
-          }
-
-          if (formData.credit_rating) {
-            report.credit_rating = formData.credit_rating;
-            formData.rating_agency ? report.rating_agency = formData.rating_agency : report.rating_agency = '';
-          }
 
           if (formData.total_investment) {
             report.total_investment = Number(formData.total_investment);

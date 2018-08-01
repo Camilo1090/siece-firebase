@@ -231,6 +231,7 @@
                             <option value="propios">Recursos propios</option>
                             <option value="inversiones">Inversiones</option>
                             <option value="otra">Otra</option>
+                            <option value="todos">Todos</option>
                           </select>
                         </div>
                       </div>
@@ -241,6 +242,7 @@
                             <option></option>
                             <option value="pais">País</option>
                             <option value="exterior">Exterior</option>
+                            <option value="todos">Todos</option>
                           </select>
                         </div>
                       </div>
@@ -251,6 +253,7 @@
                             <option></option>
                             <option value="pregrado">Pregrado</option>
                             <option value="posgrado">Posgrado</option>
+                            <option value="todos">Todos</option>
                           </select>
                         </div>
                       </div>
@@ -259,8 +262,9 @@
                         <div class="col-xs-6">
                           <select class="select2_single form-control" id="sex" tabindex="-1" name="sex">
                             <option></option>
-                            <option value="female">Femenino</option>
-                            <option value="male">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="todos">Todos</option>
                           </select>
                         </div>
                       </div>
@@ -280,14 +284,17 @@
                     <div class="clearfix"></div>
                   </div>
                   <div id="table-container" class="x_content">
-                    <table id="forms-datatable" class="table table-striped table-bordered">
+                    <table id="forms-datatable" class="table table-striped table-bordered" style="width: 100% !important;">
                       <thead>
                       <tr>
                         <th>Institución</th>
-                        {{#each table_results.0.indicators}}
-                          <th class="{{../type}}">{{this.reported_year}}</th>
+                        {{#each table_results.0.indicators as |indicator|}}
+                          <th class="{{../type}}">{{../first_indicator_label}} {{#if ../first_indicator_label}}-{{/if}} {{indicator.reported_year}}</th>
+                          {{#../indicator_labels}}
+                            <th class="{{../../type}}">{{this}} - {{indicator.reported_year}}</th>
+                          {{/../indicator_labels}}
                           {{#../additional_columns as |column|}}
-                            <th class="{{column.format}}">{{column.name}}</th>
+                            <th class="{{column.format}}">{{column.name}} - {{indicator.reported_year}}</th>
                           {{/../additional_columns}}
                         {{/each}}
                       </tr>
@@ -411,23 +418,25 @@
           "columnDefs": [
             {
               "render": function (data, type, row) {
-                if (type === 'display')
+                if (type === 'display' && !isNaN(Number(data)))
                   return 'USD ' + Number(data).toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-                return Number(data);
+                return data;
               },
               "targets": 'money'
             },
             {
               "render": function (data, type, row) {
-                if (type === 'display')
+                if (type === 'display' && !isNaN(Number(data)))
                   return Number(data) + ' %';
-                return Number(data);
+                return data;
               },
               "targets": 'percentage'
             },
             {
               "render": function (data, type, row) {
-                return Number(data);
+                if (!isNaN(Number(data)))
+                  return Number(data);
+                return data;
               },
               "targets": 'number'
             },
@@ -440,10 +449,13 @@
             { extend: "pdfHtml5", className: "btn-sm" },
             { extend: "print", className: "btn-sm" }
           ],
-          // responsive:true,
-          "deferRender": false,
-          "scroller": true
+          // responsive: true,
+          // "deferRender": false,
+          "scrollX": true
+          // scroller: true
         });
+
+        // $("#forms-datatable").DataTable().draw();
 
         $("#reports").change(() => {
           $("#sources_container").hide().removeAttr('required');
@@ -466,18 +478,13 @@
             $("#places_container").show().attr('required', true);
             $("#places").attr('required', true);
           } else if ($("#reports").val() === 'asignacion_nivel' || $("#reports").val() === 'cartera_vigente_nivel'
-              || $("#reports").val() === 'cartera_vencida_nivel') {
+              || $("#reports").val() === 'cartera_vencida_nivel' || $("#reports").val() === 'asignacion_nuevo_nivel') {
             $("#levels_container").show().attr('required', true);
             $("#levels").attr('required', true);
           } else if ($("#reports").val() === 'asignacion_genero' || $("#reports").val() === 'cartera_vigente_genero'
               || $("#reports").val() === 'cartera_vencida_genero') {
             $("#sex_container").show().attr('required', true);
             $("#sex").attr('required', true);
-          } else if ($("#reports").val() === 'asignacion_nuevo_nivel') {
-            $("#places_container").show().attr('required', true);
-            $("#places").attr('required', true);
-            $("#levels_container").show().attr('required', true);
-            $("#levels").attr('required', true);
           } else if ($("#reports").val() === 'plataforma' || $("#reports").val() === 'regulacion'
               || $("#reports").val() === 'calificacion') {
             $("#period_container").hide().attr('required', true);

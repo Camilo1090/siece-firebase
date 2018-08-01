@@ -29,7 +29,7 @@ exports.getIndicator = (req, res) => {
       return financiamientoInstitucion(req, res, data);
     }
     case 'financiamiento_fuentes': {
-      data.indicator_name = 'Proporción de financiación de CE según fuente de financiamiento por año';
+      data.indicator_name = 'Proporción de financiación de CE según fuente de financiamiento por año - ' + getFinancingSource(req.body.source);
       return financiamientoFuentes(req, res, data);
     }
     case 'variacion_anual': {
@@ -37,23 +37,23 @@ exports.getIndicator = (req, res) => {
       return variacionAnual(req, res, data);
     }
     case 'asignacion_lugar': {
-      data.indicator_name = 'Propoción de CE según el lugar de estudios';
+      data.indicator_name = 'Proporción de CE según el lugar de estudios - ' + req.body.place.toUpperCase();
       return asignacionLugar(req, res, data);
     }
     case 'asignacion_nivel': {
-      data.indicator_name = 'Propoción de CE según el nivel de estudios';
+      data.indicator_name = 'Proporción de CE según el nivel de estudios - ' + req.body.level.toUpperCase();
       return asignacionNivel(req, res, data);
     }
     case 'asignacion_genero': {
-      data.indicator_name = 'Propoción de CE según el género';
+      data.indicator_name = 'Proporción de CE según el género - ' + req.body.sex.toUpperCase();
       return asignacionGenero(req, res, data);
     }
     case 'asignacion_nuevo': {
-      data.indicator_name = 'Proporción anual de CE nuevo según el lugar de estudios';
-      return asignacionNuevo(req, res, data);
+      data.indicator_name = 'Proporción anual de CE nuevo según el lugar de estudios - ' + req.body.place.toUpperCase();
+      return asignacionNuevoLugar(req, res, data);
     }
     case 'asignacion_nuevo_nivel': {
-      data.indicator_name = 'Proporción anual de CE nuevo según el nivel de estudios';
+      data.indicator_name = 'Proporción anual de CE nuevo según el nivel de estudios - ' + req.body.level.toUpperCase();
       return asignacionNuevoNivel(req, res, data);
     }
     case 'variacion_cartera': {
@@ -61,15 +61,15 @@ exports.getIndicator = (req, res) => {
       return variacionCartera(req, res, data);
     }
     case 'cartera_vigente_nivel': {
-      data.indicator_name = 'Proporción anual de la cartera vigente según el nivel de estudios';
+      data.indicator_name = 'Proporción anual de la cartera vigente según el nivel de estudios - ' + req.body.level.toUpperCase();
       return carteraVigenteNivel(req, res, data);
     }
     case 'cartera_vigente_lugar': {
-      data.indicator_name = 'Proporción anual de la cartera vigente según el lugar de estudios';
+      data.indicator_name = 'Proporción anual de la cartera vigente según el lugar de estudios - ' + req.body.place.toUpperCase();
       return carteraVigenteLugar(req, res, data);
     }
     case 'cartera_vigente_genero': {
-      data.indicator_name = 'Proporción anual de la cartera vigente según el género';
+      data.indicator_name = 'Proporción anual de la cartera vigente según el género - ' + req.body.sex.toUpperCase();
       return carteraVigenteGenero(req, res, data);
     }
     case 'cartera_vencida': {
@@ -77,15 +77,15 @@ exports.getIndicator = (req, res) => {
       return carteraVencida(req, res, data);
     }
     case 'cartera_vencida_nivel': {
-      data.indicator_name = 'Proporción anual de la cartera vencida según el nivel de estudios';
+      data.indicator_name = 'Proporción anual de la cartera vencida según el nivel de estudios - ' + req.body.level.toUpperCase();
       return carteraVencidaNivel(req, res, data);
     }
     case 'cartera_vencida_lugar': {
-      data.indicator_name = 'Proporción anual de la cartera vencida según el lugar de estudios';
+      data.indicator_name = 'Proporción anual de la cartera vencida según el lugar de estudios - ' + req.body.place.toUpperCase();
       return carteraVencidaLugar(req, res, data);
     }
     case 'cartera_vencida_genero': {
-      data.indicator_name = 'Proporción anual de la cartera vencida según el género';
+      data.indicator_name = 'Proporción anual de la cartera vencida según el género - ' + req.body.sex.toUpperCase();
       return carteraVencidaGenero(req, res, data);
     }
     case 'empleado_beneficiario': {
@@ -373,30 +373,59 @@ const financiamientoFuentes = async (req, res, data) => {
         const additionalColumns = [
           { name: 'Total Financiamiento', format: 'money'}
         ];
+        let funding_sources = {
+          gubernamental: null,
+          privado: null,
+          nacional: null,
+          internacional: null,
+          donaciones: null,
+          cartera: null,
+          terceros: null,
+          cooperacion: null,
+          impuestos: null,
+          titularizacion: null,
+          propios: null,
+          inversiones: null,
+          otra: null
+        };
 
         for (let i = 0; i < reports.length; i++) {
           let total_source_amount = 0;
-          let selected_source_amount = 0;
+          Object.keys(funding_sources).forEach(item => funding_sources[item] = null);
+          
           if (reports[i].funding_sources && reports[i].funding_sources instanceof Array) {
             // console.log(reports[i].funding_sources);
             for (let j = 0; j < reports[i].funding_sources.length; j++) {
               total_source_amount += Number(reports[i].funding_sources[j].amount);
-              if (reports[i].funding_sources[j].source === source) {
-                selected_source_amount = Number(reports[i].funding_sources[j].amount);
-              }
+              funding_sources[reports[i].funding_sources[j].source] = reports[i].funding_sources[j].amount;
             }
           }
 
-          let indicatorValue = selected_source_amount / total_source_amount * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
+          if (source === 'todos') {
+            let indicators = Object.values(funding_sources)
+              .map(indicator => {
+                return (indicator / total_source_amount * 100).toFixed(2);
+              });
+            indicators.push(total_source_amount);
             if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicators;
             } else {
               const userRecord = await admin.auth().getUser(reports[i].user_id);
               userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicators;
+            }
+          } else {
+            let indicatorValue = funding_sources[source] / total_source_amount * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_source_amount];
+              }
             }
           }
         }
@@ -405,9 +434,15 @@ const financiamientoFuentes = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (source === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 14);
+          data.indicator_labels = Object.keys(funding_sources).map(item => getFinancingSource(item)).slice(1);
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = getFinancingSource('gubernamental');
         data.source = source;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -494,9 +529,9 @@ const variacionAnual = async (req, res, data) => {
           Object.keys(results[i]).forEach(key => {
             if (key !== 'reported_year') {
               if (results[i + 1][key]) {
-                obj[key] = ((results[i + 1][key] - results[i][key]) / results[i][key] * 100).toFixed(2);
+                obj[key] = [((results[i + 1][key][0] - results[i][key][0]) / results[i][key][0] * 100).toFixed(2)];
               } else {
-                obj[key] = -100;
+                obj[key] = [-100];
               }
             }
           });
@@ -551,6 +586,8 @@ const asignacionLugar = async (req, res, data) => {
         for (let i = 0; i < reports.length; i++) {
           let place_credits = 0;
           let total_credits = 0;
+          let pais_credits = 0;
+          let exterior_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
@@ -560,12 +597,16 @@ const asignacionLugar = async (req, res, data) => {
                   total_credits += Number(program.credit_pais.new);
                   if (place === 'pais')
                     place_credits += Number(program.credit_pais.new);
+                  if (place === 'todos')
+                    pais_credits += Number(program.credit_pais.new);
                 }
 
                 if (program.credit_pais.old) {
                   total_credits += Number(program.credit_pais.old);
                   if (place === 'pais')
                     place_credits += Number(program.credit_pais.old);
+                  if (place === 'todos')
+                    pais_credits += Number(program.credit_pais.old);
                 }
               }
 
@@ -574,27 +615,47 @@ const asignacionLugar = async (req, res, data) => {
                   total_credits += Number(program.credit_exterior.new);
                   if (place === 'exterior')
                     place_credits += Number(program.credit_exterior.new);
+                  if (place === 'todos')
+                    exterior_credits += Number(program.credit_exterior.new);
                 }
 
                 if (program.credit_exterior.old) {
                   total_credits += Number(program.credit_exterior.old);
                   if (place === 'exterior')
                     place_credits += Number(program.credit_exterior.old);
+                  if (place === 'todos')
+                    exterior_credits += Number(program.credit_exterior.old);
                 }
               }
             }
           }
 
-          let indicatorValue = place_credits / total_credits * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+          if (place === 'todos') {
+            let paisIndicator = pais_credits / total_credits * 100;
+            let exteriorIndicator = exterior_credits / total_credits * 100;
+            if (paisIndicator && exteriorIndicator) {
+              paisIndicator = paisIndicator.toFixed(2);
+              exteriorIndicator = exteriorIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+              }
+            }
+          } else {
+            let indicatorValue = place_credits / total_credits * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              }
             }
           }
         }
@@ -603,9 +664,16 @@ const asignacionLugar = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.bar_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (place === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Exterior'];
+        }
+        else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'percentage';
+        data.first_indicator_label = 'País';
         data.place = place;
         data.additional_columns = additionalColumns;
         // console.log(data.bar_chart_results, data.table_results);
@@ -652,6 +720,8 @@ const asignacionNivel = async (req, res, data) => {
         for (let i = 0; i < reports.length; i++) {
           let level_credits = 0;
           let total_credits = 0;
+          let pregrado_credits = 0;
+          let posgrado_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
@@ -661,12 +731,24 @@ const asignacionNivel = async (req, res, data) => {
                   total_credits += Number(program.credit_pais.new);
                   if (program.level === level)
                     level_credits += Number(program.credit_pais.new);
+                  if (level === 'todos') {
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_pais.new);
+                    else
+                      posgrado_credits += Number(program.credit_pais.new);
+                  }
                 }
 
                 if (program.credit_pais.old) {
                   total_credits += Number(program.credit_pais.old);
                   if (program.level === level)
                     level_credits += Number(program.credit_pais.old);
+                  if (level === 'todos') {
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_pais.old);
+                    else
+                      posgrado_credits += Number(program.credit_pais.old);
+                  }
                 }
               }
 
@@ -675,27 +757,55 @@ const asignacionNivel = async (req, res, data) => {
                   total_credits += Number(program.credit_exterior.new);
                   if (program.level === level)
                     level_credits += Number(program.credit_exterior.new);
+                  if (level === 'todos') {
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_exterior.new);
+                    else
+                      posgrado_credits += Number(program.credit_exterior.new);
+                  }
                 }
 
                 if (program.credit_exterior.old) {
                   total_credits += Number(program.credit_exterior.old);
                   if (program.level === level)
                     level_credits += Number(program.credit_exterior.old);
+                  if (level === 'todos') {
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_exterior.old);
+                    else
+                      posgrado_credits += Number(program.credit_exterior.old);
+                  }
                 }
               }
             }
           }
 
-          let indicatorValue = level_credits / total_credits * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+          if (level === 'todos') {
+            let pregradoIndicator = pregrado_credits / total_credits * 100;
+            let posgradoIndicator = posgrado_credits / total_credits * 100;
+            if (pregradoIndicator && posgradoIndicator) {
+              pregradoIndicator = pregradoIndicator.toFixed(2);
+              posgradoIndicator = posgradoIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+              }
+            }
+          } else {
+            let indicatorValue = level_credits / total_credits * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              }
             }
           }
         }
@@ -704,9 +814,15 @@ const asignacionNivel = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.bar_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (level === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Posgrado'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'percentage';
+        data.first_indicator_label = 'Pregrado';
         data.level = level;
         data.additional_columns = additionalColumns;
         // console.log(data.bar_chart_results, data.table_results);
@@ -752,22 +868,45 @@ const asignacionGenero = async (req, res, data) => {
 
         for (let i = 0; i < reports.length; i++) {
           let total_credits = reports[i].female_students + reports[i].male_students;
-          let sex_credits = 0;
-          if (sex === 'female') {
-            sex_credits = reports[i].female_students;
+          let female_credits = reports[i].female_students;
+          let male_credits = reports[i].male_students;
+          let indicatorValue;
+          let femaleIndicator;
+          let maleIndicator;
+          if (sex === 'femenino') {
+            indicatorValue = female_credits / total_credits * 100;
+          } else if (sex === 'masculino') {
+            indicatorValue = male_credits / total_credits * 100;
           } else {
-            sex_credits = reports[i].male_students;
+            femaleIndicator = female_credits / total_credits * 100;
+            maleIndicator = male_credits / total_credits * 100;
           }
-          let indicatorValue = sex_credits / total_credits * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+
+          if (sex === 'todos') {
+            let femaleIndicator = female_credits / total_credits * 100;
+            let maleIndicator = male_credits / total_credits * 100;
+            if (femaleIndicator && maleIndicator) {
+              femaleIndicator = femaleIndicator.toFixed(2);
+              maleIndicator = maleIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, total_credits];
+              }
+            }
+          } else {
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              }
             }
           }
         }
@@ -776,9 +915,15 @@ const asignacionGenero = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.bar_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (sex === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Masculino'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'percentage';
+        data.first_indicator_label = 'Femenino';
         data.sex = sex;
         data.additional_columns = additionalColumns;
         // console.log(data.bar_chart_results, data.table_results);
@@ -795,7 +940,7 @@ const asignacionGenero = async (req, res, data) => {
   }
 };
 
-const asignacionNuevo = async (req, res, data) => {
+const asignacionNuevoLugar = async (req, res, data) => {
   const formData = req.body;
   const place = formData.place;
   const years = formData.to_year - formData.from_year + 1;
@@ -825,6 +970,8 @@ const asignacionNuevo = async (req, res, data) => {
         for (let i = 0; i < reports.length; i++) {
           let new_credits = 0;
           let total_credits = 0;
+          let pais_credits = 0;
+          let exterior_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
@@ -848,19 +995,53 @@ const asignacionNuevo = async (req, res, data) => {
                 if (program.credit_exterior.old)
                   total_credits += Number(program.credit_exterior.old);
               }
+
+              if (place === 'todos' && program.credit_pais && program.credit_exterior) {
+                if (program.credit_pais.new) {
+                  total_credits += Number(program.credit_pais.new);
+                  pais_credits += Number(program.credit_pais.new);
+                }
+
+                if (program.credit_pais.old)
+                  total_credits += Number(program.credit_pais.old);
+
+                if (program.credit_exterior.new) {
+                  total_credits += Number(program.credit_exterior.new);
+                  exterior_credits += Number(program.credit_exterior.new);
+                }
+
+                if (program.credit_exterior.old)
+                  total_credits += Number(program.credit_exterior.old);
+              }
             }
           }
 
-          let indicatorValue = new_credits / total_credits * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+          if (place === 'todos') {
+            let paisIndicator = pais_credits / total_credits * 100;
+            let exteriorIndicator = exterior_credits / total_credits * 100;
+            if (paisIndicator && exteriorIndicator) {
+              paisIndicator = paisIndicator.toFixed(2);
+              exteriorIndicator = exteriorIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+              }
+            }
+          } else {
+            let indicatorValue = new_credits / total_credits * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              }
             }
           }
         }
@@ -869,9 +1050,15 @@ const asignacionNuevo = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.bar_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (place === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Exterior'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'percentage';
+        data.first_indicator_label = 'País';
         data.place = place;
         data.additional_columns = additionalColumns;
         // console.log(data.bar_chart_results, data.table_results);
@@ -890,7 +1077,6 @@ const asignacionNuevo = async (req, res, data) => {
 
 const asignacionNuevoNivel = async (req, res, data) => {
   const formData = req.body;
-  const place = formData.place;
   const level = formData.level;
   const years = formData.to_year - formData.from_year + 1;
   if (years >= 0 && years <= 10) {
@@ -919,12 +1105,13 @@ const asignacionNuevoNivel = async (req, res, data) => {
         for (let i = 0; i < reports.length; i++) {
           let new_credits = 0;
           let total_credits = 0;
+          let pregrado_credits = 0;
+          let posgrado_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
-
               if (program.level === level) {
-                if (program.credit_pais && place === 'pais') {
+                if (program.credit_pais) {
                   if (program.credit_pais.new) {
                     total_credits += Number(program.credit_pais.new);
                     new_credits += Number(program.credit_pais.new);
@@ -934,10 +1121,36 @@ const asignacionNuevoNivel = async (req, res, data) => {
                     total_credits += Number(program.credit_pais.old);
                 }
 
-                if (program.credit_exterior && place === 'exterior') {
+                if (program.credit_exterior) {
                   if (program.credit_exterior.new) {
                     total_credits += Number(program.credit_exterior.new);
                     new_credits += Number(program.credit_exterior.new);
+                  }
+
+                  if (program.credit_exterior.old)
+                    total_credits += Number(program.credit_exterior.old);
+                }
+              } else {
+                if (program.credit_pais) {
+                  if (program.credit_pais.new) {
+                    total_credits += Number(program.credit_pais.new);
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_pais.new);
+                    else
+                      posgrado_credits += Number(program.credit_pais.new);
+                  }
+
+                  if (program.credit_pais.old)
+                    total_credits += Number(program.credit_pais.old);
+                }
+
+                if (program.credit_exterior) {
+                  if (program.credit_exterior.new) {
+                    total_credits += Number(program.credit_exterior.new);
+                    if (program.level === 'pregrado')
+                      pregrado_credits += Number(program.credit_exterior.new);
+                    else
+                      posgrado_credits += Number(program.credit_exterior.new);
                   }
 
                   if (program.credit_exterior.old)
@@ -947,16 +1160,32 @@ const asignacionNuevoNivel = async (req, res, data) => {
             }
           }
 
-          let indicatorValue = new_credits / total_credits * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+          if (level === 'todos') {
+            let pregradoIndicator = pregrado_credits / total_credits * 100;
+            let posgradoIndicator = posgrado_credits / total_credits * 100;
+            if (pregradoIndicator && posgradoIndicator) {
+              pregradoIndicator = pregradoIndicator.toFixed(2);
+              posgradoIndicator = posgradoIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+              }
+            }
+          } else {
+            let indicatorValue = new_credits / total_credits * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+              }
             }
           }
         }
@@ -965,10 +1194,15 @@ const asignacionNuevoNivel = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.bar_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (level === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Posgrado'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 10);
         data.type = 'percentage';
-        data.place = place;
+        data.first_indicator_label = 'Pregrado';
         data.level = level;
         data.additional_columns = additionalColumns;
         // console.log(data.bar_chart_results, data.table_results);
@@ -1031,11 +1265,11 @@ const variacionCartera = async (req, res, data) => {
             // console.log(indicatorValue);
             // indicatorValue = indicatorValue.toFixed(2);
             if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
             } else {
               const userRecord = await admin.auth().getUser(reports[i].user_id);
               userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = indicatorValue;
+              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
             }
           }
         }
@@ -1049,9 +1283,9 @@ const variacionCartera = async (req, res, data) => {
           Object.keys(results[i]).forEach(key => {
             if (key !== 'reported_year') {
               if (results[i + 1][key]) {
-                obj[key] = ((results[i + 1][key] - results[i][key]) / results[i][key] * 100).toFixed(2);
+                obj[key] = [((results[i + 1][key][0] - results[i][key][0]) / results[i][key][0] * 100).toFixed(2)];
               } else {
-                obj[key] = -100;
+                obj[key] = [-100];
               }
             }
           });
@@ -1100,31 +1334,58 @@ const carteraVigenteNivel = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Cartera Vigente', format: 'money'}
+          { name: 'Cartera Vigente', format: 'money' }
         ];
 
         for (let i = 0; i < reports.length; i++) {
           let current_portfolio = 0;
           let level_portfolio = 0;
+          let pregrado_portfolio = 0;
+          let posgrado_portfolio = 0;
           if (reports[i].current_portfolio && reports[i].current_portfolio instanceof Array) {
             for (let j = 0; j < reports[i].current_portfolio.length; j++) {
               current_portfolio += Number(reports[i].current_portfolio[j].amount);
               if (reports[i].current_portfolio[j].name === level + '_pais'
-                || reports[i].current_portfolio[j].name === level + '_exterior')
+                || reports[i].current_portfolio[j].name === level + '_exterior') {
                 level_portfolio += Number(reports[i].current_portfolio[j].amount);
+              } else {
+                if (reports[i].current_portfolio[j].name === 'pregrado_pais' 
+                  || reports[i].current_portfolio[j].name === 'pregrado_exterior') {
+                  pregrado_portfolio += Number(reports[i].current_portfolio[j].amount);
+                } else if (reports[i].current_portfolio[j].name === 'posgrado_pais'
+                  || reports[i].current_portfolio[j].name === 'posgrado_exterior') {
+                  posgrado_portfolio += Number(reports[i].current_portfolio[j].amount);
+                }
+              }
             }
           }
 
-          let indicatorValue = level_portfolio / current_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+          if (level === 'todos') {
+            let pregradoIndicator = pregrado_portfolio / current_portfolio * 100;
+            let posgradoIndicator = posgrado_portfolio / current_portfolio * 100;
+            if (pregradoIndicator && posgradoIndicator) {
+              pregradoIndicator = pregradoIndicator.toFixed(2);
+              posgradoIndicator = posgradoIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, current_portfolio];
+              }
+            }
+          } else {
+            let indicatorValue = level_portfolio / current_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              }
             }
           }
         }
@@ -1133,9 +1394,15 @@ const carteraVigenteNivel = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (level === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Posgrado'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'Pregrado';
         data.level = level;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1182,25 +1449,52 @@ const carteraVigenteLugar = async (req, res, data) => {
         for (let i = 0; i < reports.length; i++) {
           let current_portfolio = 0;
           let place_portfolio = 0;
+          let pais_portfolio = 0;
+          let exterior_portfolio = 0;
           if (reports[i].current_portfolio && reports[i].current_portfolio instanceof Array) {
             for (let j = 0; j < reports[i].current_portfolio.length; j++) {
               current_portfolio += Number(reports[i].current_portfolio[j].amount);
               if (reports[i].current_portfolio[j].name === 'pregrado_' + place
-                || reports[i].current_portfolio[j].name === 'posgrado_' + place)
+                || reports[i].current_portfolio[j].name === 'posgrado_' + place) {
                 place_portfolio += Number(reports[i].current_portfolio[j].amount);
+              } else {
+                if (reports[i].current_portfolio[j].name === 'pregrado_pais' 
+                  || reports[i].current_portfolio[j].name === 'posgrado_pais') {
+                  pais_portfolio += Number(reports[i].current_portfolio[j].amount);
+                } else if (reports[i].current_portfolio[j].name === 'pregrado_exterior'
+                  || reports[i].current_portfolio[j].name === 'posgrado_exterior') {
+                  exterior_portfolio += Number(reports[i].current_portfolio[j].amount);
+                }
+              }
             }
           }
 
-          let indicatorValue = place_portfolio / current_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+          if (place === 'todos') {
+            let paisIndicator = pais_portfolio / current_portfolio * 100;
+            let exteriorIndicator = exterior_portfolio / current_portfolio * 100;
+            if (paisIndicator && exteriorIndicator) {
+              paisIndicator = paisIndicator.toFixed(2);
+              exteriorIndicator = exteriorIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, current_portfolio];
+              }
+            }
+          } else {
+            let indicatorValue = place_portfolio / current_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              }
             }
           }
         }
@@ -1209,9 +1503,15 @@ const carteraVigenteLugar = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (place === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Exterior'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'País';
         data.place = place;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1256,24 +1556,41 @@ const carteraVigenteGenero = async (req, res, data) => {
         ];
 
         for (let i = 0; i < reports.length; i++) {
-          let total_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_pregrado_female
+          let current_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_pregrado_female
             + reports[i].current_portfolio_posgrado_male + reports[i].current_portfolio_posgrado_female;
-          let sex_portfolio = 0;
-          if (sex === 'female') {
-            sex_portfolio = reports[i].current_portfolio_pregrado_female + reports[i].current_portfolio_posgrado_female;
+          let female_portfolio = reports[i].current_portfolio_pregrado_female + reports[i].current_portfolio_posgrado_female;
+          let male_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_posgrado_male;
+          
+          if (sex === 'todos') {
+            let femaleIndicator = female_portfolio / current_portfolio * 100;
+            let maleIndicator = male_portfolio / current_portfolio * 100;
+            if (femaleIndicator && maleIndicator) {
+              femaleIndicator = femaleIndicator.toFixed(2);
+              maleIndicator = maleIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, current_portfolio];
+              }
+            }
           } else {
-            sex_portfolio = reports[i].current_portfolio_pregrado_male + reports[i].current_portfolio_posgrado_male;
-          }
-          let indicatorValue = sex_portfolio / total_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
+            let indicatorValue;
+            if (sex === 'femenino')
+              indicatorValue = female_portfolio / current_portfolio * 100;
+            else
+              indicatorValue = male_portfolio / current_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, current_portfolio];
+              }
             }
           }
         }
@@ -1282,9 +1599,15 @@ const carteraVigenteGenero = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (sex === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Masculino'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'Femenino';
         data.sex = sex;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1407,31 +1730,58 @@ const carteraVencidaNivel = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Cartera Vigente', format: 'money'}
+          { name: 'Cartera Vigente', format: 'money' }
         ];
 
         for (let i = 0; i < reports.length; i++) {
           let pastdue_portfolio = 0;
           let level_portfolio = 0;
+          let pregrado_portfolio = 0;
+          let posgrado_portfolio = 0;
           if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
             for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
               pastdue_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
               if (reports[i].pastdue_portfolio[j].name === level + '_pais'
-                || reports[i].pastdue_portfolio[j].name === level + '_exterior')
+                || reports[i].pastdue_portfolio[j].name === level + '_exterior') {
                 level_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+              } else {
+                if (reports[i].pastdue_portfolio[j].name === 'pregrado_pais'
+                  || reports[i].pastdue_portfolio[j].name === 'pregrado_exterior') {
+                  pregrado_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+                } else if (reports[i].pastdue_portfolio[j].name === 'posgrado_pais'
+                  || reports[i].pastdue_portfolio[j].name === 'posgrado_exterior') {
+                  posgrado_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+                }
+              }
             }
           }
 
-          let indicatorValue = level_portfolio / pastdue_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+          if (level === 'todos') {
+            let pregradoIndicator = pregrado_portfolio / pastdue_portfolio * 100;
+            let posgradoIndicator = posgrado_portfolio / pastdue_portfolio * 100;
+            if (pregradoIndicator && posgradoIndicator) {
+              pregradoIndicator = pregradoIndicator.toFixed(2);
+              posgradoIndicator = posgradoIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, pastdue_portfolio];
+              }
+            }
+          } else {
+            let indicatorValue = level_portfolio / pastdue_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              }
             }
           }
         }
@@ -1440,9 +1790,15 @@ const carteraVencidaNivel = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (level === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Posgrado'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'Pregrado';
         data.level = level;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1483,31 +1839,58 @@ const carteraVencidaLugar = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Cartera Vencida', format: 'money'}
+          { name: 'Cartera Vigente', format: 'money'}
         ];
 
         for (let i = 0; i < reports.length; i++) {
           let pastdue_portfolio = 0;
           let place_portfolio = 0;
+          let pais_portfolio = 0;
+          let exterior_portfolio = 0;
           if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
             for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
               pastdue_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
               if (reports[i].pastdue_portfolio[j].name === 'pregrado_' + place
-                || reports[i].pastdue_portfolio[j].name === 'posgrado_' + place)
+                || reports[i].pastdue_portfolio[j].name === 'posgrado_' + place) {
                 place_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+              } else {
+                if (reports[i].pastdue_portfolio[j].name === 'pregrado_pais'
+                  || reports[i].pastdue_portfolio[j].name === 'posgrado_pais') {
+                  pais_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+                } else if (reports[i].pastdue_portfolio[j].name === 'pregrado_exterior'
+                  || reports[i].pastdue_portfolio[j].name === 'posgrado_exterior') {
+                  exterior_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+                }
+              }
             }
           }
 
-          let indicatorValue = place_portfolio / pastdue_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+          if (place === 'todos') {
+            let paisIndicator = pais_portfolio / pastdue_portfolio * 100;
+            let exteriorIndicator = exterior_portfolio / pastdue_portfolio * 100;
+            if (paisIndicator && exteriorIndicator) {
+              paisIndicator = paisIndicator.toFixed(2);
+              exteriorIndicator = exteriorIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, pastdue_portfolio];
+              }
+            }
+          } else {
+            let indicatorValue = place_portfolio / pastdue_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              }
             }
           }
         }
@@ -1516,9 +1899,15 @@ const carteraVencidaLugar = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (place === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Exterior'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'País';
         data.place = place;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1559,28 +1948,45 @@ const carteraVencidaGenero = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Cartera Vencida', format: 'money'}
+          { name: 'Cartera Vigente', format: 'money'}
         ];
 
         for (let i = 0; i < reports.length; i++) {
-          let total_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_pregrado_female
+          let pastdue_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_pregrado_female
             + reports[i].pastdue_portfolio_posgrado_male + reports[i].pastdue_portfolio_posgrado_female;
-          let sex_portfolio = 0;
-          if (sex === 'female') {
-            sex_portfolio = reports[i].pastdue_portfolio_pregrado_female + reports[i].pastdue_portfolio_posgrado_female;
+          let female_portfolio = reports[i].pastdue_portfolio_pregrado_female + reports[i].pastdue_portfolio_posgrado_female;
+          let male_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_posgrado_male;
+
+          if (sex === 'todos') {
+            let femaleIndicator = female_portfolio / pastdue_portfolio * 100;
+            let maleIndicator = male_portfolio / pastdue_portfolio * 100;
+            if (femaleIndicator && maleIndicator) {
+              femaleIndicator = femaleIndicator.toFixed(2);
+              maleIndicator = maleIndicator.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [femaleIndicator, maleIndicator, pastdue_portfolio];
+              }
+            }
           } else {
-            sex_portfolio = reports[i].pastdue_portfolio_pregrado_male + reports[i].pastdue_portfolio_posgrado_male;
-          }
-          let indicatorValue = sex_portfolio / total_portfolio * 100;
-          if (indicatorValue) {
-            // console.log(indicatorValue);
-            indicatorValue = indicatorValue.toFixed(2);
-            if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
-            } else {
-              const userRecord = await admin.auth().getUser(reports[i].user_id);
-              userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
+            let indicatorValue;
+            if (sex === 'femenino')
+              indicatorValue = female_portfolio / pastdue_portfolio * 100;
+            else
+              indicatorValue = male_portfolio / pastdue_portfolio * 100;
+            if (indicatorValue) {
+              // console.log(indicatorValue);
+              indicatorValue = indicatorValue.toFixed(2);
+              if (userCache[reports[i].user_id]) {
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              } else {
+                const userRecord = await admin.auth().getUser(reports[i].user_id);
+                userCache[reports[i].user_id] = userRecord.displayName;
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, pastdue_portfolio];
+              }
             }
           }
         }
@@ -1589,9 +1995,15 @@ const carteraVencidaGenero = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         data.line_chart_results = results;
-        data.table_results = tableResults(results, institutionNames, 2);
+        if (sex === 'todos') {
+          data.table_results = tableResults(results, institutionNames, 3);
+          data.indicator_labels = ['Masculino'];
+        } else {
+          data.table_results = tableResults(results, institutionNames, 2);
+        }
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.first_indicator_label = 'Femenino';
         data.sex = sex;
         data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
@@ -1853,11 +2265,58 @@ const tableResults = (chartResults, institutionNames, indicatorsLength) => {
       if (indicatorValues) {
         indicator.values = indicatorValues;
       }
-      console.log(indicator);
+      // console.log(indicator);
       result.indicators.push(indicator);
     }
     tableResults.push(result);
   }
 
   return tableResults;
+};
+
+const getFinancingSource = (code) => {
+  switch (code) {
+    case 'gubernamental': {
+      return 'Recursos Gubernamentales';
+    }
+    case 'privado': {
+      return 'Recursos Privados';
+    }
+    case 'nacional': {
+      return 'Créditos Nacionales';
+    }
+    case 'internacional': {
+      return 'Créditos Internacionales';
+    }
+    case 'donaciones': {
+      return 'Donaciones y Filantropía';
+    }
+    case 'cartera': {
+      return 'Recuperación de la Cartera / Cobranza';
+    }
+    case 'terceros': {
+      return 'Administración de Recursos de terceros';
+    }
+    case 'cooperacion': {
+      return 'Fondos de Cooperación';
+    }
+    case 'impuestos': {
+      return 'Impuestos, Tasas y Contribuciones';
+    }
+    case 'titularizacion': {
+      return 'Titularización';
+    }
+    case 'propios': {
+      return 'Recursos Propios';
+    }
+    case 'inversiones': {
+      return 'Inversiones';
+    }
+    case 'otra': {
+      return 'Otra';
+    }
+    default: {
+      return 'error'
+    }
+  }
 };

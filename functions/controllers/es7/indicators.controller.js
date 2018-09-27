@@ -964,83 +964,63 @@ const asignacionNuevoLugar = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Total Créditos', format: 'number'}
+          { name: 'Total Créditos Nuevos', format: 'number'}
         ];
 
         for (let i = 0; i < reports.length; i++) {
-          let new_credits = 0;
-          let total_credits = 0;
-          let pais_credits = 0;
-          let exterior_credits = 0;
+          let total_new_credits = 0;
+          let new_pais_credits = 0;
+          let new_exterior_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
 
-              if (program.credit_pais && place === 'pais') {
-                if (program.credit_pais.new) {
-                  total_credits += Number(program.credit_pais.new);
-                  new_credits += Number(program.credit_pais.new);
+              if (program.credit_pais && program.credit_pais.new) {
+                total_new_credits += Number(program.credit_pais.new);
+                if (place === 'pais' || place === 'todos') {
+                  new_pais_credits += Number(program.credit_pais.new);
                 }
-
-                if (program.credit_pais.old)
-                  total_credits += Number(program.credit_pais.old);
               }
 
-              if (program.credit_exterior && place === 'exterior') {
-                if (program.credit_exterior.new) {
-                  total_credits += Number(program.credit_exterior.new);
-                  new_credits += Number(program.credit_exterior.new);
+              if (program.credit_exterior && program.credit_exterior.new) {
+                total_new_credits += Number(program.credit_exterior.new);
+                if (place === 'exterior' || place === 'todos') {
+                  new_exterior_credits += Number(program.credit_exterior.new);
                 }
-
-                if (program.credit_exterior.old)
-                  total_credits += Number(program.credit_exterior.old);
-              }
-
-              if (place === 'todos' && program.credit_pais && program.credit_exterior) {
-                if (program.credit_pais.new) {
-                  total_credits += Number(program.credit_pais.new);
-                  pais_credits += Number(program.credit_pais.new);
-                }
-
-                if (program.credit_pais.old)
-                  total_credits += Number(program.credit_pais.old);
-
-                if (program.credit_exterior.new) {
-                  total_credits += Number(program.credit_exterior.new);
-                  exterior_credits += Number(program.credit_exterior.new);
-                }
-
-                if (program.credit_exterior.old)
-                  total_credits += Number(program.credit_exterior.old);
               }
             }
           }
 
           if (place === 'todos') {
-            let paisIndicator = pais_credits / total_credits * 100;
-            let exteriorIndicator = exterior_credits / total_credits * 100;
+            let paisIndicator = new_pais_credits / total_new_credits * 100;
+            let exteriorIndicator = new_exterior_credits / total_new_credits * 100;
             if (paisIndicator && exteriorIndicator) {
               paisIndicator = paisIndicator.toFixed(2);
               exteriorIndicator = exteriorIndicator.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_new_credits];
               } else {
                 const userRecord = await admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [paisIndicator, exteriorIndicator, total_new_credits];
               }
             }
           } else {
-            let indicatorValue = new_credits / total_credits * 100;
+            let indicatorValue;
+            if (place === 'pais') {
+              indicatorValue = new_pais_credits / total_new_credits * 100;
+            } else {
+              indicatorValue = new_exterior_credits / total_new_credits * 100;
+            }
             if (indicatorValue) {
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_new_credits];
               } else {
                 const userRecord = await admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_new_credits];
               }
             }
           }
@@ -1099,92 +1079,74 @@ const asignacionNuevoNivel = async (req, res, data) => {
           results.push(result);
         }
         const additionalColumns = [
-          { name: 'Total Créditos', format: 'number'}
+          { name: 'Total Créditos Nuevos', format: 'number'}
         ];
 
         for (let i = 0; i < reports.length; i++) {
-          let new_credits = 0;
-          let total_credits = 0;
-          let pregrado_credits = 0;
-          let posgrado_credits = 0;
+          let total_new_credits = 0;
+          let new_pregrado_credits = 0;
+          let new_posgrado_credits = 0;
           if (reports[i].programs && reports[i].programs instanceof Array) {
             for (let j = 0; j < reports[i].programs.length; j++) {
               const program = reports[i].programs[j];
-              if (program.level === level) {
-                if (program.credit_pais) {
-                  if (program.credit_pais.new) {
-                    total_credits += Number(program.credit_pais.new);
-                    new_credits += Number(program.credit_pais.new);
-                  }
-
-                  if (program.credit_pais.old)
-                    total_credits += Number(program.credit_pais.old);
+              if (program.level === level || level === 'todos') {
+                if (program.credit_pais && program.credit_pais.new) {
+                  total_new_credits += Number(program.credit_pais.new);
+                  if (program.level === 'pregrado')
+                    new_pregrado_credits += Number(program.credit_pais.new);
+                  else
+                    new_posgrado_credits += Number(program.credit_pais.new);
                 }
 
-                if (program.credit_exterior) {
-                  if (program.credit_exterior.new) {
-                    total_credits += Number(program.credit_exterior.new);
-                    new_credits += Number(program.credit_exterior.new);
-                  }
-
-                  if (program.credit_exterior.old)
-                    total_credits += Number(program.credit_exterior.old);
+                if (program.credit_exterior && program.credit_exterior.new) {
+                  total_new_credits += Number(program.credit_exterior.new);
+                  if (program.level === 'pregrado')
+                    new_pregrado_credits += Number(program.credit_exterior.new);
+                  else
+                    new_posgrado_credits += Number(program.credit_exterior.new);
                 }
               } else {
-                if (program.credit_pais) {
-                  if (program.credit_pais.new) {
-                    total_credits += Number(program.credit_pais.new);
-                    if (program.level === 'pregrado')
-                      pregrado_credits += Number(program.credit_pais.new);
-                    else
-                      posgrado_credits += Number(program.credit_pais.new);
-                  }
-
-                  if (program.credit_pais.old)
-                    total_credits += Number(program.credit_pais.old);
+                if (program.credit_pais && program.credit_pais.new) {
+                  total_new_credits += Number(program.credit_pais.new);
                 }
 
-                if (program.credit_exterior) {
-                  if (program.credit_exterior.new) {
-                    total_credits += Number(program.credit_exterior.new);
-                    if (program.level === 'pregrado')
-                      pregrado_credits += Number(program.credit_exterior.new);
-                    else
-                      posgrado_credits += Number(program.credit_exterior.new);
-                  }
-
-                  if (program.credit_exterior.old)
-                    total_credits += Number(program.credit_exterior.old);
+                if (program.credit_exterior && program.credit_exterior.new) {
+                  total_new_credits += Number(program.credit_exterior.new);
                 }
               }
             }
           }
 
           if (level === 'todos') {
-            let pregradoIndicator = pregrado_credits / total_credits * 100;
-            let posgradoIndicator = posgrado_credits / total_credits * 100;
+            let pregradoIndicator = new_pregrado_credits / total_new_credits * 100;
+            let posgradoIndicator = new_posgrado_credits / total_new_credits * 100;
             if (pregradoIndicator && posgradoIndicator) {
               pregradoIndicator = pregradoIndicator.toFixed(2);
               posgradoIndicator = posgradoIndicator.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_new_credits];
               } else {
                 const userRecord = await admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [pregradoIndicator, posgradoIndicator, total_new_credits];
               }
             }
           } else {
-            let indicatorValue = new_credits / total_credits * 100;
+            let indicatorValue;
+            if (level === 'pregrado') {
+              indicatorValue = new_pregrado_credits / total_new_credits * 100;
+            } else {
+              indicatorValue = new_posgrado_credits / total_new_credits * 100;
+            }
             if (indicatorValue) {
               // console.log(indicatorValue);
               indicatorValue = indicatorValue.toFixed(2);
               if (userCache[reports[i].user_id]) {
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_new_credits];
               } else {
                 const userRecord = await admin.auth().getUser(reports[i].user_id);
                 userCache[reports[i].user_id] = userRecord.displayName;
-                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
+                results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue, total_new_credits];
               }
             }
           }

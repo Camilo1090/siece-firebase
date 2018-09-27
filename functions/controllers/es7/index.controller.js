@@ -71,6 +71,7 @@ const topStatistics = (reports, data) => {
   if (totalBeneficiaries > 0) {
     data.percentage_female = (totalFemale / totalBeneficiaries * 100).toFixed(2);
     data.percentage_male = (totalMale / totalBeneficiaries * 100).toFixed(2);
+    data.total_beneficiaries = data.total_beneficiaries.toLocaleString('en-US', { style: 'decimal' });
   }
   data.total_investment = totalInvestment.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 };

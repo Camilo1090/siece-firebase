@@ -376,6 +376,7 @@
                                 tabindex="1">
                             <i class="fa fa-question-circle"></i>
                           </span>
+                          <span id="current_portfolio_error" hidden>Los montos de las preguntas 7 y 7A deben coincidir</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="checkbox col-xs-12">
@@ -385,7 +386,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="current_portfolio_pregrado_pais_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_pregrado_pais_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" disabled id="current_portfolio_pregrado_pais_amount" name="current_portfolio_amounts" min="0"
+                                     data-parsley-current-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -395,7 +397,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="current_portfolio_pregrado_exterior_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_pregrado_exterior_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" disabled id="current_portfolio_pregrado_exterior_amount" name="current_portfolio_amounts" min="0"
+                                     data-parsley-current-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -405,7 +408,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="current_portfolio_posgrado_pais_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_posgrado_pais_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" disabled id="current_portfolio_posgrado_pais_amount" name="current_portfolio_amounts" min="0"
+                                     data-parsley-current-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -415,7 +419,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="current_portfolio_posgrado_exterior_amount">USD</label>
-                              <input type="number" disabled id="current_portfolio_posgrado_exterior_amount" name="current_portfolio_amounts" min="0">
+                              <input type="number" disabled id="current_portfolio_posgrado_exterior_amount" name="current_portfolio_amounts" min="0"
+                                     data-parsley-current-portfolio>
                             </div>
                           </div>
                         </div>
@@ -428,19 +433,23 @@
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="current_portfolio_pregrado_male">Masculino (pregrado): </label>
-                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_male" name="current_portfolio_pregrado_male" min="0">
+                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_male" name="current_portfolio_pregrado_male" min="0"
+                                   data-parsley-current-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="current_portfolio_pregrado_female">Femenino (pregrado): </label>
-                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_female" name="current_portfolio_pregrado_female" min="0">
+                            <input class="col-sm-3" type="number" id="current_portfolio_pregrado_female" name="current_portfolio_pregrado_female" min="0"
+                                   data-parsley-current-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="current_portfolio_posgrado_male">Masculino (posgrado): </label>
-                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_male" name="current_portfolio_posgrado_male" min="0">
+                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_male" name="current_portfolio_posgrado_male" min="0"
+                                   data-parsley-current-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="current_portfolio_posgrado_female">Femenino (posgrado): </label>
-                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_female" name="current_portfolio_posgrado_female" min="0">
+                            <input class="col-sm-3" type="number" id="current_portfolio_posgrado_female" name="current_portfolio_posgrado_female" min="0"
+                                   data-parsley-current-portfolio>
                           </div>
                         </div>
                       </div>
@@ -461,7 +470,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="pastdue_portfolio_pregrado_pais_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_pregrado_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" disabled id="pastdue_portfolio_pregrado_pais_amount" name="pastdue_portfolio_amounts" min="0"
+                                     data-parsley-pastdue-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -471,7 +481,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="pastdue_portfolio_pregrado_exterior_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_pregrado_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" disabled id="pastdue_portfolio_pregrado_exterior_amount" name="pastdue_portfolio_amounts" min="0"
+                                     data-parsley-pastdue-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -481,7 +492,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="pastdue_portfolio_posgrado_pais_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_posgrado_pais_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" disabled id="pastdue_portfolio_posgrado_pais_amount" name="pastdue_portfolio_amounts" min="0"
+                                     data-parsley-pastdue-portfolio>
                             </div>
                           </div>
                           <div class="checkbox col-xs-12">
@@ -491,7 +503,8 @@
                             </label>
                             <div class="col-xs-12 col-sm-8">
                               <label for="pastdue_portfolio_posgrado_exterior_amount">USD</label>
-                              <input type="number" disabled id="pastdue_portfolio_posgrado_exterior_amount" name="pastdue_portfolio_amounts" min="0">
+                              <input type="number" disabled id="pastdue_portfolio_posgrado_exterior_amount" name="pastdue_portfolio_amounts" min="0"
+                                     data-parsley-pastdue-portfolio>
                             </div>
                           </div>
                         </div>
@@ -504,19 +517,23 @@
                         <div class="col-md-6 col-sm-6 col-xs-12 pt">
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="pastdue_portfolio_pregrado_male">Masculino (pregrado): </label>
-                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_male" name="pastdue_portfolio_pregrado_male" min="0">
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_male" name="pastdue_portfolio_pregrado_male" min="0"
+                                   data-parsley-pastdue-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="pastdue_portfolio_pregrado_female">Femenino (pregrado): </label>
-                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_female" name="pastdue_portfolio_pregrado_female" min="0">
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_pregrado_female" name="pastdue_portfolio_pregrado_female" min="0"
+                                   data-parsley-pastdue-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="pastdue_portfolio_posgrado_male">Masculino (posgrado): </label>
-                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_male" name="pastdue_portfolio_posgrado_male" min="0">
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_male" name="pastdue_portfolio_posgrado_male" min="0"
+                                   data-parsley-pastdue-portfolio>
                           </div>
                           <div class="col-xs-12">
                             <label class="col-sm-3" for="pastdue_portfolio_posgrado_female">Femenino (posgrado): </label>
-                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_female" name="pastdue_portfolio_posgrado_female" min="0">
+                            <input class="col-sm-3" type="number" id="pastdue_portfolio_posgrado_female" name="pastdue_portfolio_posgrado_female" min="0"
+                                   data-parsley-pastdue-portfolio>
                           </div>
                         </div>
                       </div>
@@ -832,7 +849,7 @@
                       <div class="ln_solid"></div>
                       <!-- botones -->
                       <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-9">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-8">
                           {{#if report}}
                             <button type="submit" class="btn btn-success">Solo Guardar</button>
                             <button type="button" class="btn btn-success" onclick="sendForReview()">Guardar y Enviar para Revisión</button>
@@ -1553,6 +1570,52 @@
 
       document.getElementById('demo-form2').submit();
     }
+
+    function validateTotalCurrentPortfolio() {
+      let total1 = Number($("#current_portfolio_pregrado_pais_amount").val()) +
+              Number($("#current_portfolio_pregrado_exterior_amount").val()) +
+              Number($("#current_portfolio_posgrado_pais_amount").val()) +
+              Number($("#current_portfolio_posgrado_exterior_amount").val());
+      let total2 = Number($("#current_portfolio_pregrado_female").val()) +
+              Number($("#current_portfolio_pregrado_male").val()) +
+              Number($("#current_portfolio_posgrado_female").val()) +
+              Number($("#current_portfolio_posgrado_male").val());
+
+      //console.log(total1 + " - " + total2);
+      return total1 === total2;
+    }
+
+    window.Parsley.addValidator('currentPortfolio', {
+      validateNumber: function() {
+        return validateTotalCurrentPortfolio();
+      },
+      messages: {
+        es: 'Los totales de las preguntas 7 y 7A deben coincidir'
+      }
+    });
+
+    function validateTotalPastduePortfolio() {
+      let total1 = Number($("#pastdue_portfolio_pregrado_pais_amount").val()) +
+              Number($("#pastdue_portfolio_pregrado_exterior_amount").val()) +
+              Number($("#pastdue_portfolio_posgrado_pais_amount").val()) +
+              Number($("#pastdue_portfolio_posgrado_exterior_amount").val());
+      let total2 = Number($("#pastdue_portfolio_pregrado_female").val()) +
+              Number($("#pastdue_portfolio_pregrado_male").val()) +
+              Number($("#pastdue_portfolio_posgrado_female").val()) +
+              Number($("#pastdue_portfolio_posgrado_male").val());
+
+      //console.log(total1 + " - " + total2);
+      return total1 === total2;
+    }
+
+    window.Parsley.addValidator('pastduePortfolio', {
+      validateNumber: function() {
+        return validateTotalPastduePortfolio();
+      },
+      messages: {
+        es: 'Los totales de las preguntas 8 y 8A deben coincidir'
+      }
+    });
   </script>
   </body>
 <!--</html>-->

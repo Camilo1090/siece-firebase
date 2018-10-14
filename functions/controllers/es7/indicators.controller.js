@@ -56,9 +56,13 @@ exports.getIndicator = (req, res) => {
       data.indicator_name = 'Proporción anual de CE nuevo según el nivel de estudios - ' + req.body.level.toUpperCase();
       return asignacionNuevoNivel(req, res, data);
     }
-    case 'variacion_cartera': {
-      data.indicator_name = 'Variación anual de la cartera';
-      return variacionCartera(req, res, data);
+    case 'variacion_cartera_vigente': {
+      data.indicator_name = 'Variación anual de la cartera vigente';
+      return variacionCarteraVigente(req, res, data);
+    }
+    case 'variacion_cartera_vencida': {
+      data.indicator_name = 'Variación anual de la cartera vencida';
+      return variacionCarteraVencida(req, res, data);
     }
     case 'cartera_vigente_nivel': {
       data.indicator_name = 'Proporción anual de la cartera vigente según el nivel de estudios - ' + req.body.level.toUpperCase();
@@ -466,7 +470,7 @@ const variacionAnual = async (req, res, data) => {
     try {
       const reportsSnapshot = await db.collection('reports')
         .where('status', '==', 'Aceptado')
-        .where('reported_year', '>=', Number(formData.from_year))
+        .where('reported_year', '>=', Number(formData.from_year - 1))
         .where('reported_year', '<=', Number(formData.to_year))
         .get();
       if (reportsSnapshot.empty) {
@@ -477,10 +481,13 @@ const variacionAnual = async (req, res, data) => {
         // console.log(reports);
         let userCache = {};
         let results = [];
-        for (let i = formData.from_year; i <= formData.to_year; i++) {
+        for (let i = formData.from_year - 1; i <= formData.to_year; i++) {
           let result = { reported_year: Number(i) };
           results.push(result);
         }
+        const additionalColumns = [
+          { name: 'Total Créditos', format: 'number'}
+        ];
 
         for (let i = 0; i < reports.length; i++) {
           let total_credits = 0;
@@ -511,11 +518,11 @@ const variacionAnual = async (req, res, data) => {
             // console.log(indicatorValue);
             // indicatorValue = indicatorValue.toFixed(2);
             if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
             } else {
               const userRecord = await admin.auth().getUser(reports[i].user_id);
               userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_credits];
             }
           }
         }
@@ -524,17 +531,18 @@ const variacionAnual = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         let variationResults = [];
-        for (let i = 0; i < results.length - 1; i++) {
-          const obj = { reported_year: Number(results[i].reported_year) + 1 };
-          Object.keys(results[i]).forEach(key => {
-            if (key !== 'reported_year') {
-              if (results[i + 1][key]) {
-                obj[key] = [((results[i + 1][key][0] - results[i][key][0]) / results[i][key][0] * 100).toFixed(2)];
-              } else {
-                obj[key] = [-100];
-              }
+        for (let i = 1; i < results.length; i++) {
+          const obj = { reported_year: Number(results[i].reported_year) };
+          for (let j = 0; j < institutionNames.length; j++) {
+            let key = institutionNames[j];
+            if (results[i][key] && results[i - 1][key]) {
+              obj[key] = [((results[i][key][0] - results[i - 1][key][0]) / results[i - 1][key][0] * 100).toFixed(2), results[i][key][1]];
+            } else if (results[i - 1][key]) {
+              obj[key] = [-100, null];
+            } else {
+              obj[key] = [100, results[i][key][1]];
             }
-          });
+          }
           variationResults.push(obj);
         }
 
@@ -542,6 +550,7 @@ const variacionAnual = async (req, res, data) => {
         data.table_results = tableResults(variationResults, institutionNames, 1);
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
@@ -1181,14 +1190,14 @@ const asignacionNuevoNivel = async (req, res, data) => {
   }
 };
 
-const variacionCartera = async (req, res, data) => {
+const variacionCarteraVigente = async (req, res, data) => {
   const formData = req.body;
   const years = formData.to_year - formData.from_year + 1;
   if (years >= 0 && years <= 10) {
     try {
       const reportsSnapshot = await db.collection('reports')
         .where('status', '==', 'Aceptado')
-        .where('reported_year', '>=', Number(formData.from_year))
+        .where('reported_year', '>=', Number(formData.from_year) - 1)
         .where('reported_year', '<=', Number(formData.to_year))
         .get();
       if (reportsSnapshot.empty) {
@@ -1199,10 +1208,13 @@ const variacionCartera = async (req, res, data) => {
         // console.log(reports);
         let userCache = {};
         let results = [];
-        for (let i = formData.from_year; i <= formData.to_year; i++) {
+        for (let i = formData.from_year - 1; i <= formData.to_year; i++) {
           let result = { reported_year: Number(i) };
           results.push(result);
         }
+        const additionalColumns = [
+          { name: 'Cartera Vigente', format: 'money'}
+        ];
 
         for (let i = 0; i < reports.length; i++) {
           let total_portfolio = 0;
@@ -1211,27 +1223,27 @@ const variacionCartera = async (req, res, data) => {
               total_portfolio += Number(reports[i].current_portfolio[j].amount);
             }
           }
-          if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
-            for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
-              total_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
-            }
-          }
-          if (reports[i].execution_portfolio && reports[i].execution_portfolio instanceof Array) {
-            for (let j = 0; j < reports[i].execution_portfolio.length; j++) {
-              total_portfolio += Number(reports[i].execution_portfolio[j].amount);
-            }
-          }
+          // if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
+          //   for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
+          //     total_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+          //   }
+          // }
+          // if (reports[i].execution_portfolio && reports[i].execution_portfolio instanceof Array) {
+          //   for (let j = 0; j < reports[i].execution_portfolio.length; j++) {
+          //     total_portfolio += Number(reports[i].execution_portfolio[j].amount);
+          //   }
+          // }
 
           let indicatorValue = total_portfolio;
           if (indicatorValue) {
             // console.log(indicatorValue);
             // indicatorValue = indicatorValue.toFixed(2);
             if (userCache[reports[i].user_id]) {
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
             } else {
               const userRecord = await admin.auth().getUser(reports[i].user_id);
               userCache[reports[i].user_id] = userRecord.displayName;
-              results[reports[i].reported_year - formData.from_year][userCache[reports[i].user_id]] = [indicatorValue];
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
             }
           }
         }
@@ -1240,24 +1252,122 @@ const variacionCartera = async (req, res, data) => {
         Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
 
         let variationResults = [];
-        for (let i = 0; i < results.length - 1; i++) {
-          const obj = { reported_year: Number(results[i].reported_year) + 1 };
-          Object.keys(results[i]).forEach(key => {
-            if (key !== 'reported_year') {
-              if (results[i + 1][key]) {
-                obj[key] = [((results[i + 1][key][0] - results[i][key][0]) / results[i][key][0] * 100).toFixed(2)];
-              } else {
-                obj[key] = [-100];
-              }
+        for (let i = 1; i < results.length; i++) {
+          const obj = { reported_year: Number(results[i].reported_year) };
+          for (let j = 0; j < institutionNames.length; j++) {
+            let key = institutionNames[j];
+            if (results[i][key] && results[i - 1][key]) {
+              obj[key] = [((results[i][key][0] - results[i - 1][key][0]) / results[i - 1][key][0] * 100).toFixed(2), results[i][key][1]];
+            } else if (results[i - 1][key]) {
+              obj[key] = [-100, null];
+            } else {
+              obj[key] = [100, results[i][key][1]];
             }
-          });
+          }
           variationResults.push(obj);
         }
 
         data.line_chart_results = variationResults;
-        data.table_results = tableResults(variationResults, institutionNames);
+        data.table_results = tableResults(variationResults, institutionNames, 1);
         data.institution_names = underscore.sample(institutionNames, 5);
         data.type = 'percentage';
+        data.additional_columns = additionalColumns;
+        // console.log(data.line_chart_results, data.table_results);
+      }
+      return res.render('select-report', data);
+    } catch(error) {
+      console.log('Error: ', error);
+      data.error = 'No se han podido recuperar los datos de la institución. Contacte al administrador.';
+      return res.render('select-report', data);
+    }
+  } else {
+    data.error = 'Rango de años invalido. (0 <= rango <= 10)';
+    return res.render('select-report', data);
+  }
+};
+
+const variacionCarteraVencida = async (req, res, data) => {
+  const formData = req.body;
+  const years = formData.to_year - formData.from_year + 1;
+  if (years >= 0 && years <= 10) {
+    try {
+      const reportsSnapshot = await db.collection('reports')
+        .where('status', '==', 'Aceptado')
+        .where('reported_year', '>=', Number(formData.from_year) - 1)
+        .where('reported_year', '<=', Number(formData.to_year))
+        .get();
+      if (reportsSnapshot.empty) {
+        console.log('No documents found.');
+        data.warning = 'No hay datos reportados en el periodo seleccionado.';
+      } else {
+        let reports = reportsSnapshot.docs.map(doc => doc.data());
+        // console.log(reports);
+        let userCache = {};
+        let results = [];
+        for (let i = formData.from_year - 1; i <= formData.to_year; i++) {
+          let result = { reported_year: Number(i) };
+          results.push(result);
+        }
+        const additionalColumns = [
+          { name: 'Cartera Vencida', format: 'money'}
+        ];
+
+        for (let i = 0; i < reports.length; i++) {
+          let total_portfolio = 0;
+          // if (reports[i].current_portfolio && reports[i].current_portfolio instanceof Array) {
+          //   for (let j = 0; j < reports[i].current_portfolio.length; j++) {
+          //     total_portfolio += Number(reports[i].current_portfolio[j].amount);
+          //   }
+          // }
+          if (reports[i].pastdue_portfolio && reports[i].pastdue_portfolio instanceof Array) {
+            for (let j = 0; j < reports[i].pastdue_portfolio.length; j++) {
+              total_portfolio += Number(reports[i].pastdue_portfolio[j].amount);
+            }
+          }
+          // if (reports[i].execution_portfolio && reports[i].execution_portfolio instanceof Array) {
+          //   for (let j = 0; j < reports[i].execution_portfolio.length; j++) {
+          //     total_portfolio += Number(reports[i].execution_portfolio[j].amount);
+          //   }
+          // }
+
+          let indicatorValue = total_portfolio;
+          if (indicatorValue) {
+            // console.log(indicatorValue);
+            // indicatorValue = indicatorValue.toFixed(2);
+            if (userCache[reports[i].user_id]) {
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
+            } else {
+              const userRecord = await admin.auth().getUser(reports[i].user_id);
+              userCache[reports[i].user_id] = userRecord.displayName;
+              results[reports[i].reported_year - formData.from_year + 1][userCache[reports[i].user_id]] = [indicatorValue, total_portfolio];
+            }
+          }
+        }
+
+        let institutionNames = [];
+        Object.keys(userCache).forEach(key => institutionNames.push(userCache[key]));
+
+        let variationResults = [];
+        for (let i = 1; i < results.length; i++) {
+          const obj = { reported_year: Number(results[i].reported_year) };
+          for (let j = 0; j < institutionNames.length; j++) {
+            let key = institutionNames[j];
+            if (results[i][key] && results[i - 1][key]) {
+              obj[key] = [((results[i][key][0] - results[i - 1][key][0]) / results[i - 1][key][0] * 100).toFixed(2), results[i][key][1]];
+            } else if (results[i - 1][key]) {
+              obj[key] = [-100, null];
+            } else {
+              obj[key] = [100, results[i][key][1]];
+            }
+          }
+          variationResults.push(obj);
+        }
+
+        data.line_chart_results = variationResults;
+        data.table_results = tableResults(variationResults, institutionNames, 1);
+        data.institution_names = underscore.sample(institutionNames, 5);
+        data.type = 'percentage';
+        data.additional_columns = additionalColumns;
         // console.log(data.line_chart_results, data.table_results);
       }
       return res.render('select-report', data);
